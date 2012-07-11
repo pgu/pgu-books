@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
 import pgu.client.service.AdminBooksService;
 import pgu.server.access.nosql.AppDoc;
@@ -17,6 +22,7 @@ import pgu.server.domain.sql.BookId;
 import pgu.shared.AppUtils;
 import pgu.shared.domain.Book;
 
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
@@ -156,6 +162,62 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             log.error(this, e);
             throw e;
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        // TODO if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+        // return; // The app is running on App Engine...
+        // }
+
+        final QueryResultIterator<BookId> bookIdItr = dao.ofy().query(BookId.class).iterator();
+        while (bookIdItr.hasNext()) {
+            dao.ofy().delete(bookIdItr.next());
+        }
+
+        final Iterator<ScoredDocument> bookDocItr = s.idx().search(Query.newBuilder().build("" + //
+                BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._())).iterator();
+        while (bookDocItr.hasNext()) {
+            s.idx().remove(bookDocItr.next().getId());
+        }
+
+        final Iterator<ScoredDocument> archiveDocItr = s.archiveIdx().search(Query.newBuilder().build("" + //
+                BookDoc.DOC_TYPE._() + ":" + DocType.ARCHIVE_BOOK._())).iterator();
+        while (archiveDocItr.hasNext()) {
+            s.archiveIdx().remove(archiveDocItr.next().getId());
+        }
+    }
+
+    @Override
+    public void deleteBooks(final ArrayList<Book> selectedBooks) {
+
+        final String now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        final ArrayList<Long> bookIds = new ArrayList<Long>(selectedBooks.size());
+
+        for (final Book book : selectedBooks) {
+            final ScoredDocument doc = fetchDocByBook(book);
+
+            final AppDoc archiveDoc = new AppDoc() //
+                    .text(BookDoc.DOC_TYPE, DocType.ARCHIVE_BOOK._()) //
+                    .copyNumLong(BookDoc.BOOK_ID, doc) //
+                    .copyText(BookDoc.AUTHOR, doc) //
+                    .copyText(BookDoc.TITLE, doc) //
+                    .copyText(BookDoc.EDITOR, doc) //
+                    .copyNumInt(BookDoc.YEAR, doc) //
+                    .copyText(BookDoc.COMMENT, doc) //
+                    .copyText(BookDoc.CATEGORY, doc) //
+                    .text(BookDoc.ARCHIVE_DATE, now) //
+            ;
+
+            s.idx().remove(doc.getId()); // removes it from the index
+            s.archiveIdx().add(archiveDoc.build()); // adds the archive
+
+            bookIds.add(book.getId());
+        }
+
+        // clean bookIds
+        final Map<Long, BookId> id2bookId = dao.ofy().get(BookId.class, bookIds);
+        dao.ofy().delete(id2bookId.values());
     }
 
 }
