@@ -1,0 +1,3 @@
+"Francisco A. de Icaza", "Nietzsche, poeta (Interpretaciones líricas)", "Sáez Hnos.", "", "", "Errores de pegado"
+"Gunnar Ekelof", "Diwán Una trilogía", "Alianza", "1982", "", "Errores de pegado"
+"T. S. Elliot", "Poesías reunidas 1909-1962", "Alianza", "1979", "2ª ed.", "Errores de pegado"

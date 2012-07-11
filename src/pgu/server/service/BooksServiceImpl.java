@@ -1,4 +1,4 @@
-package pgu.server;
+package pgu.server.service;
 
 import pgu.client.service.BooksService;
 
