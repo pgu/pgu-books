@@ -21,7 +21,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class Pgu_books implements EntryPoint {
 
-    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+    private final BooksServiceAsync booksService = GWT.create(BooksService.class);
 
     @Override
     public void onModuleLoad() {
