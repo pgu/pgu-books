@@ -4,6 +4,8 @@ import pgu.client.app.mvp.AppActivityMapper;
 import pgu.client.app.mvp.AppPlaceHistoryMapper;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.books.BooksPlace;
+import pgu.client.service.BooksService;
+import pgu.client.service.BooksServiceAsync;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;

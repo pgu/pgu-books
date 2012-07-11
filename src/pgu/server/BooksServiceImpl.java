@@ -1,6 +1,6 @@
 package pgu.server;
 
-import pgu.client.BooksService;
+import pgu.client.service.BooksService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
