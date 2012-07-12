@@ -17,5 +17,7 @@
             </b:Nav>
         </b:Navbar>
         <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
+        <b:FluidContainer ui:field="readonlyGrid">
+        </b:FluidContainer>
     </g:HTMLPanel>
 </ui:UiBinder> 
