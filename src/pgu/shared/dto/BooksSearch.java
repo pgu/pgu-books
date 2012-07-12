@@ -9,7 +9,7 @@ public class BooksSearch implements IsSerializable {
     private String editor;
     private String category;
     private String year;
-    private String comentario;
+    private String comment;
 
     public String getTitle() {
         return title;
@@ -51,12 +51,12 @@ public class BooksSearch implements IsSerializable {
         this.year = year;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getComment() {
+        return comment;
     }
 
-    public void setComentario(final String comentario) {
-        this.comentario = comentario;
+    public void setComment(final String comment) {
+        this.comment = comment;
     }
 
 }

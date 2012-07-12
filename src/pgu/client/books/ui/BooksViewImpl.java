@@ -2,6 +2,7 @@ package pgu.client.books.ui;
 
 import java.util.ArrayList;
 
+import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksSearch;
@@ -10,13 +11,13 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
+import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -28,11 +29,15 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @UiField
-    ProgressBar    progressBar;
+    ProgressBar            progressBar;
     @UiField
-    Button         searchBtn;
+    Button                 searchBtn;
     @UiField
-    FluidContainer readonlyGrid;
+    FluidContainer         readonlyGrid;
+    @UiField
+    NavSearch              sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+
+    private BooksPresenter presenter;
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -40,42 +45,29 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     }
 
+    @Override
+    public void setPresenter(final BooksPresenter presenter) {
+        this.presenter = presenter;
+    }
+
     @UiHandler("searchBtn")
     public void clickSearch(final ClickEvent e) {
         readonlyGrid.clear();
         progressBar.setVisible(true);
+
         final BooksSearch booksSearch = new BooksSearch();
-        // booksSearch.setAuthor(author);
-        // booksSearch.setCategory(category);
-        // booksSearch.setComentario(comentario);
-        // booksSearch.setEditor(editor);
-        // booksSearch.setTitle(title);
-        // booksSearch.setYear(year);
+        booksSearch.setAuthor(sAuthor.getTextBox().getText());
+        booksSearch.setCategory(sCategory.getTextBox().getText());
+        booksSearch.setComment(sComment.getTextBox().getText());
+        booksSearch.setEditor(sEditor.getTextBox().getText());
+        booksSearch.setTitle(sTitle.getTextBox().getText());
+        booksSearch.setYear(sYear.getTextBox().getText());
 
-        new Timer() {
-
-            @Override
-            public void run() {
-                final ArrayList<Book> books = new ArrayList<Book>();
-                for (int i = 0; i < 5; i++) {
-                    final Book book = new Book() //
-                            .title("title " + i) //
-                            .author("author " + i) //
-                            .editor("editor " + i) //
-                            .category("cat " + i) //
-                            .year(1980 + i) //
-                            .comment("comment " + i) //
-                            .id(1L * i) //
-                    ;
-                    books.add(book);
-                }
-                setBooks(books);
-            }
-
-        }.schedule(750);
+        presenter.searchBooks(booksSearch);
     }
 
-    private void setBooks(final ArrayList<Book> books) {
+    @Override
+    public void setBooks(final ArrayList<Book> books) {
         progressBar.setVisible(false);
 
         for (final Book book : books) {
