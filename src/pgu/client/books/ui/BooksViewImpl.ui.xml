@@ -19,7 +19,7 @@
         </b:Navbar>
         <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
         <b:FluidContainer ui:field="readonlyGrid" />
-        <b:Pagination alignment="CENTERED">
+        <b:Pagination ui:field="pager" alignment="CENTERED">
             <b:NavLink active="true">Anterior</b:NavLink>
             <b:NavLink active="true">1</b:NavLink>
             <b:NavLink>2</b:NavLink>

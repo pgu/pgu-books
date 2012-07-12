@@ -11,6 +11,7 @@ import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.NavSearch;
+import com.github.gwtbootstrap.client.ui.Pagination;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,13 +36,15 @@ public class BooksViewImpl extends Composite implements BooksView {
     FluidContainer         readonlyGrid;
     @UiField
     NavSearch              sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+    @UiField
+    Pagination             pager;
 
     private BooksPresenter presenter;
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         progressBar.setVisible(false);
-
+        pager.setVisible(false);
     }
 
     @Override
@@ -52,6 +55,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     @UiHandler("searchBtn")
     public void clickSearch(final ClickEvent e) {
         readonlyGrid.clear();
+        pager.setVisible(false);
         progressBar.setVisible(true);
 
         final BooksSearch booksSearch = new BooksSearch();
@@ -99,6 +103,13 @@ public class BooksViewImpl extends Composite implements BooksView {
             readonlyGrid.add(row);
         }
         // Anterior 1..10 Posterior
-    }
+        final int start = booksResult.getStart();
+        final int length = booksResult.getLength();
+        final long nbFound = booksResult.getNbFound();
 
+        // TODO PGU
+
+        pager.clear();
+        pager.setVisible(true);
+    }
 }
