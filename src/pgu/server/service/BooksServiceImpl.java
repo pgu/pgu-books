@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import pgu.client.service.BooksService;
 import pgu.server.access.nosql.DocUtils;
 import pgu.server.access.nosql.Search;
-import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.shared.domain.Book;
@@ -23,7 +22,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class BooksServiceImpl extends RemoteServiceServlet implements BooksService {
 
     private final AppLog   log  = new AppLog();
-    private final DAO      dao  = new DAO();
     private final Search   s    = new Search();
     private final DocUtils docU = new DocUtils();
 
