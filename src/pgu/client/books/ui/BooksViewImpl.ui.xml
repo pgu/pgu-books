@@ -3,14 +3,16 @@
             xmlns:g="urn:import:com.google.gwt.user.client.ui"
             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
             
-    <b:Navbar>
+    <b:Navbar position="TOP">
         <b:Brand>Libros</b:Brand>
         <b:NavSearch size="4" placeholder="Título" alignment="LEFT"/>        
         <b:NavSearch size="2" placeholder="Autor" alignment="LEFT"/>        
         <b:NavSearch size="2" placeholder="Editor" alignment="LEFT"/>        
         <b:NavSearch size="2" placeholder="Categoría" alignment="LEFT"/>        
         <b:NavSearch size="2" placeholder="Año" alignment="LEFT"/>        
-        <b:Button icon="SEARCH" size="LARGE">Search</b:Button>
-        <b:NavText alignment="RIGHT">Admin</b:NavText>
+        <b:Button icon="SEARCH">Buscar</b:Button>
+        <b:Nav alignment="RIGHT">
+            <b:NavLink>Admin</b:NavLink>
+        </b:Nav>
     </b:Navbar>
 </ui:UiBinder> 
