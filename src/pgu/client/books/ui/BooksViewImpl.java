@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
+import pgu.shared.dto.BooksSearch;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
@@ -43,6 +44,13 @@ public class BooksViewImpl extends Composite implements BooksView {
     public void clickSearch(final ClickEvent e) {
         readonlyGrid.clear();
         progressBar.setVisible(true);
+        final BooksSearch booksSearch = new BooksSearch();
+        // booksSearch.setAuthor(author);
+        // booksSearch.setCategory(category);
+        // booksSearch.setComentario(comentario);
+        // booksSearch.setEditor(editor);
+        // booksSearch.setTitle(title);
+        // booksSearch.setYear(year);
 
         new Timer() {
 
