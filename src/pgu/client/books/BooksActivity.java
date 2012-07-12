@@ -22,6 +22,9 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus) {
         final BooksView booksView = clientFactory.getBooksView();
+
+        booksView.setPresenter(this);
+
         panel.setWidget(booksView.asWidget());
     }
 
