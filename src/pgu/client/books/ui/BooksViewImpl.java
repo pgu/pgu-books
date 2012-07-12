@@ -1,10 +1,9 @@
 package pgu.client.books.ui;
 
-import java.util.ArrayList;
-
 import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
+import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -63,14 +62,17 @@ public class BooksViewImpl extends Composite implements BooksView {
         booksSearch.setTitle(sTitle.getTextBox().getText());
         booksSearch.setYear(sYear.getTextBox().getText());
 
+        booksSearch.setStart(0);
+        booksSearch.setLength(5);
+
         presenter.searchBooks(booksSearch);
     }
 
     @Override
-    public void setBooks(final ArrayList<Book> books) {
+    public void setBooks(final BooksResult booksResult) {
         progressBar.setVisible(false);
 
-        for (final Book book : books) {
+        for (final Book book : booksResult.getBooks()) {
 
             final Column titleCol = new Column(2);
             final Column authorCol = new Column(2);

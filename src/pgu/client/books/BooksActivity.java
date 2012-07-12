@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pgu.client.app.mvp.ClientFactory;
 import pgu.shared.domain.Book;
+import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -41,8 +42,10 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                     total = 5;
                 }
 
+                final int start = booksSearch.getStart();
+                final int stop = booksSearch.getStart() + booksSearch.getLength();
                 final ArrayList<Book> books = new ArrayList<Book>();
-                for (int i = 0; i < total; i++) {
+                for (int i = start; i < stop; i++) {
                     final Book book = new Book() //
                             .title("title " + i) //
                             .author("author " + i) //
@@ -54,7 +57,13 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                     ;
                     books.add(book);
                 }
-                clientFactory.getBooksView().setBooks(books);
+                final BooksResult booksResult = new BooksResult();
+                booksResult.setBooks(books);
+                booksResult.setStart(start);
+                booksResult.setLength(booksSearch.getLength());
+                booksResult.setNbFound(total);
+
+                clientFactory.getBooksView().setBooks(booksResult);
             }
 
         }.schedule(500);

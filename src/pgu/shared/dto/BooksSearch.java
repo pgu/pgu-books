@@ -4,6 +4,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class BooksSearch implements IsSerializable {
 
+    private int    start;
+    private int    length;
+
     private String title;
     private String author;
     private String editor;
@@ -57,6 +60,22 @@ public class BooksSearch implements IsSerializable {
 
     public void setComment(final String comment) {
         this.comment = comment;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(final int start) {
+        this.start = start;
+    }
+
+    public void setLength(final int length) {
+        this.length = length;
     }
 
 }
