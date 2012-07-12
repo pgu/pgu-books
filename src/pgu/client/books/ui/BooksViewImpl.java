@@ -96,6 +96,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
             readonlyGrid.add(row);
         }
+        // Anterior 1..10 Posterior
     }
 
 }
