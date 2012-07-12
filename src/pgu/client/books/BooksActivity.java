@@ -45,7 +45,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                 final int start = booksSearch.getStart();
                 final int stop = booksSearch.getStart() + booksSearch.getLength();
                 final ArrayList<Book> books = new ArrayList<Book>();
-                for (int i = start; i < stop; i++) {
+                for (int i = start + 1; i < stop + 1; i++) {
                     final Book book = new Book() //
                             .title("title " + i) //
                             .author("author " + i) //
