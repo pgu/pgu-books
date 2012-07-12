@@ -2,8 +2,12 @@
 <module rename-to='pgu_books'>
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+  
   <inherits name="com.github.gwtbootstrap.Bootstrap" />
   <inherits name="com.googlecode.objectify.Objectify" />
+  <inherits name="com.google.gwt.activity.Activity" />
+  <inherits name="com.google.gwt.place.Place" />
+  
   
   <entry-point class='pgu.client.Pgu_books'/>
   

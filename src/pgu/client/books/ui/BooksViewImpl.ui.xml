@@ -2,13 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
             xmlns:g="urn:import:com.google.gwt.user.client.ui"
             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
-    <ui:style>
-        .important {
-            font-weight: bold;
-        }
-    </ui:style>
-    <g:HTMLPanel>
-        Hello,
-        <g:Button styleName="{style.important}" ui:field="button" />
-    </g:HTMLPanel>
+            
+    <b:Navbar>
+        <b:Brand>Libros</b:Brand>
+        <b:NavSearch size="4" placeholder="Título" alignment="LEFT"/>        
+        <b:NavSearch size="2" placeholder="Autor" alignment="LEFT"/>        
+        <b:NavSearch size="2" placeholder="Editor" alignment="LEFT"/>        
+        <b:NavSearch size="2" placeholder="Categoría" alignment="LEFT"/>        
+        <b:NavSearch size="2" placeholder="Año" alignment="LEFT"/>        
+        <b:Button icon="SEARCH" size="LARGE">Search</b:Button>
+        <b:NavText alignment="RIGHT">Admin</b:NavText>
+    </b:Navbar>
 </ui:UiBinder> 
