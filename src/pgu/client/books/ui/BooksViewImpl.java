@@ -108,6 +108,9 @@ public class BooksViewImpl extends Composite implements BooksView {
         final long nbFound = booksResult.getNbFound();
 
         // TODO PGU
+        // numero record / length -> nb blocs
+        // numero record % length -> if > 0 then +1 to nb blocs
+        // 5 links before the current block then 4 links
 
         pager.clear();
         pager.setVisible(true);
