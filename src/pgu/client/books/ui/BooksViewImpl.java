@@ -46,8 +46,6 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void setBooks(final BooksResult booksResult) {
         readonlyGrid.clear();
-        // progressBar.setVisible(false);
-        // TODO PGU Jul 13, 2012 fire event "finish waiting"
 
         for (final Book book : booksResult.getBooks()) {
 
@@ -154,8 +152,6 @@ public class BooksViewImpl extends Composite implements BooksView {
 
         @Override
         public void onClick(final ClickEvent event) {
-            // progressBar.setVisible(true);
-            // TODO PGU Jul 13, 2012 fire event "start waiting"
 
             final BooksSearch booksSearch = booksResult.getBooksSearch();
             booksSearch.setStart(i * booksSearch.getLength());

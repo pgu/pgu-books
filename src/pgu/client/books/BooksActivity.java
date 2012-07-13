@@ -2,7 +2,9 @@ package pgu.client.books;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.SearchBooksEvent;
+import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
@@ -40,6 +42,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter, S
 
     @Override
     public void searchBooks(final BooksSearch booksSearch) {
+        eventBus.fireEvent(new ShowWaitingIndicatorEvent());
         new Timer() {
 
             @Override
@@ -81,6 +84,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter, S
                 booksResult.setBooksSearch(booksSearch);
                 booksResult.setNbFound(total);
 
+                eventBus.fireEvent(new HideWaitingIndicatorEvent());
                 clientFactory.getBooksView().setBooks(booksResult);
             }
 

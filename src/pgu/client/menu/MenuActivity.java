@@ -2,13 +2,14 @@ package pgu.client.menu;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.SearchBooksEvent;
+import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.menu.ui.MenuViewImpl;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.web.bindery.event.shared.EventBus;
 
 public class MenuActivity implements MenuPresenter //
-        , SearchBooksEvent.Handler //
+        , ShowWaitingIndicatorEvent.Handler //
         , HideWaitingIndicatorEvent.Handler //
 {
 
@@ -18,7 +19,8 @@ public class MenuActivity implements MenuPresenter //
 
     public void start(final EventBus eventBus) {
         this.eventBus = eventBus;
-        eventBus.addHandler(SearchBooksEvent.TYPE, this);
+        eventBus.addHandler(ShowWaitingIndicatorEvent.TYPE, this);
+        eventBus.addHandler(HideWaitingIndicatorEvent.TYPE, this);
     }
 
     public MenuView getView() {
@@ -31,13 +33,13 @@ public class MenuActivity implements MenuPresenter //
     }
 
     @Override
-    public void onSearchBooks(final SearchBooksEvent event) {
-        view.getWaitingIndicator().show();
+    public void onHideWaitingIndicator(final HideWaitingIndicatorEvent event) {
+        view.getWaitingIndicator().hide();
     }
 
     @Override
-    public void onHideWaitingIndicator(final HideWaitingIndicatorEvent event) {
-        view.getWaitingIndicator().hide();
+    public void onShowWaitingIndicator(final ShowWaitingIndicatorEvent event) {
+        view.getWaitingIndicator().show();
     }
 
 }
