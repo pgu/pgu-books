@@ -42,7 +42,15 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter, S
 
     @Override
     public void searchBooks(final BooksSearch booksSearch) {
+        eventBus.fireEvent(new SearchBooksEvent(booksSearch));
+    }
+
+    @Override
+    public void onSearchBooks(final SearchBooksEvent event) {
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
+
+        final BooksSearch booksSearch = event.getBooksSearch();
+
         new Timer() {
 
             @Override
@@ -89,12 +97,6 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter, S
             }
 
         }.schedule(500);
-
-    }
-
-    @Override
-    public void onSearchBooks(final SearchBooksEvent event) {
-        // TODO PGU Jul 13, 2012
     }
 
     @Override
