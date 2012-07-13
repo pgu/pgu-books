@@ -155,7 +155,13 @@ public class BooksViewImpl extends Composite implements BooksView {
 
             final BooksSearch booksSearch = booksResult.getBooksSearch();
             booksSearch.setStart(i * booksSearch.getLength());
-            presenter.searchBooks(booksSearch);
+            presenter.goToSearchBooks(booksSearch);
         }
+    }
+
+    @Override
+    public void clear() {
+        readonlyGrid.clear();
+        pager.setVisible(false);
     }
 }

@@ -4,6 +4,6 @@ import pgu.shared.dto.BooksSearch;
 
 public interface BooksPresenter {
 
-    void searchBooks(BooksSearch booksSearch);
+    void goToSearchBooks(BooksSearch booksSearch);
 
 }

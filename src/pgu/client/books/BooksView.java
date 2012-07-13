@@ -10,4 +10,5 @@ public interface BooksView extends IsWidget {
 
     void setBooks(BooksResult booksResult);
 
+    void clear();
 }

@@ -26,13 +26,14 @@ public class Pgu_books implements EntryPoint {
     @Override
     public void onModuleLoad() {
         final ClientFactory clientFactory = GWT.create(ClientFactory.class);
+        final PlaceController placeController = clientFactory.getPlaceController();
         final EventBus eventBus = clientFactory.getEventBus();
 
-        final AppActivity appActivity = new AppActivity();
-        final AppView appView = appActivity.startAndGetView(eventBus);
+        final AppView appView = clientFactory.getAppView();
+        final AppActivity appActivity = new AppActivity(placeController, appView);
+        appActivity.start(eventBus, clientFactory);
 
         final Place defaultPlace = new BooksPlace();
-        final PlaceController placeController = clientFactory.getPlaceController();
 
         final ActivityMapper activityMapper = new AppActivityMapper(clientFactory);
         final ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);
