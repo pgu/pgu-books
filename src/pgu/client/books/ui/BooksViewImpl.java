@@ -114,10 +114,12 @@ public class BooksViewImpl extends Composite implements BooksView {
             if (nbBlock > 1) {
 
                 final NavLink previousLink = new NavLink("Anterior");
-                pager.add(previousLink);
+                final NavLink nextLink = new NavLink("Siguiente");
+
                 if (blockIdx == 0L) {
                     previousLink.setActive(true);
                 }
+                pager.add(previousLink);
 
                 for (int i = startIdx; i < endIdx + 1; i++) {
                     final int numBlock = i + 1;
@@ -125,12 +127,11 @@ public class BooksViewImpl extends Composite implements BooksView {
                     pager.add(navLink);
                     if (blockIdx == i) {
                         navLink.setActive(true);
+                    } else {
+                        navLink.addClickHandler(new PagerClickHandler(i, booksResult));
                     }
-
-                    navLink.addClickHandler(new PagerClickHandler(i, booksResult));
                 }
 
-                final NavLink nextLink = new NavLink("Siguiente");
                 pager.add(nextLink);
                 if (blockIdx == nbBlock - 1) {
                     nextLink.setActive(true);
