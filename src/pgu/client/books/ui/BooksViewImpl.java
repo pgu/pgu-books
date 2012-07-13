@@ -112,10 +112,11 @@ public class BooksViewImpl extends Composite implements BooksView {
         // numero record / length -> n° bloc
         // numero record % length -> if > 0 then +1 to n° bloc
         // 5 links before the current block then 4 links
-        // 01..10 -> 1
+        // 01..10 -> 1 (records -> block)
         // 11..20 -> 2
         // 21..30 -> 3
         // 31..40 -> 4
+        // 1..10 -> 5 current 4
 
         pager.clear();
 
@@ -129,7 +130,19 @@ public class BooksViewImpl extends Composite implements BooksView {
                 nbBlock++;
             }
 
-            if (nbBlock < 11) {
+            // with the blockIdx:
+            // startBlock: blockIdx - 5
+            // compare startBlock with 0 -> take the higher
+            final long startBlockIdx = blockIdx - 5;
+            final int startIdx = startBlockIdx > 0 ? (int) startBlockIdx : 0;
+
+            // endBlock: blockIdx + 4
+            // compare endBlock with lastBlock -> take the lower
+            final long lastBlockIdx = nbBlock - 1;
+            final long endBlockIdx = blockIdx + 4;
+            final int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
+
+            if (nbBlock > 1) {
 
                 final NavLink previousLink = new NavLink("Anterior");
                 pager.add(previousLink);
@@ -137,8 +150,8 @@ public class BooksViewImpl extends Composite implements BooksView {
                     previousLink.setActive(true);
                 }
 
-                for (int i = 0; i < nbBlock; i++) {
-                    final int numBlock = i+1;
+                for (int i = startIdx; i < endIdx; i++) {
+                    final int numBlock = i + 1;
                     final NavLink navLink = new NavLink("" + numBlock);
                     pager.add(navLink);
                     if (blockIdx == i) {
@@ -148,7 +161,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
                 final NavLink nextLink = new NavLink("Siguiente");
                 pager.add(nextLink);
-                if (blockIdx == nbBlock-1) {
+                if (blockIdx == nbBlock - 1) {
                     nextLink.setActive(true);
                 }
             }
