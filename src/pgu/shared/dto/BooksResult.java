@@ -10,8 +10,7 @@ public class BooksResult implements IsSerializable {
 
     private ArrayList<Book> books;
     private long            nbFound;
-    private int             start;
-    private int             length;
+    private BooksSearch     booksSearch;
 
     public ArrayList<Book> getBooks() {
         return books;
@@ -29,20 +28,12 @@ public class BooksResult implements IsSerializable {
         this.nbFound = nbFound;
     }
 
-    public int getStart() {
-        return start;
+    public BooksSearch getBooksSearch() {
+        return booksSearch;
     }
 
-    public void setStart(final int start) {
-        this.start = start;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
+    public void setBooksSearch(final BooksSearch booksSearch) {
+        this.booksSearch = booksSearch;
     }
 
 }

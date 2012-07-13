@@ -6,19 +6,16 @@ import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
-import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.NavLink;
-import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.Pagination;
-import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,13 +27,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @UiField
-    ProgressBar            progressBar;
-    @UiField
-    Button                 searchBtn;
-    @UiField
     FluidContainer         readonlyGrid;
-    @UiField
-    NavSearch              sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
     Pagination             pager;
 
@@ -44,7 +35,6 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
-        progressBar.setVisible(false);
         pager.setVisible(false);
     }
 
@@ -53,29 +43,11 @@ public class BooksViewImpl extends Composite implements BooksView {
         this.presenter = presenter;
     }
 
-    @UiHandler("searchBtn")
-    public void clickSearch(final ClickEvent e) {
-        readonlyGrid.clear();
-        pager.setVisible(false);
-        progressBar.setVisible(true);
-
-        final BooksSearch booksSearch = new BooksSearch();
-        booksSearch.setAuthor(sAuthor.getTextBox().getText());
-        booksSearch.setCategory(sCategory.getTextBox().getText());
-        booksSearch.setComment(sComment.getTextBox().getText());
-        booksSearch.setEditor(sEditor.getTextBox().getText());
-        booksSearch.setTitle(sTitle.getTextBox().getText());
-        booksSearch.setYear(sYear.getTextBox().getText());
-
-        booksSearch.setStart(0);
-        booksSearch.setLength(5);
-
-        presenter.searchBooks(booksSearch);
-    }
-
     @Override
     public void setBooks(final BooksResult booksResult) {
-        progressBar.setVisible(false);
+        readonlyGrid.clear();
+        // progressBar.setVisible(false);
+        // TODO PGU Jul 13, 2012 fire event "finish waiting"
 
         for (final Book book : booksResult.getBooks()) {
 
@@ -104,11 +76,10 @@ public class BooksViewImpl extends Composite implements BooksView {
             readonlyGrid.add(row);
         }
         // Anterior 1..10 Posterior
-        final int start = booksResult.getStart();
-        final int length = booksResult.getLength();
+        final int start = booksResult.getBooksSearch().getStart();
+        final int length = booksResult.getBooksSearch().getLength();
         final long nbFound = booksResult.getNbFound();
 
-        // TODO PGU
         // numero record / length -> n° bloc
         // numero record % length -> if > 0 then +1 to n° bloc
         // 5 links before the current block then 4 links
@@ -142,16 +113,8 @@ public class BooksViewImpl extends Composite implements BooksView {
             final long endBlockIdx = blockIdx < 10 ? 9 : blockIdx + 4;
             final int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
 
-            GWT.log("blockIdx " + blockIdx);
-            GWT.log("startBlockIdx " + startBlockIdx);
-            GWT.log("startIdx " + startIdx);
-            GWT.log("lastBlockIdx " + lastBlockIdx);
-            GWT.log("endBlockIdx " + endBlockIdx);
-            GWT.log("endIdx " + endIdx);
-
             if (nbBlock > 1) {
 
-                // TODO PGU Jul 13, 2012 add clickhandler on navlink
                 final NavLink previousLink = new NavLink("Anterior");
                 pager.add(previousLink);
                 if (blockIdx == 0L) {
@@ -165,6 +128,8 @@ public class BooksViewImpl extends Composite implements BooksView {
                     if (blockIdx == i) {
                         navLink.setActive(true);
                     }
+
+                    navLink.addClickHandler(new PagerClickHandler(i, booksResult));
                 }
 
                 final NavLink nextLink = new NavLink("Siguiente");
@@ -175,6 +140,26 @@ public class BooksViewImpl extends Composite implements BooksView {
             }
 
             pager.setVisible(true);
+        }
+    }
+
+    private class PagerClickHandler implements ClickHandler {
+        private int               i = 0;
+        private final BooksResult booksResult;
+
+        public PagerClickHandler(final int i, final BooksResult booksResult) {
+            this.i = i;
+            this.booksResult = booksResult;
+        }
+
+        @Override
+        public void onClick(final ClickEvent event) {
+            // progressBar.setVisible(true);
+            // TODO PGU Jul 13, 2012 fire event "start waiting"
+
+            final BooksSearch booksSearch = booksResult.getBooksSearch();
+            booksSearch.setStart(i * booksSearch.getLength());
+            presenter.searchBooks(booksSearch);
         }
     }
 }

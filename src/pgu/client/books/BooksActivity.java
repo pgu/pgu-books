@@ -8,6 +8,7 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -48,7 +49,9 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                 final int delta1 = booksSearch.getLength() - booksSearch.getStart();
                 final int delta2 = total - booksSearch.getStart();
 
-                final int stop = delta2 > delta1 ? delta1: delta2;
+                final int stop = delta2 > delta1 ? delta1 : delta2;
+                GWT.log("start " + start);
+                GWT.log("stop " + stop);
 
                 final ArrayList<Book> books = new ArrayList<Book>();
                 for (int i = start + 1; i < stop + 1; i++) {
@@ -61,14 +64,13 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                             .year(1980 + i) //
                             .comment("comment " + i) //
                             .id(1L * i) //
-                            ;
+                    ;
 
                     books.add(book);
                 }
                 final BooksResult booksResult = new BooksResult();
                 booksResult.setBooks(books);
-                booksResult.setStart(start);
-                booksResult.setLength(booksSearch.getLength());
+                booksResult.setBooksSearch(booksSearch);
                 booksResult.setNbFound(total);
 
                 clientFactory.getBooksView().setBooks(booksResult);
