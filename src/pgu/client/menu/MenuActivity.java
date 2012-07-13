@@ -19,6 +19,7 @@ public class MenuActivity implements MenuPresenter //
 
     public void start(final EventBus eventBus) {
         this.eventBus = eventBus;
+        view.setPresenter(this);
         eventBus.addHandler(ShowWaitingIndicatorEvent.TYPE, this);
         eventBus.addHandler(HideWaitingIndicatorEvent.TYPE, this);
     }
