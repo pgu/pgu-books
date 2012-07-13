@@ -139,8 +139,15 @@ public class BooksViewImpl extends Composite implements BooksView {
             // endBlock: blockIdx + 4
             // compare endBlock with lastBlock -> take the lower
             final long lastBlockIdx = nbBlock - 1;
-            final long endBlockIdx = blockIdx + 4;
+            final long endBlockIdx = blockIdx < 10 ? 9 : blockIdx + 4;
             final int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
+
+            GWT.log("blockIdx " + blockIdx);
+            GWT.log("startBlockIdx " + startBlockIdx);
+            GWT.log("startIdx " + startIdx);
+            GWT.log("lastBlockIdx " + lastBlockIdx);
+            GWT.log("endBlockIdx " + endBlockIdx);
+            GWT.log("endIdx " + endIdx);
 
             if (nbBlock > 1) {
 
@@ -150,7 +157,7 @@ public class BooksViewImpl extends Composite implements BooksView {
                     previousLink.setActive(true);
                 }
 
-                for (int i = startIdx; i < endIdx; i++) {
+                for (int i = startIdx; i < endIdx + 1; i++) {
                     final int numBlock = i + 1;
                     final NavLink navLink = new NavLink("" + numBlock);
                     pager.add(navLink);
