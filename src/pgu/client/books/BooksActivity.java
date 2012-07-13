@@ -66,7 +66,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
                 final int start = booksSearch.getStart();
 
-                final int delta1 = booksSearch.getLength() - booksSearch.getStart();
+                final int delta1 = booksSearch.getLength();
                 final int delta2 = total - booksSearch.getStart();
 
                 final int stop = delta2 > delta1 ? delta1 : delta2;
@@ -74,7 +74,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                 GWT.log("stop " + stop);
 
                 final ArrayList<Book> books = new ArrayList<Book>();
-                for (int i = start + 1; i < stop + 1; i++) {
+                for (int i = start + 1; i < start + 1 + stop; i++) {
 
                     final Book book = new Book() //
                             .title("title " + i) //
