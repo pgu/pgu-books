@@ -35,6 +35,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
             @Override
             public void run() {
+
                 int total;
                 try {
                     total = Integer.parseInt(booksSearch.getTitle());
@@ -43,9 +44,15 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                 }
 
                 final int start = booksSearch.getStart();
-                final int stop = booksSearch.getStart() + booksSearch.getLength();
+
+                final int delta1 = booksSearch.getLength() - booksSearch.getStart();
+                final int delta2 = total - booksSearch.getStart();
+
+                final int stop = delta2 > delta1 ? delta1: delta2;
+
                 final ArrayList<Book> books = new ArrayList<Book>();
                 for (int i = start + 1; i < stop + 1; i++) {
+
                     final Book book = new Book() //
                             .title("title " + i) //
                             .author("author " + i) //
@@ -54,7 +61,8 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
                             .year(1980 + i) //
                             .comment("comment " + i) //
                             .id(1L * i) //
-                    ;
+                            ;
+
                     books.add(book);
                 }
                 final BooksResult booksResult = new BooksResult();

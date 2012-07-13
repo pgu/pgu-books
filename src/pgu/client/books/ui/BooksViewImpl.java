@@ -10,6 +10,7 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
+import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.Pagination;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
@@ -108,11 +109,51 @@ public class BooksViewImpl extends Composite implements BooksView {
         final long nbFound = booksResult.getNbFound();
 
         // TODO PGU
-        // numero record / length -> nb blocs
-        // numero record % length -> if > 0 then +1 to nb blocs
+        // numero record / length -> n° bloc
+        // numero record % length -> if > 0 then +1 to n° bloc
         // 5 links before the current block then 4 links
+        // 01..10 -> 1
+        // 11..20 -> 2
+        // 21..30 -> 3
+        // 31..40 -> 4
 
         pager.clear();
-        pager.setVisible(true);
+
+        if (nbFound == 0) {
+            pager.setVisible(false);
+        } else {
+            final long blockIdx = start / length;
+
+            long nbBlock = nbFound / length;
+            if (nbFound % length > 0) {
+                nbBlock++;
+            }
+
+            if (nbBlock < 11) {
+
+                final NavLink previousLink = new NavLink("Anterior");
+                pager.add(previousLink);
+                if (blockIdx == 0L) {
+                    previousLink.setActive(true);
+                }
+
+                for (int i = 0; i < nbBlock; i++) {
+                    final int numBlock = i+1;
+                    final NavLink navLink = new NavLink("" + numBlock);
+                    pager.add(navLink);
+                    if (blockIdx == i) {
+                        navLink.setActive(true);
+                    }
+                }
+
+                final NavLink nextLink = new NavLink("Siguiente");
+                pager.add(nextLink);
+                if (blockIdx == nbBlock-1) {
+                    nextLink.setActive(true);
+                }
+            }
+
+            pager.setVisible(true);
+        }
     }
 }
