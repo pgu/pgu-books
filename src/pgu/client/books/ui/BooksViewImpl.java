@@ -151,6 +151,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
             if (nbBlock > 1) {
 
+                // TODO PGU Jul 13, 2012 add clickhandler on navlink
                 final NavLink previousLink = new NavLink("Anterior");
                 pager.add(previousLink);
                 if (blockIdx == 0L) {
