@@ -2,6 +2,7 @@ package pgu.client.books;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
@@ -12,10 +13,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class BooksActivity extends AbstractActivity implements BooksPresenter {
+public class BooksActivity extends AbstractActivity implements BooksPresenter, SearchBooksEvent.Handler {
 
-    private final ClientFactory clientFactory;
+    private final ClientFactory                  clientFactory;
+    private EventBus                             eventBus;
+
+    private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
@@ -23,6 +28,9 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus) {
+        this.eventBus = eventBus;
+        handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
+
         final BooksView booksView = clientFactory.getBooksView();
 
         booksView.setPresenter(this);
@@ -78,6 +86,22 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
         }.schedule(500);
 
+    }
+
+    @Override
+    public void onSearchBooks(final SearchBooksEvent event) {
+        // TODO PGU Jul 13, 2012
+    }
+
+    @Override
+    public void onStop() {
+        for (HandlerRegistration handlerReg : handlerRegs) {
+            handlerReg.removeHandler();
+            handlerReg = null;
+        }
+        handlerRegs.clear();
+
+        super.onStop();
     }
 
 }

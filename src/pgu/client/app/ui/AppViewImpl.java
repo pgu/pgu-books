@@ -5,6 +5,7 @@ import pgu.client.app.AppView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -27,6 +28,16 @@ public class AppViewImpl extends Composite implements AppView {
     @Override
     public void setWidget(final IsWidget w) {
         body.setWidget(w);
+    }
+
+    @Override
+    public AcceptsOneWidget getHeader() {
+        return header;
+    }
+
+    @Override
+    public AcceptsOneWidget getBody() {
+        return body;
     }
 
 }

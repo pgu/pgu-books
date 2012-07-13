@@ -6,4 +6,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface AppView extends IsWidget //
         , AcceptsOneWidget //
 {
+
+    AcceptsOneWidget getHeader();
+
+    AcceptsOneWidget getBody();
 }

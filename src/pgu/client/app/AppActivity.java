@@ -1,13 +1,22 @@
 package pgu.client.app;
 
-import com.google.gwt.core.client.GWT;
+import pgu.client.app.ui.AppViewImpl;
+import pgu.client.menu.MenuActivity;
+
+import com.google.web.bindery.event.shared.EventBus;
 
 public class AppActivity {
 
-    private final AppView view = GWT.create(AppView.class);
+    private static AppView appView = new AppViewImpl();
 
-    public AppView getView() {
-        return view;
+    public AppView startAndGetView(final EventBus eventBus) {
+
+        final MenuActivity menuActivity = new MenuActivity();
+        menuActivity.start(eventBus);
+
+        appView.getHeader().setWidget(menuActivity.getView());
+
+        return appView;
     }
 
 }
