@@ -1,23 +1,28 @@
 package pgu.client.menu;
 
+import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.menu.ui.MenuViewImpl;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.web.bindery.event.shared.EventBus;
 
-public class MenuActivity implements MenuPresenter {
+public class MenuActivity implements MenuPresenter //
+        , SearchBooksEvent.Handler //
+        , HideWaitingIndicatorEvent.Handler //
+{
 
-    private static MenuView menuView = new MenuViewImpl();
+    private static MenuView view = new MenuViewImpl();
 
     private EventBus        eventBus;
 
     public void start(final EventBus eventBus) {
         this.eventBus = eventBus;
+        eventBus.addHandler(SearchBooksEvent.TYPE, this);
     }
 
     public MenuView getView() {
-        return menuView;
+        return view;
     }
 
     @Override
@@ -25,5 +30,14 @@ public class MenuActivity implements MenuPresenter {
         eventBus.fireEvent(new SearchBooksEvent(booksSearch));
     }
 
-    // TODO PGU Jul 13, 2012 hashandler on searchbooksevent: show progressbar
+    @Override
+    public void onSearchBooks(final SearchBooksEvent event) {
+        view.getWaitingIndicator().show();
+    }
+
+    @Override
+    public void onHideWaitingIndicator(final HideWaitingIndicatorEvent event) {
+        view.getWaitingIndicator().hide();
+    }
+
 }

@@ -7,6 +7,7 @@ import pgu.shared.dto.BooksSearch;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
+import com.github.gwtbootstrap.client.ui.base.HasVisibility;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -44,8 +45,6 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiHandler("searchBtn")
     public void clickSearch(final ClickEvent e) {
 
-        progressBar.setVisible(true);
-
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setAuthor(sAuthor.getTextBox().getText());
         booksSearch.setCategory(sCategory.getTextBox().getText());
@@ -58,6 +57,27 @@ public class MenuViewImpl extends Composite implements MenuView {
         booksSearch.setLength(5);
 
         presenter.searchBooks(booksSearch);
+    }
+
+    @Override
+    public HasVisibility getWaitingIndicator() {
+        return new HasVisibility() {
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                progressBar.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                progressBar.setVisible(false);
+            }
+        };
     }
 
 }
