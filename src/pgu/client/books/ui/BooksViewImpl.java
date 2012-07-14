@@ -64,7 +64,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             commentCol.getElement().setInnerText(book.getComment());
 
             final FluidRow row = new FluidRow();
-            row.setStyleName("show-grid");
+            // row.setStyleName("show-grid");
             row.add(titleCol);
             row.add(authorCol);
             row.add(editorCol);

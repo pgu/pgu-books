@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pgu.client.app.event.ExceptionEvent;
 import pgu.client.app.event.ImportBooksEvent;
+import pgu.client.app.event.InformationEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Notification;
@@ -16,7 +17,11 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Handler, ImportBooksEvent.Handler {
+public class AppActivity implements SearchBooksEvent.Handler //
+        , ExceptionEvent.Handler //
+        , ImportBooksEvent.Handler //
+        , InformationEvent.Handler //
+{
 
     private final AppView                        view;
     private final PlaceController                placeController;
@@ -31,6 +36,8 @@ public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Han
 
         handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ExceptionEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(InformationEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory.getLoginInfo());
@@ -74,6 +81,14 @@ public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Han
     @Override
     public void onImportBooks(final ImportBooksEvent event) {
         placeController.goTo(new ImportBooksPlace());
+    }
+
+    @Override
+    public void onInformation(final InformationEvent event) {
+        view.getNotification().setHeading("Info");
+        view.getNotification().setText(event.getMessage());
+        view.getNotification().setLevel(Notification.Level.INFO);
+        view.getNotification().show();
     }
 
 }

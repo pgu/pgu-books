@@ -6,7 +6,10 @@ import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
+import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
@@ -22,10 +25,12 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
     private final BooksPlace                     place;
     private final BooksView                      view;
+    private final BooksServiceAsync              booksService;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
         view = clientFactory.getBooksView();
+        booksService = clientFactory.getBooksService();
     }
 
     @Override
@@ -51,7 +56,24 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
-        // TODO PGU brancher le service fetch books
+        // testBooks(booksSearch);
+        final BooksQueryParameters queryParameters = new BooksQueryParameters();
+        final int start = booksSearch.getStart();
+        final int length = booksSearch.getLength();
+
+        booksService.fetchBooks(queryParameters, start, length, new AsyncCallbackApp<BooksResult>(eventBus) {
+
+            @Override
+            public void onSuccess(final BooksResult booksResult) {
+                eventBus.fireEvent(new HideWaitingIndicatorEvent());
+                booksResult.setBooksSearch(booksSearch);
+                view.setBooks(booksResult);
+
+            }
+        });
+    }
+
+    private void testBooks(final BooksSearch booksSearch) {
         new Timer() {
 
             @Override

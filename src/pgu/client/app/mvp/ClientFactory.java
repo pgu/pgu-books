@@ -4,6 +4,9 @@ import pgu.client.app.AppView;
 import pgu.client.books.BooksView;
 import pgu.client.importBooks.ImportBooksView;
 import pgu.client.menu.MenuView;
+import pgu.client.service.AdminBooksServiceAsync;
+import pgu.client.service.BooksServiceAsync;
+import pgu.client.service.LoginServiceAsync;
 import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.place.shared.PlaceController;
@@ -26,4 +29,10 @@ public interface ClientFactory {
     MenuView getMenuView();
 
     ImportBooksView getImportBooksView();
+
+    LoginServiceAsync getLoginService();
+
+    BooksServiceAsync getBooksService();
+
+    AdminBooksServiceAsync getAdminBooksService();
 }
