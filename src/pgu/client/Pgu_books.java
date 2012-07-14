@@ -38,6 +38,7 @@ public class Pgu_books implements EntryPoint {
 
             @Override
             public void onSuccess(final LoginInfo loginInfo) {
+                clientFactory.setLoginInfo(loginInfo);
 
                 final AppView appView = clientFactory.getAppView();
                 final AppActivity appActivity = new AppActivity(placeController, appView);

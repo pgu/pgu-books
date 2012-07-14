@@ -31,7 +31,7 @@ public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Han
         handlerRegs.add(eventBus.addHandler(ExceptionEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
-        final MenuActivity menuActivity = new MenuActivity(menuView);
+        final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory.getLoginInfo());
         menuActivity.start(eventBus);
 
         view.getHeader().setWidget(menuView);

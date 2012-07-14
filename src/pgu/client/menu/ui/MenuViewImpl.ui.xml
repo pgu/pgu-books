@@ -15,6 +15,8 @@
             <b:Button ui:field="searchBtn" icon="SEARCH">Buscar</b:Button>
             <b:Nav alignment="RIGHT">
                 <b:NavLink ui:field="adminBtn">Admin</b:NavLink>
+                <b:NavLink ui:field="importBtn">Import</b:NavLink>
+                <b:NavLink ui:field="logoutBtn">Log out</b:NavLink>
             </b:Nav>
         </b:Navbar>
         <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>

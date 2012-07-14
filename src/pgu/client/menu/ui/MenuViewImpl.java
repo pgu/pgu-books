@@ -5,6 +5,7 @@ import pgu.client.menu.MenuView;
 import pgu.shared.dto.BooksSearch;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
@@ -29,11 +30,15 @@ public class MenuViewImpl extends Composite implements MenuView {
     Button                searchBtn;
     @UiField
     NavSearch             sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+    @UiField
+    NavLink               adminBtn, logoutBtn, importBtn;
 
     private MenuPresenter presenter;
 
     public MenuViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
+        logoutBtn.setVisible(false);
+        importBtn.setVisible(false);
         progressBar.setVisible(false);
     }
 
@@ -76,6 +81,109 @@ public class MenuViewImpl extends Composite implements MenuView {
             @Override
             public void hide() {
                 progressBar.setVisible(false);
+            }
+        };
+    }
+
+    @Override
+    public LogWidget getLoginWidget() {
+        return new LogWidget() {
+
+            @Override
+            public void setTargetHistoryToken(final String targetHistoryToken) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void setHref(final String href) {
+                adminBtn.setHref(href);
+            }
+
+            @Override
+            public String getTargetHistoryToken() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public String getHref() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                adminBtn.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                adminBtn.setVisible(false);
+            }
+        };
+    }
+
+    @Override
+    public LogWidget getLogoutWidget() {
+        return new LogWidget() {
+
+            @Override
+            public void setTargetHistoryToken(final String targetHistoryToken) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void setHref(final String href) {
+                logoutBtn.setHref(href);
+            }
+
+            @Override
+            public String getTargetHistoryToken() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public String getHref() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                logoutBtn.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                logoutBtn.setVisible(false);
+            }
+        };
+    }
+
+    @Override
+    public HasVisibility getImportWidget() {
+        return new HasVisibility() {
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                importBtn.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                importBtn.setVisible(false);
             }
         };
     }
