@@ -1,6 +1,6 @@
 package pgu.client.books;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import pgu.shared.dto.BooksSearch;
 
@@ -9,10 +9,9 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 
 public class BooksPlace extends Place {
 
-    private static ArrayList<BooksSearch> booksSearches      = new ArrayList<BooksSearch>();
-    private static ArrayList<String>      booksSearchesToken = new ArrayList<String>();
+    private static HashMap<String, BooksSearch> token2search = new HashMap<String, BooksSearch>();
 
-    private final BooksSearch             booksSearch;
+    private final BooksSearch                   booksSearch;
 
     public BooksPlace() {
         booksSearch = null;
@@ -22,9 +21,9 @@ public class BooksPlace extends Place {
         if (booksSearch != null) {
 
             final BooksSearch copy = booksSearch.copy();
-            if (!booksSearches.contains(copy)) {
-                booksSearches.add(copy);
-                booksSearchesToken.add(getToken(copy));
+            final String token = getToken(copy);
+            if (!token2search.containsKey(token)) {
+                token2search.put(token, copy);
             }
         }
 
@@ -44,18 +43,13 @@ public class BooksPlace extends Place {
         public String getToken(final BooksPlace place) {
 
             final BooksSearch bs = place.getBooksSearch();
-            if (bs == null) {
-                return "";
-            }
-
             return place.getToken(bs);
         }
 
         @Override
         public BooksPlace getPlace(final String token) {
 
-            final int tokenIdx = booksSearchesToken.indexOf(token);
-            final BooksSearch bs = booksSearches.get(tokenIdx);
+            final BooksSearch bs = token2search.get(token);
             return new BooksPlace(bs.copy());
         }
     }
