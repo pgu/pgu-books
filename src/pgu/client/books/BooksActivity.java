@@ -36,6 +36,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         view.setPresenter(this);
         panel.setWidget(view.asWidget());
 
+        GWT.log("start " + place.getToken(place.getBooksSearch()));
         searchBooks(place.getBooksSearch());
     }
 
