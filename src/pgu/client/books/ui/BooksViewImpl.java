@@ -107,8 +107,9 @@ public class BooksViewImpl extends Composite implements BooksView {
 
             // endBlock: blockIdx + 4
             // compare endBlock with lastBlock -> take the lower
+            // TODO PGU make it 10 length if nbBlock > 10
             final long lastBlockIdx = nbBlock - 1;
-            final long endBlockIdx = blockIdx < 10 ? 9 : blockIdx + 4;
+            final long endBlockIdx = blockIdx < 5 ? 9 : blockIdx + 4;
             final int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
 
             if (nbBlock > 1) {
