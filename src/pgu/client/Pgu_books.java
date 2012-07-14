@@ -5,9 +5,13 @@ import pgu.client.app.AppView;
 import pgu.client.app.mvp.AppActivityMapper;
 import pgu.client.app.mvp.AppPlaceHistoryMapper;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.books.BooksPlace;
 import pgu.client.service.BooksService;
 import pgu.client.service.BooksServiceAsync;
+import pgu.client.service.LoginService;
+import pgu.client.service.LoginServiceAsync;
+import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -22,29 +26,38 @@ import com.google.web.bindery.event.shared.EventBus;
 public class Pgu_books implements EntryPoint {
 
     private final BooksServiceAsync booksService = GWT.create(BooksService.class);
+    private final LoginServiceAsync loginService = GWT.create(LoginService.class);
 
     @Override
     public void onModuleLoad() {
         final ClientFactory clientFactory = GWT.create(ClientFactory.class);
-        final PlaceController placeController = clientFactory.getPlaceController();
         final EventBus eventBus = clientFactory.getEventBus();
+        final PlaceController placeController = clientFactory.getPlaceController();
 
-        final AppView appView = clientFactory.getAppView();
-        final AppActivity appActivity = new AppActivity(placeController, appView);
-        appActivity.start(eventBus, clientFactory);
+        loginService.getLoginInfo(GWT.getHostPageBaseURL(), new AsyncCallbackApp<LoginInfo>(eventBus) {
 
-        final Place defaultPlace = new BooksPlace();
+            @Override
+            public void onSuccess(final LoginInfo loginInfo) {
 
-        final ActivityMapper activityMapper = new AppActivityMapper(clientFactory);
-        final ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);
-        activityManager.setDisplay(appView);
+                final AppView appView = clientFactory.getAppView();
+                final AppActivity appActivity = new AppActivity(placeController, appView);
+                appActivity.start(eventBus, clientFactory);
 
-        final AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
-        final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-        historyHandler.register(placeController, eventBus, defaultPlace);
+                final Place defaultPlace = new BooksPlace();
 
-        RootPanel.get().add(appView);
-        historyHandler.handleCurrentHistory();
+                final ActivityMapper activityMapper = new AppActivityMapper(clientFactory);
+                final ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);
+                activityManager.setDisplay(appView);
+
+                final AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
+                final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+                historyHandler.register(placeController, eventBus, defaultPlace);
+
+                RootPanel.get().add(appView);
+                historyHandler.handleCurrentHistory();
+            }
+
+        });
 
     }
 }

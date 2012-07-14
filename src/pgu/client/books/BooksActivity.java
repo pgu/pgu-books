@@ -51,6 +51,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
+        // TODO PGU brancher le service fetch books
         new Timer() {
 
             @Override

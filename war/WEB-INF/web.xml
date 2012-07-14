@@ -9,6 +9,10 @@
     <servlet-name>adminBooks</servlet-name>
     <servlet-class>pgu.server.service.AdminBooksServiceImpl</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>login</servlet-name>
+    <servlet-class>pgu.server.service.LoginServiceImpl</servlet-class>
+  </servlet>
   
   <servlet-mapping>
     <servlet-name>books</servlet-name>
@@ -17,6 +21,10 @@
   <servlet-mapping>
     <servlet-name>adminBooks</servlet-name>
     <url-pattern>/pgu_books/adminBooks</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>login</servlet-name>
+    <url-pattern>/pgu_books/login</url-pattern>
   </servlet-mapping>
   
   <welcome-file-list>

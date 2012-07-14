@@ -2,8 +2,10 @@ package pgu.client.app;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.ExceptionEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.Notification;
 import pgu.client.books.BooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
@@ -12,7 +14,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class AppActivity implements SearchBooksEvent.Handler {
+public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Handler {
 
     private final AppView                        view;
     private final PlaceController                placeController;
@@ -26,6 +28,7 @@ public class AppActivity implements SearchBooksEvent.Handler {
     public void start(final EventBus eventBus, final ClientFactory clientFactory) {
 
         handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(ExceptionEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView);
@@ -45,6 +48,25 @@ public class AppActivity implements SearchBooksEvent.Handler {
             handlerReg = null;
         }
         handlerRegs.clear();
+    }
+
+    @Override
+    public void onException(final ExceptionEvent event) {
+        final Throwable th = event.getThrowable();
+        final StringBuilder sb = new StringBuilder();
+        sb.append(th.getMessage());
+        sb.append("<br>");
+
+        for (final StackTraceElement ste : th.getStackTrace()) {
+            sb.append(ste);
+            sb.append("<br>");
+        }
+
+        view.getNotification().setHeading("Technical Error");
+        view.getNotification().setText(sb.toString());
+        view.getNotification().setLevel(Notification.Level.ERROR);
+        view.getNotification().show();
+
     }
 
 }
