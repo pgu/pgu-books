@@ -2,6 +2,7 @@ package pgu.client.app.mvp;
 
 import pgu.client.app.AppView;
 import pgu.client.books.BooksView;
+import pgu.client.importBooks.ImportBooksView;
 import pgu.client.menu.MenuView;
 import pgu.shared.dto.LoginInfo;
 
@@ -16,11 +17,13 @@ public interface ClientFactory {
 
     LoginInfo getLoginInfo();
 
+    void setLoginInfo(LoginInfo loginInfo);
+
     BooksView getBooksView();
 
     AppView getAppView();
 
     MenuView getMenuView();
 
-    void setLoginInfo(LoginInfo loginInfo);
+    ImportBooksView getImportBooksView();
 }

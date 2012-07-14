@@ -4,6 +4,7 @@ import pgu.client.app.AppView;
 import pgu.client.app.ui.AppViewImpl;
 import pgu.client.books.BooksView;
 import pgu.client.books.ui.BooksViewImpl;
+import pgu.client.importBooks.ImportBooksView;
 import pgu.client.menu.MenuView;
 import pgu.client.menu.ui.MenuViewImpl;
 import pgu.shared.dto.LoginInfo;
@@ -55,6 +56,11 @@ public class ClientFactoryImpl implements ClientFactory {
     @Override
     public void setLoginInfo(final LoginInfo loginInfo) {
         this.loginInfo = loginInfo;
+    }
+
+    @Override
+    public ImportBooksView getImportBooksView() {
+        return null;
     }
 
 }

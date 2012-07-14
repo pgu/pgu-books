@@ -2,6 +2,8 @@ package pgu.client.app.mvp;
 
 import pgu.client.books.BooksActivity;
 import pgu.client.books.BooksPlace;
+import pgu.client.importBooks.ImportBooksActivity;
+import pgu.client.importBooks.ImportBooksPlace;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -19,6 +21,10 @@ public class AppActivityMapper implements ActivityMapper {
     public Activity getActivity(final Place place) {
         if (place instanceof BooksPlace) {
             return new BooksActivity((BooksPlace) place, clientFactory);
+
+        } else if (place instanceof ImportBooksPlace) {
+            return new ImportBooksActivity((ImportBooksPlace) place, clientFactory);
+
         }
 
         return null;

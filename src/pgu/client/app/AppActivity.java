@@ -3,10 +3,12 @@ package pgu.client.app;
 import java.util.ArrayList;
 
 import pgu.client.app.event.ExceptionEvent;
+import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Notification;
 import pgu.client.books.BooksPlace;
+import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
 
@@ -14,7 +16,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Handler {
+public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Handler, ImportBooksEvent.Handler {
 
     private final AppView                        view;
     private final PlaceController                placeController;
@@ -67,6 +69,11 @@ public class AppActivity implements SearchBooksEvent.Handler, ExceptionEvent.Han
         view.getNotification().setLevel(Notification.Level.ERROR);
         view.getNotification().show();
 
+    }
+
+    @Override
+    public void onImportBooks(final ImportBooksEvent event) {
+        placeController.goTo(new ImportBooksPlace());
     }
 
 }

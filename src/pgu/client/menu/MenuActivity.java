@@ -1,6 +1,7 @@
 package pgu.client.menu;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
+import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.shared.dto.BooksSearch;
@@ -60,6 +61,11 @@ public class MenuActivity implements MenuPresenter //
     @Override
     public void onShowWaitingIndicator(final ShowWaitingIndicatorEvent event) {
         view.getWaitingIndicator().show();
+    }
+
+    @Override
+    public void importBooks() {
+        eventBus.fireEvent(new ImportBooksEvent());
     }
 
 }

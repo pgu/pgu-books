@@ -6,4 +6,6 @@ public interface MenuPresenter {
 
     void searchBooks(BooksSearch booksSearch);
 
+    void importBooks();
+
 }
