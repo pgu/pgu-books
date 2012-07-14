@@ -4,10 +4,8 @@
     xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
     
     <g:HTMLPanel>
+        <g:SimplePanel ui:field="header" />
         <b:AlertBlock ui:field="notification" animation="true"></b:AlertBlock>
-        <g:SimplePanel ui:field="header">
-        </g:SimplePanel>
-        <g:SimplePanel ui:field="body">
-        </g:SimplePanel>
+        <g:SimplePanel ui:field="body" />
     </g:HTMLPanel>
 </ui:UiBinder> 
