@@ -7,6 +7,7 @@ import pgu.server.access.nosql.DocUtils;
 import pgu.server.access.nosql.Search;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
+import pgu.server.domain.nosql.DocType;
 import pgu.shared.dto.Book;
 import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
@@ -50,32 +51,20 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                 .build();
 
         final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
-                // .setOffset(start) //
-                // .setLimit(limit) //
+                .setOffset(start) //
+                .setLimit(limit) // must force the limit, if not, it is set to 20
+                .setNumberFoundAccuracy(1000) //
                 .setSortOptions(mainSortOptions) //
                 .build();
 
         final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder()
-                .setOptions(mainQueryOptions).build("");
+                .setOptions(mainQueryOptions).build(BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._());
 
         final Results<ScoredDocument> results = s.idx().search(mainQuery);
+        System.out.println("nb found: " + results.getNumberFound());
 
-        // TODO PGU
         final ArrayList<Book> books = new ArrayList<Book>(limit);
-        int idx = 0;
-        final int stop = start + length;
         for (final ScoredDocument doc : results) {
-            if (idx < start) {
-                idx++;
-                continue;
-            }
-
-            if (idx >= stop) {
-                break;
-            }
-
-            idx++;
-
             final Book book = new Book() //
                     .id(docU.numLong(BookDoc.BOOK_ID, doc)) //
                     .author(docU.text(BookDoc.AUTHOR, doc)) //
@@ -91,16 +80,19 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final QueryOptions countQOptions = QueryOptions.newBuilder() //
                 .setReturningIdsOnly(true) //
                 .setLimit(1) //
-                .setNumberFoundAccuracy(10000) //
+                .setNumberFoundAccuracy(1000) //
                 .build();
 
         final com.google.appengine.api.search.Query countQuery = com.google.appengine.api.search.Query.newBuilder()
-                .setOptions(countQOptions).build("");
+                .setOptions(countQOptions).build(BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._());
         final Results<ScoredDocument> countResults = s.idx().search(countQuery);
 
         final BooksResult booksResult = new BooksResult();
         booksResult.setBooks(books);
         booksResult.setNbFound(countResults.getNumberFound());
+
+        // System.out.println("nb found " + countResults.getNumberFound());
+
         return booksResult;
     }
 
