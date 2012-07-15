@@ -9,7 +9,10 @@
             <b:TextBox ui:field="startBox" placeholder="0"/>
             <b:ControlLabel>Length</b:ControlLabel>
             <b:TextBox ui:field="lengthBox" placeholder="10"/>
-            <b:SubmitButton ui:field="importBtn" addStyleNames="btn">Submit</b:SubmitButton>
+            <b:FormActions>
+                <b:SubmitButton ui:field="importBtn" addStyleNames="btn" type="PRIMARY">Submit</b:SubmitButton>
+            </b:FormActions>
         </b:WellForm>    
+        
     </g:HTMLPanel>
 </ui:UiBinder> 
