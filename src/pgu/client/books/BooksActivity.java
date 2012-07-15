@@ -14,6 +14,7 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -60,6 +61,9 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         final BooksQueryParameters queryParameters = new BooksQueryParameters();
         final int start = booksSearch.getStart();
         final int length = booksSearch.getLength();
+
+        GWT.log("start " + start);
+        GWT.log("length " + length);
 
         booksService.fetchBooks(queryParameters, start, length, new AsyncCallbackApp<BooksResult>(eventBus) {
 

@@ -55,7 +55,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         try {
 
             final ArrayList<String> misseds = new ArrayList<String>();
-            String lastBookTitle = "";
+            Book lastBook = null;
 
             int counter = 0;
             int countImported = 0;
@@ -92,7 +92,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
                     final Book book = new Book(author, title, editor, year, comment, category);
                     saveBook(book);
-                    lastBookTitle = book.getTitle();
+                    lastBook = book;
 
                 } else {
                     misseds.add(line);
@@ -103,7 +103,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             log.info(this, "Imported books: %s/%s in %s ms", countImported, length, System.currentTimeMillis()
                     - startTime);
 
-            importResult.setLastBookTitle(lastBookTitle);
+            importResult.setLastBook(lastBook.toString());
             importResult.setMisseds(misseds);
             importResult.setDone(true);
             dao.ofy().put(importResult);

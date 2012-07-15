@@ -15,7 +15,7 @@ public class ImportResult implements IsSerializable {
     private ArrayList<String> misseds;
     private String            importDate;
     private boolean           done;
-    private String            lastBookTitle;
+    private String            lastBook;
 
     @Override
     public int hashCode() {
@@ -50,7 +50,7 @@ public class ImportResult implements IsSerializable {
     @Override
     public String toString() {
         return "ImportResult [id=" + id + ", start=" + start + ", length=" + length + ", misseds=" + misseds
-                + ", importDate=" + importDate + ", done=" + done + ", lastBookTitle=" + lastBookTitle + "]";
+                + ", importDate=" + importDate + ", done=" + done + ", lastBook=" + lastBook + "]";
     }
 
     public Long getId() {
@@ -101,12 +101,12 @@ public class ImportResult implements IsSerializable {
         return done;
     }
 
-    public String getLastBookTitle() {
-        return lastBookTitle;
+    public String getLastBook() {
+        return lastBook;
     }
 
-    public void setLastBookTitle(final String lastBookTitle) {
-        this.lastBookTitle = lastBookTitle;
+    public void setLastBook(final String lastBook) {
+        this.lastBook = lastBook;
     }
 
 }

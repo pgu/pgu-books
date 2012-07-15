@@ -44,7 +44,7 @@ public class ImportBooksActivity extends AbstractActivity implements ImportBooks
                     sb.append("All the books have been imported");
                     sb.append(" .start " + result.getStart());
                     sb.append(" .length " + result.getLength());
-                    sb.append(" .lastbook " + result.getLastBookTitle());
+                    sb.append(" .lastbook " + result.getLastBook());
 
                     eventBus.fireEvent(new NotificationEvent(Level.SUCCESS, sb.toString()));
                 } else {

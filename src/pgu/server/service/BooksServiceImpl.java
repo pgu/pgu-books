@@ -15,6 +15,7 @@ import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SortExpression;
+import com.google.appengine.api.search.SortExpression.SortDirection;
 import com.google.appengine.api.search.SortOptions;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -34,41 +35,72 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
         final int limit = length;
 
-        final SortOptions sortOptions = SortOptions
-                .newBuilder()
-                .addSortExpression(
-                        SortExpression
-                        .newBuilder()
-                        .setExpression(queryParameters.getSortField().toString().toUpperCase())
-                        .setDirection(
-                                queryParameters.isAscending() ? SortExpression.SortDirection.DESCENDING
-                                        : SortExpression.SortDirection.ASCENDING).setDefaultValue("")).build();
+        final String expression = queryParameters.getSortField().toString().toUpperCase();
 
-        final com.google.appengine.api.search.Query query = com.google.appengine.api.search.Query.newBuilder()
-                .setOptions(QueryOptions.newBuilder() //
-                        .setOffset(start) //
-                        .setLimit(limit) //
-                        .setSortOptions(sortOptions) //
-                        .build()).build("");
-        final Results<ScoredDocument> results = s.idx().search(query);
+        final SortDirection mainSortDirection = queryParameters.isAscending() ? SortExpression.SortDirection.ASCENDING
+                : SortExpression.SortDirection.DESCENDING;
 
+        final SortExpression.Builder mainSortExp = SortExpression.newBuilder() //
+                .setExpression(expression) //
+                .setDirection(mainSortDirection) //
+                .setDefaultValue("");
+
+        final SortOptions mainSortOptions = SortOptions.newBuilder() //
+                .addSortExpression(mainSortExp) //
+                .build();
+
+        final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
+                // .setOffset(start) //
+                // .setLimit(limit) //
+                .setSortOptions(mainSortOptions) //
+                .build();
+
+        final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder()
+                .setOptions(mainQueryOptions).build("");
+
+        final Results<ScoredDocument> results = s.idx().search(mainQuery);
+
+        // TODO PGU
         final ArrayList<Book> books = new ArrayList<Book>(limit);
+        int idx = 0;
+        final int stop = start + length;
         for (final ScoredDocument doc : results) {
+            if (idx < start) {
+                idx++;
+                continue;
+            }
+
+            if (idx >= stop) {
+                break;
+            }
+
+            idx++;
+
             final Book book = new Book() //
-            .id(docU.numLong(BookDoc.BOOK_ID, doc)) //
-            .author(docU.text(BookDoc.AUTHOR, doc)) //
-            .title(docU.text(BookDoc.TITLE, doc)) //
-            .editor(docU.text(BookDoc.EDITOR, doc)) //
-            .year(docU.numInt(BookDoc.YEAR, doc)) //
-            .comment(docU.text(BookDoc.COMMENT, doc)) //
-            .category(docU.text(BookDoc.CATEGORY, doc)) //
+                    .id(docU.numLong(BookDoc.BOOK_ID, doc)) //
+                    .author(docU.text(BookDoc.AUTHOR, doc)) //
+                    .title(docU.text(BookDoc.TITLE, doc)) //
+                    .editor(docU.text(BookDoc.EDITOR, doc)) //
+                    .year(docU.numInt(BookDoc.YEAR, doc)) //
+                    .comment(docU.text(BookDoc.COMMENT, doc)) //
+                    .category(docU.text(BookDoc.CATEGORY, doc)) //
             ;
             books.add(book);
         }
 
+        final QueryOptions countQOptions = QueryOptions.newBuilder() //
+                .setReturningIdsOnly(true) //
+                .setLimit(1) //
+                .setNumberFoundAccuracy(10000) //
+                .build();
+
+        final com.google.appengine.api.search.Query countQuery = com.google.appengine.api.search.Query.newBuilder()
+                .setOptions(countQOptions).build("");
+        final Results<ScoredDocument> countResults = s.idx().search(countQuery);
+
         final BooksResult booksResult = new BooksResult();
         booksResult.setBooks(books);
-        booksResult.setNbFound(results.getNumberFound());
+        booksResult.setNbFound(countResults.getNumberFound());
         return booksResult;
     }
 
