@@ -8,7 +8,7 @@ import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.service.BooksServiceAsync;
-import pgu.shared.dto.Book;
+import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
@@ -64,6 +64,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
         GWT.log("start " + start);
         GWT.log("length " + length);
+        queryParameters.setSearchText(booksSearch.getTitle());
 
         booksService.fetchBooks(queryParameters, start, length, new AsyncCallbackApp<BooksResult>(eventBus) {
 

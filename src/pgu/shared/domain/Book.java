@@ -1,4 +1,6 @@
-package pgu.shared.dto;
+package pgu.shared.domain;
+
+import javax.persistence.Id;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -56,6 +58,7 @@ public class Book implements IsSerializable {
         return this;
     }
 
+    @Id
     private Long    id;
     private String  author;
     private String  editor;

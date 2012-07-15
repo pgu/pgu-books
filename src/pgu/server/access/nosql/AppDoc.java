@@ -42,4 +42,9 @@ public class AppDoc {
     public AppDoc copyNumInt(final BookDoc bookDoc, final ScoredDocument originalDoc) {
         return num(bookDoc, docU.numInt(bookDoc, originalDoc));
     }
+
+    public AppDoc setId(final Long id) {
+        docBuilder.setId("" + id);
+        return this;
+    }
 }

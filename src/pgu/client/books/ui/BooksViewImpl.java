@@ -2,7 +2,7 @@ package pgu.client.books.ui;
 
 import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
-import pgu.shared.dto.Book;
+import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 

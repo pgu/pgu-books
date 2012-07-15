@@ -18,10 +18,9 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
-import pgu.server.domain.sql.BookId;
 import pgu.shared.AppUtils;
+import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
-import pgu.shared.dto.Book;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.Query;
@@ -122,14 +121,14 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
         if (null == book.getId()) { // creation
 
-            // generate an id
-            final BookId bookId = new BookId();
-            dao.ofy().put(bookId);
+            // generate id for the book
+            dao.ofy().put(book);
 
             // create a doc for the book
             final AppDoc doc = new AppDoc() //
+                    .setId(book.getId()) //
                     .text(BookDoc.DOC_TYPE, DocType.BOOK._()) //
-                    .num(BookDoc.BOOK_ID, bookId.getId()) //
+                    .num(BookDoc.BOOK_ID, book.getId()) //
                     .text(BookDoc.AUTHOR, book.getAuthor()) //
                     .text(BookDoc.TITLE, book.getTitle()) //
                     .text(BookDoc.EDITOR, book.getEditor()) //
@@ -148,6 +147,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
             // creates a new one with the same book id
             final AppDoc newDoc = new AppDoc() //
+                    .setId(book.getId()) //
                     .text(BookDoc.DOC_TYPE, DocType.BOOK._()) //
                     .num(BookDoc.BOOK_ID, book.getId()) //
                     .text(BookDoc.AUTHOR, book.getAuthor()) //
@@ -158,6 +158,9 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     .text(BookDoc.CATEGORY, book.getCategory()) //
             ;
             s.idx().add(newDoc.build());
+
+            // update book
+            dao.ofy().put(book);
         }
     }
 
@@ -184,9 +187,9 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         // return; // The app is running on App Engine...
         // }
 
-        final QueryResultIterator<BookId> bookIdItr = dao.ofy().query(BookId.class).iterator();
-        while (bookIdItr.hasNext()) {
-            dao.ofy().delete(bookIdItr.next());
+        final QueryResultIterator<Book> bookItr = dao.ofy().query(Book.class).iterator();
+        while (bookItr.hasNext()) {
+            dao.ofy().delete(bookItr.next());
         }
 
         final Iterator<ScoredDocument> bookDocItr = s.idx().search(Query.newBuilder().build("" + //
@@ -229,8 +232,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             bookIds.add(book.getId());
         }
 
-        // clean bookIds
-        final Map<Long, BookId> id2bookId = dao.ofy().get(BookId.class, bookIds);
+        // clean books
+        final Map<Long, Book> id2bookId = dao.ofy().get(Book.class, bookIds);
         dao.ofy().delete(id2bookId.values());
     }
 

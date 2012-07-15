@@ -2,8 +2,8 @@ package pgu.client.service;
 
 import java.util.ArrayList;
 
+import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
-import pgu.shared.dto.Book;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
