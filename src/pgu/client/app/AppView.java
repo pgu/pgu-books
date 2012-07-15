@@ -13,5 +13,5 @@ public interface AppView extends IsWidget //
 
     AcceptsOneWidget getBody();
 
-    Notification getNotification();
+    Notification newNotification();
 }

@@ -5,7 +5,7 @@
     
     <g:HTMLPanel>
         <g:SimplePanel ui:field="header" />
-        <b:AlertBlock ui:field="notification" animation="true"></b:AlertBlock>
+        <g:HTMLPanel ui:field="notification" />
         <g:SimplePanel ui:field="body" />
     </g:HTMLPanel>
 </ui:UiBinder> 

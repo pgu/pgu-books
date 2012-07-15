@@ -13,6 +13,15 @@
                 <b:SubmitButton ui:field="importBtn" addStyleNames="btn" type="PRIMARY">Submit</b:SubmitButton>
             </b:FormActions>
         </b:WellForm>    
+        <b:WellForm>
+            <b:TextBox ui:field="msg" placeholder="A text to show..."/>
+            <b:FormActions>
+                <b:Button ui:field="infoBtn" type="INFO">Info</b:Button>
+                <b:Button ui:field="successBtn" type="SUCCESS">Success</b:Button>
+                <b:Button ui:field="warningBtn" type="WARNING">Warning</b:Button>
+                <b:Button ui:field="errorBtn" type="DANGER">Error</b:Button>
+            </b:FormActions>
+        </b:WellForm>    
         
     </g:HTMLPanel>
 </ui:UiBinder> 

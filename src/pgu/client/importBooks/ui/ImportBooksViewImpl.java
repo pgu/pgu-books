@@ -1,8 +1,10 @@
 package pgu.client.importBooks.ui;
 
+import pgu.client.app.utils.Level;
 import pgu.client.importBooks.ImportBooksPresenter;
 import pgu.client.importBooks.ImportBooksView;
 
+import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.SubmitButton;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
@@ -24,6 +26,10 @@ public class ImportBooksViewImpl extends Composite implements ImportBooksView {
     TextBox                      startBox, lengthBox;
     @UiField
     SubmitButton                 importBtn;
+    @UiField
+    TextBox                      msg;
+    @UiField
+    Button                       infoBtn, successBtn, warningBtn, errorBtn;
 
     private ImportBooksPresenter presenter;
 
@@ -42,6 +48,26 @@ public class ImportBooksViewImpl extends Composite implements ImportBooksView {
         final int start = Integer.valueOf(startBox.getText());
 
         presenter.importBooks(start, length);
+    }
+
+    @UiHandler("infoBtn")
+    public void clickInfo(final ClickEvent e) {
+        presenter.display(Level.INFO, msg.getText());
+    }
+
+    @UiHandler("successBtn")
+    public void clickSuccess(final ClickEvent e) {
+        presenter.display(Level.SUCCESS, msg.getText());
+    }
+
+    @UiHandler("warningBtn")
+    public void clickWarning(final ClickEvent e) {
+        presenter.display(Level.WARNING, msg.getText());
+    }
+
+    @UiHandler("errorBtn")
+    public void clickError(final ClickEvent e) {
+        presenter.display(Level.ERROR, msg.getText());
     }
 
 }

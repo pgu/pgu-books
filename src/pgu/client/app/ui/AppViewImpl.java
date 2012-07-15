@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,13 +25,12 @@ public class AppViewImpl extends Composite implements AppView {
     }
 
     @UiField
-    AlertBlock notification;
-    @UiField
     SimplePanel header, body;
+    @UiField
+    HTMLPanel   notification;
 
     public AppViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
-        notification.close();
     }
 
     @Override
@@ -48,25 +48,31 @@ public class AppViewImpl extends Composite implements AppView {
         return body;
     }
 
-    @Override
-    public Notification getNotification() {
-        return new Notification() {
+    private Notification notif;
 
-            private boolean hasCloseAction = false;
+    @Override
+    public Notification newNotification() {
+        notif = new Notification() {
+
+            private boolean    hasCloseAction = false;
+            private String     heading;
+            private String     text;
+            private AlertBlock alert;
 
             @Override
             public String getText() {
-                return notification.getText();
+                return text;
             }
 
             @Override
             public void setText(final String text) {
-                notification.setText(text);
+                this.text = text;
             }
 
             @Override
             public void show() {
-                notification.setVisible(true);
+                notification.add(alert);
+
                 if (!hasCloseAction) {
                     addTimerForClosingNotification();
                 }
@@ -74,7 +80,7 @@ public class AppViewImpl extends Composite implements AppView {
 
             @Override
             public void hide() {
-                notification.close();
+                alert.close();
             }
 
             @Override
@@ -84,50 +90,57 @@ public class AppViewImpl extends Composite implements AppView {
 
             @Override
             public void setLevel(final Level level) {
+                GWT.log("level- " + level);
+                GWT.log("text- " + text);
+                GWT.log("heading- " + heading);
                 if (Level.ERROR == level) {
-                    notification.setType(AlertType.ERROR);
-                    notification.setClose(true);
+                    alert = new AlertBlock(AlertType.ERROR);
+                    alert.setClose(true);
                     hasCloseAction = true;
 
                 } else if (Level.INFO == level) {
-                    notification.setType(AlertType.INFO);
-                    notification.setClose(false);
+                    alert = new AlertBlock(AlertType.INFO);
+                    alert.setClose(false);
                     hasCloseAction = false;
 
                 } else if (Level.SUCCESS == level) {
-                    notification.setType(AlertType.SUCCESS);
-                    notification.setClose(false);
+                    alert = new AlertBlock(AlertType.SUCCESS);
+                    alert.setClose(false);
                     hasCloseAction = false;
 
                 } else if (Level.WARNING == level) {
-                    notification.setType(AlertType.WARNING);
-                    notification.setClose(false);
+                    alert = new AlertBlock(AlertType.WARNING);
+                    alert.setClose(false);
                     hasCloseAction = false;
 
                 } else {
-                    notification.setType(AlertType.DEFAULT);
-                    notification.setClose(false);
+                    alert = new AlertBlock(AlertType.DEFAULT);
+                    alert.setClose(false);
                     hasCloseAction = false;
 
                 }
+                alert.setAnimation(true);
+                alert.setText(text);
+                alert.setHeading(heading);
             }
 
             @Override
             public void setHeading(final String heading) {
-                notification.setHeading(heading);
+                this.heading = heading;
             }
 
+            private void addTimerForClosingNotification() {
+                new Timer() {
+
+                    @Override
+                    public void run() {
+                        alert.close();
+                    }
+
+                }.schedule(3000);
+            }
         };
+        return notif;
     }
 
-    private void addTimerForClosingNotification() {
-        new Timer() {
-
-            @Override
-            public void run() {
-                notification.close();
-            }
-
-        }.schedule(700);
-    }
 }

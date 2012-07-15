@@ -8,11 +8,13 @@ import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
+import pgu.client.app.utils.Notification;
 import pgu.client.books.BooksPlace;
 import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -71,10 +73,11 @@ public class AppActivity implements SearchBooksEvent.Handler //
             sb.append("<br>");
         }
 
-        view.getNotification().setHeading("Technical Error");
-        view.getNotification().setText(sb.toString());
-        view.getNotification().setLevel(Level.ERROR);
-        view.getNotification().show();
+        final Notification notif = view.newNotification();
+        notif.setHeading("Technical Error");
+        notif.setText(sb.toString());
+        notif.setLevel(Level.ERROR);
+        notif.show();
 
     }
 
@@ -87,32 +90,31 @@ public class AppActivity implements SearchBooksEvent.Handler //
     public void onNotification(final NotificationEvent event) {
 
         final Level level = event.getLevel();
+        final String message = event.getMessage();
+        GWT.log("level " + level);
+        GWT.log("message " + message);
+
+        final Notification notification = view.newNotification();
+        notification.setText(message);
 
         if (Level.INFO == level) {
-            view.getNotification().setHeading("Info");
-            view.getNotification().setText(event.getMessage());
-            view.getNotification().setLevel(Level.INFO);
-            view.getNotification().show();
+            notification.setHeading("Info");
+            notification.setLevel(Level.INFO);
 
         } else if (Level.SUCCESS == level) {
-            view.getNotification().setHeading("Success");
-            view.getNotification().setText(event.getMessage());
-            view.getNotification().setLevel(Level.SUCCESS);
-            view.getNotification().show();
+            notification.setHeading("Success");
+            notification.setLevel(Level.SUCCESS);
 
         } else if (Level.WARNING == level) {
-            view.getNotification().setHeading("Warning");
-            view.getNotification().setText(event.getMessage());
-            view.getNotification().setLevel(Level.WARNING);
-            view.getNotification().show();
+            notification.setHeading("Warning");
+            notification.setLevel(Level.WARNING);
 
         } else if (Level.ERROR == level) {
-            view.getNotification().setHeading("Ups!");
-            view.getNotification().setText(event.getMessage());
-            view.getNotification().setLevel(Level.ERROR);
-            view.getNotification().show();
-
+            notification.setHeading("Ups!");
+            notification.setLevel(Level.ERROR);
         }
+
+        notification.show();
     }
 
 }

@@ -51,4 +51,9 @@ public class ImportBooksActivity extends AbstractActivity implements ImportBooks
         });
     }
 
+    @Override
+    public void display(final Level level, final String text) {
+        eventBus.fireEvent(new NotificationEvent(level, text));
+    }
+
 }
