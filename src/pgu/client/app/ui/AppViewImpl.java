@@ -48,11 +48,9 @@ public class AppViewImpl extends Composite implements AppView {
         return body;
     }
 
-    private Notification notif;
-
     @Override
     public Notification newNotification() {
-        notif = new Notification() {
+        return new Notification() {
 
             private boolean    hasCloseAction = false;
             private String     heading;
@@ -90,9 +88,6 @@ public class AppViewImpl extends Composite implements AppView {
 
             @Override
             public void setLevel(final Level level) {
-                GWT.log("level- " + level);
-                GWT.log("text- " + text);
-                GWT.log("heading- " + heading);
                 if (Level.ERROR == level) {
                     alert = new AlertBlock(AlertType.ERROR);
                     alert.setClose(true);
@@ -140,7 +135,6 @@ public class AppViewImpl extends Composite implements AppView {
                 }.schedule(3000);
             }
         };
-        return notif;
     }
 
 }

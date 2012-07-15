@@ -14,7 +14,6 @@ import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -91,8 +90,6 @@ public class AppActivity implements SearchBooksEvent.Handler //
 
         final Level level = event.getLevel();
         final String message = event.getMessage();
-        GWT.log("level " + level);
-        GWT.log("message " + message);
 
         final Notification notification = view.newNotification();
         notification.setText(message);
