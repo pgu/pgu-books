@@ -132,7 +132,7 @@ public class AppViewImpl extends Composite implements AppView {
                         alert.close();
                     }
 
-                }.schedule(3000);
+                }.schedule(5000);
             }
         };
     }
