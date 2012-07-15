@@ -50,7 +50,7 @@ public class BooksPlace extends Place {
         public BooksPlace getPlace(final String token) {
 
             final BooksSearch bs = token2search.get(token);
-            return new BooksPlace(bs.copy());
+            return new BooksPlace(bs == null ? null : bs.copy());
         }
     }
 
