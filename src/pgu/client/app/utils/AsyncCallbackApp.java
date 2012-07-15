@@ -1,5 +1,6 @@
 package pgu.client.app.utils;
 
+import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -15,6 +16,7 @@ public abstract class AsyncCallbackApp<T> implements AsyncCallback<T> {
 
     @Override
     public void onFailure(final Throwable caught) {
+        eventBus.fireEvent(new HideWaitingIndicatorEvent());
         eventBus.fireEvent(new TechnicalErrorEvent(caught));
     }
 

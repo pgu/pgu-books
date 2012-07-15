@@ -40,7 +40,13 @@ public class ImportBooksActivity extends AbstractActivity implements ImportBooks
             public void onSuccess(final ImportResult result) {
                 final boolean isSuccess = result.getMisseds().isEmpty();
                 if (isSuccess) {
-                    eventBus.fireEvent(new NotificationEvent(Level.SUCCESS, "All the books have been imported"));
+                    final StringBuilder sb = new StringBuilder();
+                    sb.append("All the books have been imported");
+                    sb.append(" .start " + result.getStart());
+                    sb.append(" .length " + result.getLength());
+                    sb.append(" .lastbook " + result.getLastBookTitle());
+
+                    eventBus.fireEvent(new NotificationEvent(Level.SUCCESS, sb.toString()));
                 } else {
                     eventBus.fireEvent(new NotificationEvent(Level.WARNING, "Not all the books have been imported"));
                 }
