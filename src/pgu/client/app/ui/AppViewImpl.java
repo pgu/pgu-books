@@ -1,6 +1,7 @@
 package pgu.client.app.ui;
 
 import pgu.client.app.AppView;
+import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
 
 import com.github.gwtbootstrap.client.ui.AlertBlock;

@@ -1,6 +1,6 @@
 package pgu.client.app.utils;
 
-import pgu.client.app.event.ExceptionEvent;
+import pgu.client.app.event.TechnicalErrorEvent;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -15,7 +15,7 @@ public abstract class AsyncCallbackApp<T> implements AsyncCallback<T> {
 
     @Override
     public void onFailure(final Throwable caught) {
-        eventBus.fireEvent(new ExceptionEvent(caught));
+        eventBus.fireEvent(new TechnicalErrorEvent(caught));
     }
 
 }

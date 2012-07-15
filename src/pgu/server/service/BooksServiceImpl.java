@@ -7,7 +7,7 @@ import pgu.server.access.nosql.DocUtils;
 import pgu.server.access.nosql.Search;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
-import pgu.shared.domain.Book;
+import pgu.shared.dto.Book;
 import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
 

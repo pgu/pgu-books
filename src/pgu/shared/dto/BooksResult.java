@@ -2,7 +2,6 @@ package pgu.shared.dto;
 
 import java.util.ArrayList;
 
-import pgu.shared.domain.Book;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

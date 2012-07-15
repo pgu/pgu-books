@@ -1,11 +1,13 @@
 package pgu.client.importBooks;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
-import pgu.client.app.event.InformationEvent;
+import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.app.utils.Level;
 import pgu.client.service.AdminBooksServiceAsync;
+import pgu.shared.domain.ImportResult;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -32,12 +34,18 @@ public class ImportBooksActivity extends AbstractActivity implements ImportBooks
     @Override
     public void importBooks(final int start, final int length) {
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
-        adminBooksService.importBooks(start, length, new AsyncCallbackApp<String>(eventBus) {
+        adminBooksService.importBooks(start, length, new AsyncCallbackApp<ImportResult>(eventBus) {
 
             @Override
-            public void onSuccess(final String result) {
+            public void onSuccess(final ImportResult result) {
+                final boolean isSuccess = result.getMisseds().isEmpty();
+                if (isSuccess) {
+                    eventBus.fireEvent(new NotificationEvent(Level.SUCCESS, "All the books have been imported"));
+                } else {
+                    eventBus.fireEvent(new NotificationEvent(Level.WARNING, "Not all the books have been imported"));
+                }
+
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
-                eventBus.fireEvent(new InformationEvent(result));
             }
 
         });

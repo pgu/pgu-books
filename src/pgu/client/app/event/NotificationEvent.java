@@ -1,26 +1,30 @@
 package pgu.client.app.event;
 
+import pgu.client.app.utils.Level;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class InformationEvent extends GwtEvent<InformationEvent.Handler> {
+public class NotificationEvent extends GwtEvent<NotificationEvent.Handler> {
 
-    public interface HasInformationHandlers extends HasHandlers {
-        HandlerRegistration addInformationHandler(InformationEvent.Handler handler);
+    public interface HasNotificationHandlers extends HasHandlers {
+        HandlerRegistration addNotificationHandler(NotificationEvent.Handler handler);
     }
 
     public interface Handler extends EventHandler {
-        void onInformation(InformationEvent event);
+        void onNotification(NotificationEvent event);
     }
 
     public static final Type<Handler> TYPE = new Type<Handler>();
 
     private final String              message;
+    private final Level               level;
 
-    public InformationEvent(final String message) {
+    public NotificationEvent(final Level level, final String message) {
         this.message = message;
+        this.level = level;
     }
 
     @Override
@@ -30,11 +34,15 @@ public class InformationEvent extends GwtEvent<InformationEvent.Handler> {
 
     @Override
     protected void dispatch(final Handler handler) {
-        handler.onInformation(this);
+        handler.onNotification(this);
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public Level getLevel() {
+        return level;
     }
 
 }

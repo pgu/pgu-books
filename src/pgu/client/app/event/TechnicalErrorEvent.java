@@ -5,21 +5,21 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class ExceptionEvent extends GwtEvent<ExceptionEvent.Handler> {
+public class TechnicalErrorEvent extends GwtEvent<TechnicalErrorEvent.Handler> {
 
-    public interface HasExceptionHandlers extends HasHandlers {
-        HandlerRegistration addExceptionHandler(ExceptionEvent.Handler handler);
+    public interface HasTechnicalErrorHandlers extends HasHandlers {
+        HandlerRegistration addTechnicalErrorHandler(TechnicalErrorEvent.Handler handler);
     }
 
     public interface Handler extends EventHandler {
-        void onException(ExceptionEvent event);
+        void onTechnicalError(TechnicalErrorEvent event);
     }
 
     public static final Type<Handler> TYPE = new Type<Handler>();
 
     private final Throwable           throwable;
 
-    public ExceptionEvent(final Throwable caught) {
+    public TechnicalErrorEvent(final Throwable caught) {
         throwable = caught;
     }
 
@@ -30,7 +30,7 @@ public class ExceptionEvent extends GwtEvent<ExceptionEvent.Handler> {
 
     @Override
     protected void dispatch(final Handler handler) {
-        handler.onException(this);
+        handler.onTechnicalError(this);
     }
 
     public Throwable getThrowable() {

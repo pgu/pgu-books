@@ -20,7 +20,8 @@ import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
 import pgu.server.domain.sql.BookId;
 import pgu.shared.AppUtils;
-import pgu.shared.domain.Book;
+import pgu.shared.domain.ImportResult;
+import pgu.shared.dto.Book;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.Query;
@@ -37,7 +38,13 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     private final AppUtils u   = new AppUtils();
 
     @Override
-    public String importBooks(final int start, final int length) {
+    public ImportResult importBooks(final int start, final int length) {
+
+        final ImportResult importResult = new ImportResult();
+        importResult.setImportDate(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        importResult.setLength(length);
+        importResult.setStart(start);
+        dao.ofy().put(importResult);
 
         final long startTime = System.currentTimeMillis();
         final int stop = start + length;
@@ -47,7 +54,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         try {
 
-            boolean hasWarning = false;
+            final ArrayList<String> misseds = new ArrayList<String>();
 
             int counter = 0;
             int countImported = 0;
@@ -85,7 +92,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     saveBook(new Book(author, title, editor, year, comment, category));
 
                 } else {
-                    hasWarning = true;
+                    misseds.add(line);
                     log.warning(this, "The book %s has not been imported: %s", counter, line);
                 }
             }
@@ -93,12 +100,15 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             log.info(this, "Imported books: %s/%s in %s ms", countImported, length, System.currentTimeMillis()
                     - startTime);
 
-            return hasWarning ? "Warning: not all the books have been imported"
-                    : "Success: All the books have been imported";
+            importResult.setMisseds(misseds);
+            importResult.setDone(true);
+            dao.ofy().put(importResult);
+
+            return importResult;
 
         } catch (final IOException e) {
             log.error(this, e);
-            return e.getMessage();
+            throw new RuntimeException(e);
         }
     }
 

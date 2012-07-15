@@ -2,12 +2,12 @@ package pgu.client.app;
 
 import java.util.ArrayList;
 
-import pgu.client.app.event.ExceptionEvent;
 import pgu.client.app.event.ImportBooksEvent;
-import pgu.client.app.event.InformationEvent;
+import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
+import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.mvp.ClientFactory;
-import pgu.client.app.utils.Notification;
+import pgu.client.app.utils.Level;
 import pgu.client.books.BooksPlace;
 import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
@@ -18,9 +18,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class AppActivity implements SearchBooksEvent.Handler //
-        , ExceptionEvent.Handler //
+        , TechnicalErrorEvent.Handler //
         , ImportBooksEvent.Handler //
-        , InformationEvent.Handler //
+        , NotificationEvent.Handler //
 {
 
     private final AppView                        view;
@@ -35,9 +35,9 @@ public class AppActivity implements SearchBooksEvent.Handler //
     public void start(final EventBus eventBus, final ClientFactory clientFactory) {
 
         handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
-        handlerRegs.add(eventBus.addHandler(ExceptionEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
-        handlerRegs.add(eventBus.addHandler(InformationEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory.getLoginInfo());
@@ -60,7 +60,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
     }
 
     @Override
-    public void onException(final ExceptionEvent event) {
+    public void onTechnicalError(final TechnicalErrorEvent event) {
         final Throwable th = event.getThrowable();
         final StringBuilder sb = new StringBuilder();
         sb.append(th.getMessage());
@@ -73,7 +73,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
 
         view.getNotification().setHeading("Technical Error");
         view.getNotification().setText(sb.toString());
-        view.getNotification().setLevel(Notification.Level.ERROR);
+        view.getNotification().setLevel(Level.ERROR);
         view.getNotification().show();
 
     }
@@ -84,11 +84,35 @@ public class AppActivity implements SearchBooksEvent.Handler //
     }
 
     @Override
-    public void onInformation(final InformationEvent event) {
-        view.getNotification().setHeading("Info");
-        view.getNotification().setText(event.getMessage());
-        view.getNotification().setLevel(Notification.Level.INFO);
-        view.getNotification().show();
+    public void onNotification(final NotificationEvent event) {
+
+        final Level level = event.getLevel();
+
+        if (Level.INFO == level) {
+            view.getNotification().setHeading("Info");
+            view.getNotification().setText(event.getMessage());
+            view.getNotification().setLevel(Level.INFO);
+            view.getNotification().show();
+
+        } else if (Level.SUCCESS == level) {
+            view.getNotification().setHeading("Success");
+            view.getNotification().setText(event.getMessage());
+            view.getNotification().setLevel(Level.SUCCESS);
+            view.getNotification().show();
+
+        } else if (Level.WARNING == level) {
+            view.getNotification().setHeading("Warning");
+            view.getNotification().setText(event.getMessage());
+            view.getNotification().setLevel(Level.WARNING);
+            view.getNotification().show();
+
+        } else if (Level.ERROR == level) {
+            view.getNotification().setHeading("Ups!");
+            view.getNotification().setText(event.getMessage());
+            view.getNotification().setLevel(Level.ERROR);
+            view.getNotification().show();
+
+        }
     }
 
 }
