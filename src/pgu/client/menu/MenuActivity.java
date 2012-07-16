@@ -37,6 +37,7 @@ public class MenuActivity implements MenuPresenter //
             view.getLogoutWidget().show();
 
             view.getImportWidget().show();
+            view.getSearchWidget().show();
 
         } else {
             view.getLoginWidget().setHref(loginInfo.getLoginUrl());
@@ -44,6 +45,7 @@ public class MenuActivity implements MenuPresenter //
 
             view.getLogoutWidget().hide();
             view.getImportWidget().hide();
+            view.getSearchWidget().hide();
         }
 
     }

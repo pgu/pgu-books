@@ -27,18 +27,19 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     ProgressBar           progressBar;
     @UiField
-    Button                searchBtn;
+    Button                searchBtn, searchOnFieldsBtn;
     @UiField
     NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink               adminBtn, logoutBtn, importBtn;
+    NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn;
 
     private MenuPresenter presenter;
 
     public MenuViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         logoutBtn.setVisible(false);
-        importBtn.setVisible(false);
+        goToImportBtn.setVisible(false);
+        goToSearchBtn.setVisible(false);
         progressBar.setVisible(false);
     }
 
@@ -47,22 +48,29 @@ public class MenuViewImpl extends Composite implements MenuView {
         this.presenter = presenter;
     }
 
-    @UiHandler("importBtn")
+    @UiHandler("goToImportBtn")
     public void clickImport(final ClickEvent e) {
         presenter.importBooks();
+    }
+
+    @UiHandler("searchOnFieldsBtn")
+    public void clickSearchOnFields(final ClickEvent e) {
+        final BooksSearch booksSearch = new BooksSearch();
+        booksSearch.setAuthor(sAuthor.getTextBox().getText());
+        booksSearch.setCategory(sCategory.getTextBox().getText());
+        booksSearch.setComment(sComment.getTextBox().getText());
+        booksSearch.setEditor(sEditor.getTextBox().getText());
+        booksSearch.setTitle(sTitle.getTextBox().getText());
+        booksSearch.setYear(sYear.getTextBox().getText());
+
+        presenter.searchBooks(booksSearch);
     }
 
     @UiHandler("searchBtn")
     public void clickSearch(final ClickEvent e) {
 
         final BooksSearch booksSearch = new BooksSearch();
-        booksSearch.setAuthor(sAuthor.getTextBox().getText());
-        booksSearch.setCategory(sCategory.getTextBox().getText());
-        booksSearch.setComment(sComment.getTextBox().getText());
-        booksSearch.setEditor(sEditor.getTextBox().getText());
         booksSearch.setSearchText(sText.getTextBox().getText());
-        booksSearch.setTitle(sTitle.getTextBox().getText());
-        booksSearch.setYear(sYear.getTextBox().getText());
 
         presenter.searchBooks(booksSearch);
     }
@@ -181,12 +189,33 @@ public class MenuViewImpl extends Composite implements MenuView {
 
             @Override
             public void show() {
-                importBtn.setVisible(true);
+                goToImportBtn.setVisible(true);
             }
 
             @Override
             public void hide() {
-                importBtn.setVisible(false);
+                goToImportBtn.setVisible(false);
+            }
+        };
+    }
+
+    @Override
+    public HasVisibility getSearchWidget() {
+        return new HasVisibility() {
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                goToSearchBtn.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                goToSearchBtn.setVisible(false);
             }
         };
     }

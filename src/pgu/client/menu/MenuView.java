@@ -19,4 +19,6 @@ public interface MenuView extends IsWidget {
 
     HasVisibility getImportWidget();
 
+    HasVisibility getSearchWidget();
+
 }
