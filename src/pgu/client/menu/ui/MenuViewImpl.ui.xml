@@ -13,7 +13,7 @@
             <b:NavSearch ui:field="sText" size="5" placeholder="Cualquier texto" alignment="LEFT"/>        
             <b:Button ui:field="searchBtn" icon="SEARCH">Buscar</b:Button>
             <b:Nav alignment="RIGHT">
-                <b:NavLink icon="SEARCH" ui:field="goToSearchBtn">Search</b:NavLink>
+                <b:NavLink icon="BOOK" ui:field="goToSearchBtn">Biblioteca</b:NavLink>
                 <b:NavLink icon="WRENCH" ui:field="goToSetupBtn">Configuración</b:NavLink>
                 <b:NavLink icon="UPLOAD" ui:field="goToImportBtn">Import</b:NavLink>
                 <b:NavLink icon="SHARE" ui:field="logoutBtn">Log out</b:NavLink>
