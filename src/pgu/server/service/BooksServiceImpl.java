@@ -77,13 +77,13 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                 sb.append("\"" + searchText + "\"");
 
             } else {
-                appendField(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);
-                appendField(BookDoc.AUTHOR, author, sb);
-                appendField(BookDoc.CATEGORY, category, sb);
-                appendField(BookDoc.COMMENT, comment, sb);
-                appendField(BookDoc.EDITOR, editor, sb);
-                appendField(BookDoc.TITLE, title, sb);
-                appendField(BookDoc.YEAR, year, sb);
+                appendFieldText(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);
+                appendFieldText(BookDoc.AUTHOR, author, sb);
+                appendFieldText(BookDoc.CATEGORY, category, sb);
+                appendFieldText(BookDoc.COMMENT, comment, sb);
+                appendFieldText(BookDoc.EDITOR, editor, sb);
+                appendFieldText(BookDoc.TITLE, title, sb);
+                appendFieldInt(BookDoc.YEAR, year, sb);
             }
 
             final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
@@ -146,9 +146,9 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     }
 
     /**
-     * add handling of OR between values
+     * TODO add handling of OR between values
      */
-    private void appendField(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
+    private void appendFieldText(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
         if (!u.isVoid(fieldValue)) {
             if (sb.length() > 0) {
                 sb.append(" ");
@@ -156,6 +156,17 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             sb.append(bookDoc.toString().toUpperCase());
             sb.append(":");
             sb.append("\"" + fieldValue + "\"");
+        }
+    }
+
+    private void appendFieldInt(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
+        if (!u.isVoid(fieldValue)) {
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+            sb.append(bookDoc.toString().toUpperCase());
+            sb.append(" = ");
+            sb.append(fieldValue);
         }
     }
 
