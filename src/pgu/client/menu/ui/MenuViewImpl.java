@@ -1,5 +1,7 @@
 package pgu.client.menu.ui;
 
+import java.util.ArrayList;
+
 import pgu.client.menu.MenuPresenter;
 import pgu.client.menu.MenuView;
 import pgu.shared.dto.BooksSearch;
@@ -8,9 +10,13 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
+import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -41,6 +47,8 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToImportBtn.setVisible(false);
         goToSearchBtn.setVisible(false);
         progressBar.setVisible(false);
+        onFieldsKeyPress();
+        onSearchTextKeyPress();
     }
 
     @Override
@@ -66,6 +74,10 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("searchOnFieldsBtn")
     public void clickSearchOnFields(final ClickEvent e) {
+        searchOnFields();
+    }
+
+    private void searchOnFields() {
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setAuthor(sAuthor.getTextBox().getText());
         booksSearch.setCategory(sCategory.getTextBox().getText());
@@ -77,9 +89,45 @@ public class MenuViewImpl extends Composite implements MenuView {
         presenter.searchBooks(booksSearch);
     }
 
+    private void onFieldsKeyPress() {
+        final ArrayList<TextBox> boxes = new ArrayList<TextBox>();
+        boxes.add(sTitle.getTextBox());
+        boxes.add(sAuthor.getTextBox());
+        boxes.add(sEditor.getTextBox());
+        boxes.add(sCategory.getTextBox());
+        boxes.add(sYear.getTextBox());
+        boxes.add(sComment.getTextBox());
+        for (final TextBox box : boxes) {
+            box.addKeyPressHandler(new KeyPressHandler() {
+
+                @Override
+                public void onKeyPress(final KeyPressEvent event) {
+                    if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+                        searchOnFields();
+                    }
+                }
+            });
+        }
+    }
+
     @UiHandler("searchBtn")
     public void clickSearch(final ClickEvent e) {
+        searchWithText();
+    }
 
+    private void onSearchTextKeyPress() {
+        sText.getTextBox().addKeyPressHandler(new KeyPressHandler() {
+
+            @Override
+            public void onKeyPress(final KeyPressEvent event) {
+                if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+                    searchWithText();
+                }
+            }
+        });
+    }
+
+    private void searchWithText() {
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setSearchText(sText.getTextBox().getText());
 
