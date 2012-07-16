@@ -21,13 +21,15 @@ public class BooksSearch implements IsSerializable {
 
     public BooksSearch copy() {
         final BooksSearch copy = new BooksSearch();
+        copy.setAscending(isAscending);
         copy.setAuthor(author);
         copy.setCategory(category);
         copy.setComment(comment);
         copy.setEditor(editor);
         copy.setLength(length);
-        copy.setStart(start);
         copy.setSearchText(searchText);
+        copy.setSortField(sortField);
+        copy.setStart(start);
         copy.setTitle(title);
         copy.setYear(year);
         return copy;
