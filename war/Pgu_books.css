@@ -1,14 +1,23 @@
 .my-show-grid:hover {
     background: #DDD;
 }
-.row-odd {
-    background-color: #EEE;
+.row-header {
+    font-weight: bold;
 }
-.row-even {
+.row-odd {
     background-color: white;
 }
-
+.row-even {
+    background-color: #EEE;
+}
 .my-show-grid {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    min-height: 30px;
+    line-height: 30px;
+}
+.my-show-grid-header {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;

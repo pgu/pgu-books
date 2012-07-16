@@ -38,6 +38,34 @@ public class BooksViewImpl extends Composite implements BooksView {
         pager.setVisible(false);
     }
 
+    private void setHeaders() {
+        final Column titleCol = new Column(2);
+        final Column authorCol = new Column(2);
+        final Column editorCol = new Column(2);
+        final Column categoryCol = new Column(2);
+        final Column yearCol = new Column(2);
+        final Column commentCol = new Column(2);
+
+        titleCol.getElement().setInnerText("Título");
+        authorCol.getElement().setInnerText("Autor");
+        editorCol.getElement().setInnerText("Editor");
+        categoryCol.getElement().setInnerText("Categoría");
+        yearCol.getElement().setInnerText("Año");
+        commentCol.getElement().setInnerText("Comentario");
+
+        final FluidRow row = new FluidRow();
+        row.addStyleName("my-show-grid-header");
+        row.addStyleName("row-header");
+        row.add(titleCol);
+        row.add(authorCol);
+        row.add(editorCol);
+        row.add(categoryCol);
+        row.add(yearCol);
+        row.add(commentCol);
+
+        readonlyGrid.add(row);
+    }
+
     @Override
     public void setPresenter(final BooksPresenter presenter) {
         this.presenter = presenter;
@@ -46,6 +74,8 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void setBooks(final BooksResult booksResult) {
         readonlyGrid.clear();
+        setHeaders();
+
         int count = 0;
         for (final Book book : booksResult.getBooks()) {
 
