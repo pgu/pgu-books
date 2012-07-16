@@ -102,6 +102,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             log.info(this, "Imported books: %s/%s in %s ms", countImported, length, System.currentTimeMillis()
                     - startTime);
 
+            importResult.setLastLineNb(counter);
             importResult.setLastBook(lastBook.toString());
             importResult.setMisseds(misseds);
             importResult.setDone(true);

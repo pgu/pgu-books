@@ -46,7 +46,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void setBooks(final BooksResult booksResult) {
         readonlyGrid.clear();
-
+        int count = 0;
         for (final Book book : booksResult.getBooks()) {
 
             final Column titleCol = new Column(2);
@@ -64,7 +64,8 @@ public class BooksViewImpl extends Composite implements BooksView {
             commentCol.getElement().setInnerText(book.getComment());
 
             final FluidRow row = new FluidRow();
-            // row.setStyleName("show-grid");
+            row.addStyleName("my-show-grid");
+            row.addStyleName((count & 1) == 1 ? "row-odd" : "row-even");
             row.add(titleCol);
             row.add(authorCol);
             row.add(editorCol);
@@ -73,6 +74,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             row.add(commentCol);
 
             readonlyGrid.add(row);
+            count++;
         }
         // Anterior 1..10 Posterior
         final int start = booksResult.getBooksSearch().getStart();

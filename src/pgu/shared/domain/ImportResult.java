@@ -16,6 +16,7 @@ public class ImportResult implements IsSerializable {
     private String            importDate;
     private boolean           done;
     private String            lastBook;
+    private int               lastLineNb;
 
     @Override
     public int hashCode() {
@@ -107,6 +108,14 @@ public class ImportResult implements IsSerializable {
 
     public void setLastBook(final String lastBook) {
         this.lastBook = lastBook;
+    }
+
+    public void setLastLineNb(final int lastLineNb) {
+        this.lastLineNb = lastLineNb;
+    }
+
+    public int getLastLineNb() {
+        return lastLineNb;
     }
 
 }
