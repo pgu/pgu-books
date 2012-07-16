@@ -48,8 +48,19 @@ public class MenuViewImpl extends Composite implements MenuView {
         this.presenter = presenter;
     }
 
+    @UiHandler("goToSetupBtn")
+    public void clickGoToSetup(final ClickEvent e) {
+        presenter.goToSetup();
+    }
+
+    @UiHandler("goToSearchBtn")
+    public void clickGoToSearch(final ClickEvent e) {
+        final BooksSearch booksSearch = new BooksSearch();
+        presenter.searchBooks(booksSearch);
+    }
+
     @UiHandler("goToImportBtn")
-    public void clickImport(final ClickEvent e) {
+    public void clickGoToImport(final ClickEvent e) {
         presenter.importBooks();
     }
 

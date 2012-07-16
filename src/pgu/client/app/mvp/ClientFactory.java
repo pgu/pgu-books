@@ -7,6 +7,7 @@ import pgu.client.menu.MenuView;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.client.service.BooksServiceAsync;
 import pgu.client.service.LoginServiceAsync;
+import pgu.client.setup.SetupView;
 import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.place.shared.PlaceController;
@@ -35,4 +36,6 @@ public interface ClientFactory {
     BooksServiceAsync getBooksService();
 
     AdminBooksServiceAsync getAdminBooksService();
+
+    SetupView getSetupView();
 }

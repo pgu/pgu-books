@@ -8,4 +8,6 @@ public interface MenuPresenter {
 
     void importBooks();
 
+    void goToSetup();
+
 }

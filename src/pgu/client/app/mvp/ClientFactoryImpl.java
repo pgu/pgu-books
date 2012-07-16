@@ -14,6 +14,8 @@ import pgu.client.service.BooksService;
 import pgu.client.service.BooksServiceAsync;
 import pgu.client.service.LoginService;
 import pgu.client.service.LoginServiceAsync;
+import pgu.client.setup.SetupView;
+import pgu.client.setup.ui.SetupViewImpl;
 import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.core.client.GWT;
@@ -29,6 +31,7 @@ public class ClientFactoryImpl implements ClientFactory {
     private static MenuView               menuView          = new MenuViewImpl();
     private static BooksView              booksView         = new BooksViewImpl();
     private static ImportBooksView        importBooksView   = new ImportBooksViewImpl();
+    private static SetupView              setupView         = new SetupViewImpl();
 
     private static BooksServiceAsync      booksService      = GWT.create(BooksService.class);
     private static LoginServiceAsync      loginService      = GWT.create(LoginService.class);
@@ -89,5 +92,10 @@ public class ClientFactoryImpl implements ClientFactory {
     @Override
     public AdminBooksServiceAsync getAdminBooksService() {
         return adminBooksService;
+    }
+
+    @Override
+    public SetupView getSetupView() {
+        return setupView;
     }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
+import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
@@ -13,6 +14,7 @@ import pgu.client.books.BooksPlace;
 import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
+import pgu.client.setup.SetupPlace;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
@@ -21,6 +23,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class AppActivity implements SearchBooksEvent.Handler //
         , TechnicalErrorEvent.Handler //
         , ImportBooksEvent.Handler //
+        , SetupEvent.Handler //
         , NotificationEvent.Handler //
 {
 
@@ -39,6 +42,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(SetupEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory.getLoginInfo());
@@ -112,6 +116,11 @@ public class AppActivity implements SearchBooksEvent.Handler //
         }
 
         notification.show();
+    }
+
+    @Override
+    public void onSetup(final SetupEvent event) {
+        placeController.goTo(new SetupPlace());
     }
 
 }

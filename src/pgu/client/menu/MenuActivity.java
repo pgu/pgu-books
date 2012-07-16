@@ -3,6 +3,7 @@ package pgu.client.menu;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.SearchBooksEvent;
+import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
@@ -68,6 +69,11 @@ public class MenuActivity implements MenuPresenter //
     @Override
     public void importBooks() {
         eventBus.fireEvent(new ImportBooksEvent());
+    }
+
+    @Override
+    public void goToSetup() {
+        eventBus.fireEvent(new SetupEvent());
     }
 
 }
