@@ -5,13 +5,20 @@ import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
+import pgu.shared.utils.SortField;
 
+import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.Pagination;
+import com.github.gwtbootstrap.client.ui.base.InlineLabel;
+import com.github.gwtbootstrap.client.ui.constants.ButtonType;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
+import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -38,7 +45,11 @@ public class BooksViewImpl extends Composite implements BooksView {
         pager.setVisible(false);
     }
 
-    private void setHeaders() {
+    private void setHeaders(final BooksResult booksResult) {
+
+        final SortField sortField = booksResult.getBooksSearch().getSortField();
+        final boolean isAscending = booksResult.getBooksSearch().isAscending();
+
         final Column titleCol = new Column(2);
         final Column authorCol = new Column(2);
         final Column editorCol = new Column(2);
@@ -46,12 +57,12 @@ public class BooksViewImpl extends Composite implements BooksView {
         final Column yearCol = new Column(2);
         final Column commentCol = new Column(2);
 
-        titleCol.getElement().setInnerText("Título");
-        authorCol.getElement().setInnerText("Autor");
-        editorCol.getElement().setInnerText("Editor");
-        categoryCol.getElement().setInnerText("Categoría");
-        yearCol.getElement().setInnerText("Año");
-        commentCol.getElement().setInnerText("Comentario");
+        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending, booksResult);
+        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending, booksResult);
+        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending, booksResult);
+        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending, booksResult);
+        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending, booksResult);
+        commentCol.add(getColumnLabel("Comentario"));
 
         final FluidRow row = new FluidRow();
         row.addStyleName("my-show-grid-header");
@@ -66,6 +77,59 @@ public class BooksViewImpl extends Composite implements BooksView {
         readonlyGrid.add(row);
     }
 
+    private void addHeaderWithSort(final Column col, final String text, //
+            final SortField sortField, //
+            final SortField selectedSortField, //
+            final boolean isAscending, //
+            final BooksResult booksResult) {
+
+        final boolean isSelected = sortField == selectedSortField;
+
+        final Button upBtn = new Button();
+        upBtn.setSize(ButtonSize.MINI);
+        upBtn.setIcon(IconType.SORT_UP);
+
+        final Button downBtn = new Button();
+        downBtn.setSize(ButtonSize.MINI);
+        downBtn.setIcon(IconType.SORT_DOWN);
+
+        col.add(getColumnLabel(text));
+        col.add(upBtn);
+        col.add(downBtn);
+
+        if (isSelected) {
+            upBtn.setType(isAscending ? ButtonType.INVERSE : ButtonType.DEFAULT);
+            downBtn.setType(isAscending ? ButtonType.DEFAULT : ButtonType.INVERSE);
+        }
+
+        upBtn.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                final BooksSearch booksSearch = booksResult.getBooksSearch();
+                booksSearch.setSortField(sortField);
+                booksSearch.setAscending(true);
+                presenter.goToSearchBooks(booksSearch);
+            }
+        });
+        downBtn.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                final BooksSearch booksSearch = booksResult.getBooksSearch();
+                booksSearch.setSortField(sortField);
+                booksSearch.setAscending(false);
+                presenter.goToSearchBooks(booksSearch);
+            }
+        });
+    }
+
+    private InlineLabel getColumnLabel(final String text) {
+        final InlineLabel label = new InlineLabel(text);
+        label.getElement().getStyle().setMarginRight(20, Unit.PX);
+        return label;
+    }
+
     @Override
     public void setPresenter(final BooksPresenter presenter) {
         this.presenter = presenter;
@@ -74,7 +138,8 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void setBooks(final BooksResult booksResult) {
         readonlyGrid.clear();
-        setHeaders();
+
+        setHeaders(booksResult);
 
         int count = 0;
         for (final Book book : booksResult.getBooks()) {
