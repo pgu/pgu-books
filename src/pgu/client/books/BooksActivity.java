@@ -6,6 +6,7 @@ import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
@@ -25,11 +26,13 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     private final BooksPlace                     place;
     private final BooksView                      view;
     private final BooksServiceAsync              booksService;
+    private final AppSetup                       appSetup;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
         view = clientFactory.getBooksView();
         booksService = clientFactory.getBooksService();
+        appSetup = clientFactory.getAppSetup();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
     private void searchBooks(final BooksSearch booksSearch) {
         final BooksSearch search = booksSearch == null ? new BooksSearch() : booksSearch;
+        search.setLength(appSetup.getResultsPerPage());
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 

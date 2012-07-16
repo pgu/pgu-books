@@ -6,10 +6,10 @@
     <g:HTMLPanel>
         <b:WellForm>
             <b:ControlLabel>Resultados por páginas</b:ControlLabel>
-            <b:RadioButton name="nb" text="10"/>
-            <b:RadioButton name="nb" text="20"/>
-            <b:RadioButton name="nb" text="30"/>
-            <b:RadioButton name="nb" text="50"/>
+            <b:RadioButton ui:field="s10" name="choice" text="10"/>
+            <b:RadioButton ui:field="s20" name="choice" text="20"/>
+            <b:RadioButton ui:field="s30" name="choice" text="30"/>
+            <b:RadioButton ui:field="s50" name="choice" text="50"/>
             <b:FormActions>
                 <b:SubmitButton ui:field="saveBtn" addStyleNames="btn" type="PRIMARY">Guardar</b:SubmitButton>
             </b:FormActions>

@@ -6,8 +6,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class BooksSearch implements IsSerializable {
 
-    private int       start       = 0;
-    private int       length      = 5;
+    private int       start;
+    private int       length;
     private SortField sortField   = SortField.TITLE;
     private boolean   isAscending = true;
 
