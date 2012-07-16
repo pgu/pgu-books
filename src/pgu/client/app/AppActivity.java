@@ -96,7 +96,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         final String message = event.getMessage();
 
         final Notification notification = view.newNotification();
-        notification.setText(message);
+        notification.setHTML(message);
 
         if (Level.INFO == level) {
             notification.setHeading("Info");

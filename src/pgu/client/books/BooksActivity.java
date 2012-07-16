@@ -3,11 +3,13 @@ package pgu.client.books;
 import java.util.ArrayList;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
+import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.app.utils.Level;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
@@ -62,8 +64,14 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
             @Override
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
-                booksResult.setBooksSearch(search);
-                view.setBooks(booksResult);
+
+                if (booksResult.getNbFound() > 1000) {
+                    eventBus.fireEvent(new NotificationEvent(Level.WARNING, //
+                            "Más de 1000 resultados correspondan a su búsqueda. <br>Modifiquen los criterios, por favor"));
+                } else {
+                    booksResult.setBooksSearch(search);
+                    view.setBooks(booksResult);
+                }
             }
         });
     }

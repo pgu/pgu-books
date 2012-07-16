@@ -1,10 +1,10 @@
 package pgu.client.app.utils;
 
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasHTML;
 
 public interface Notification extends //
-        HasText //
+        HasHTML //
         , HasVisibility //
 {
     void setLevel(Level level);

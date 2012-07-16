@@ -58,12 +58,12 @@ public class AppViewImpl extends Composite implements AppView {
             private AlertBlock alert;
 
             @Override
-            public String getText() {
+            public String getHTML() {
                 return text;
             }
 
             @Override
-            public void setText(final String text) {
+            public void setHTML(final String text) {
                 this.text = text;
             }
 
@@ -115,7 +115,7 @@ public class AppViewImpl extends Composite implements AppView {
 
                 }
                 alert.setAnimation(true);
-                alert.setText(text);
+                alert.setHTML(text);
                 alert.setHeading(heading);
             }
 
@@ -133,6 +133,16 @@ public class AppViewImpl extends Composite implements AppView {
                     }
 
                 }.schedule(5000);
+            }
+
+            @Override
+            public String getText() {
+                return text;
+            }
+
+            @Override
+            public void setText(final String text) {
+                this.text = text;
             }
         };
     }
