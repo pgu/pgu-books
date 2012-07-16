@@ -1,6 +1,7 @@
 package pgu.server.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pgu.client.service.BooksService;
 import pgu.server.access.nosql.DocUtils;
@@ -64,53 +65,64 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
             final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
                     .setReturningIdsOnly(true) //
-                    .setLimit(1000) // must force the limit, if not, it is set to 20
-                    .setNumberFoundAccuracy(1000) //
+                    .setLimit(1001) // must force the limit, if not, it is set to 20
+                    .setNumberFoundAccuracy(1001) //
                     .build();
 
             final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder()
                     .setOptions(mainQueryOptions).build( //
                             // BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._() + " " + //
                             searchText //
+                    // TODO PGU Jul 16, 2012 update query
                     );
 
-            final Results<ScoredDocument> results = s.idx().search(mainQuery);
-            final int numberFound = (int) results.getNumberFound();
+            final Results<ScoredDocument> docs = s.idx().search(mainQuery);
+            final int numberFound = (int) docs.getNumberFound();
 
-            System.out.println("resultsSize " + results.getResults().size());
+            System.out.println("resultsSize " + docs.getResults().size());
             System.out.println("numberFound " + numberFound);
 
-            final ArrayList<Long> bookIds = new ArrayList<Long>(numberFound);
-            for (final ScoredDocument doc : results) {
-                bookIds.add(Long.valueOf(doc.getId()));
+            if (numberFound > 1000) {
+                final BooksResult booksResult = new BooksResult();
+                booksResult.setBooks(new ArrayList<Book>());
+                booksResult.setNbFound(numberFound);
+                return booksResult;
             }
 
-            if (bookIds.isEmpty()) {
+            if (numberFound == 0) {
                 final BooksResult booksResult = new BooksResult();
                 booksResult.setBooks(new ArrayList<Book>());
                 booksResult.setNbFound(0);
                 return booksResult;
+            }
+
+            final ArrayList<Long> bookIds = new ArrayList<Long>(numberFound);
+            for (final ScoredDocument doc : docs) {
+                bookIds.add(Long.valueOf(doc.getId()));
+            }
+
+            final Query<Book> query = dao.ofy().query(Book.class);
+            final String sortDirection = queryParameters.isAscending() ? "" : "-";
+            final String sortField = queryParameters.getSortField().toString().toLowerCase();
+            query.order(sortDirection + sortField);
+            query.filter("id in", bookIds);
+
+            final List<Book> _books = query.offset(start).limit(length).list();
+
+            final ArrayList<Book> books;
+            if (_books instanceof ArrayList) {
+                books = (ArrayList<Book>) _books;
 
             } else {
-                final Query<Book> query = dao.ofy().query(Book.class);
-                final String sortDirection = queryParameters.isAscending() ? "" : "-";
-                final String sortField = queryParameters.getSortField().toString().toLowerCase();
-                query.order(sortDirection + sortField);
-                query.filter("id in", bookIds);
-
-                final QueryResultIterator<Book> itr = query.offset(start).limit(length).iterator();
-
-                final ArrayList<Book> books = new ArrayList<Book>(length);
-                while (itr.hasNext()) {
-                    books.add(itr.next());
-                }
-
-                final BooksResult booksResult = new BooksResult();
-                booksResult.setBooks(books);
-                booksResult.setNbFound(numberFound);
-
-                return booksResult;
+                books = new ArrayList<Book>(length);
+                books.addAll(_books);
             }
+
+            final BooksResult booksResult = new BooksResult();
+            booksResult.setBooks(books);
+            booksResult.setNbFound(numberFound);
+
+            return booksResult;
 
         }
 
