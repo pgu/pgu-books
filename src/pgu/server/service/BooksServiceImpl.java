@@ -93,7 +93,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                     .build();
 
             final String _query = sb.toString();
-            System.out.println("query " + _query);
+            log.info(this, "query [%s]", _query);
 
             final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
                     .setOptions(mainQueryOptions) //
@@ -102,8 +102,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             final Results<ScoredDocument> docs = s.idx().search(mainQuery);
             numberFound = (int) docs.getNumberFound();
 
-            System.out.println("resultsSize " + docs.getResults().size());
-            System.out.println("numberFound " + numberFound);
+            log.info(this, "resultsSize [%s] numberFound [%s]", docs.getResults().size(), numberFound);
 
             if (numberFound > 1000) {
                 final BooksResult booksResult = new BooksResult();
@@ -188,7 +187,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                 .setOptions(mainQueryOptions).build(BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._());
 
         final Results<ScoredDocument> results = s.idx().search(mainQuery);
-        System.out.println("nb found: " + results.getNumberFound());
+        log.info(this, "nb found: %s", results.getNumberFound());
 
         final ArrayList<Book> books = new ArrayList<Book>();
         for (final ScoredDocument doc : results) {

@@ -183,9 +183,6 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
     @Override
     public void deleteAll() {
-        // TODO if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-        // return; // The app is running on App Engine...
-        // }
 
         final QueryResultIterator<Book> bookItr = dao.ofy().query(Book.class).iterator();
         while (bookItr.hasNext()) {
