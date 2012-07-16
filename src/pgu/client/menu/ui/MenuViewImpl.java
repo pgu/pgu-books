@@ -29,7 +29,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     Button                searchBtn;
     @UiField
-    NavSearch             sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+    NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
     NavLink               adminBtn, logoutBtn, importBtn;
 
@@ -60,11 +60,9 @@ public class MenuViewImpl extends Composite implements MenuView {
         booksSearch.setCategory(sCategory.getTextBox().getText());
         booksSearch.setComment(sComment.getTextBox().getText());
         booksSearch.setEditor(sEditor.getTextBox().getText());
+        booksSearch.setSearchText(sText.getTextBox().getText());
         booksSearch.setTitle(sTitle.getTextBox().getText());
         booksSearch.setYear(sYear.getTextBox().getText());
-
-        booksSearch.setStart(0);
-        booksSearch.setLength(5);
 
         presenter.searchBooks(booksSearch);
     }

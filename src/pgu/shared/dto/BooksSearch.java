@@ -1,18 +1,23 @@
 package pgu.shared.dto;
 
+import pgu.shared.utils.SortField;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class BooksSearch implements IsSerializable {
 
-    private int    start;
-    private int    length;
+    private int       start       = 0;
+    private int       length      = 5;
+    private SortField sortField   = SortField.TITLE;
+    private boolean   isAscending = true;
 
-    private String title;
-    private String author;
-    private String editor;
-    private String category;
-    private String year;
-    private String comment;
+    private String    title;
+    private String    author;
+    private String    editor;
+    private String    category;
+    private String    year;
+    private String    comment;
+    private String    searchText;
 
     public BooksSearch copy() {
         final BooksSearch copy = new BooksSearch();
@@ -22,9 +27,17 @@ public class BooksSearch implements IsSerializable {
         copy.setEditor(editor);
         copy.setLength(length);
         copy.setStart(start);
+        copy.setSearchText(searchText);
         copy.setTitle(title);
         copy.setYear(year);
         return copy;
+    }
+
+    @Override
+    public String toString() {
+        return "BooksSearch [start=" + start + ", length=" + length + ", sortField=" + sortField + ", isAscending="
+                + isAscending + ", title=" + title + ", author=" + author + ", editor=" + editor + ", category="
+                + category + ", year=" + year + ", comment=" + comment + ", searchText=" + searchText + "]";
     }
 
     @Override
@@ -35,7 +48,10 @@ public class BooksSearch implements IsSerializable {
         result = prime * result + (category == null ? 0 : category.hashCode());
         result = prime * result + (comment == null ? 0 : comment.hashCode());
         result = prime * result + (editor == null ? 0 : editor.hashCode());
+        result = prime * result + (isAscending ? 1231 : 1237);
         result = prime * result + length;
+        result = prime * result + (searchText == null ? 0 : searchText.hashCode());
+        result = prime * result + (sortField == null ? 0 : sortField.hashCode());
         result = prime * result + start;
         result = prime * result + (title == null ? 0 : title.hashCode());
         result = prime * result + (year == null ? 0 : year.hashCode());
@@ -82,7 +98,20 @@ public class BooksSearch implements IsSerializable {
         } else if (!editor.equals(other.editor)) {
             return false;
         }
+        if (isAscending != other.isAscending) {
+            return false;
+        }
         if (length != other.length) {
+            return false;
+        }
+        if (searchText == null) {
+            if (other.searchText != null) {
+                return false;
+            }
+        } else if (!searchText.equals(other.searchText)) {
+            return false;
+        }
+        if (sortField != other.sortField) {
             return false;
         }
         if (start != other.start) {
@@ -167,6 +196,30 @@ public class BooksSearch implements IsSerializable {
 
     public void setLength(final int length) {
         this.length = length;
+    }
+
+    public void setSearchText(final String text) {
+        searchText = text;
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public SortField getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(final SortField sortField) {
+        this.sortField = sortField;
+    }
+
+    public boolean isAscending() {
+        return isAscending;
+    }
+
+    public void setAscending(final boolean isAscending) {
+        this.isAscending = isAscending;
     }
 
 }

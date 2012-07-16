@@ -10,11 +10,11 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
+import pgu.shared.AppUtils;
 import pgu.shared.domain.Book;
-import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
+import pgu.shared.dto.BooksSearch;
 
-import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
@@ -28,40 +28,62 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     private final AppLog   log  = new AppLog();
     private final Search   s    = new Search();
     private final DocUtils docU = new DocUtils();
+    private final AppUtils u    = new AppUtils();
 
     /**
      * http://code.google.com/p/google-app-engine-samples/source/browse/trunk/search/java/src/com/google/appengine/
      * demos/search/TextSearchServlet.java
      */
     @Override
-    public BooksResult fetchBooks(final BooksQueryParameters queryParameters, final int start, final int length) {
+    public BooksResult fetchBooks(final BooksSearch booksSearch) {
 
-        final String searchText = queryParameters.getSearchText();
-        if (null == searchText || searchText.trim().isEmpty()) {
+        final int start = booksSearch.getStart();
+        final int length = booksSearch.getLength();
+        final String sortDirection = booksSearch.isAscending() ? "" : "-";
+        final String sortField = booksSearch.getSortField().toString().toLowerCase();
+        final String order = sortDirection + sortField;
 
-            final Query<Book> query = dao.ofy().query(Book.class);
-            final String sortDirection = queryParameters.isAscending() ? "" : "-";
-            final String sortField = queryParameters.getSortField().toString().toLowerCase();
-            query.order(sortDirection + sortField);
+        final Query<Book> booksQuery = dao.ofy().query(Book.class);
+        booksQuery.order(order);
+        booksQuery.offset(start);
+        booksQuery.limit(length);
 
-            final QueryResultIterator<Book> itr = query.offset(start).limit(length).iterator();
+        final String author = booksSearch.getAuthor();
+        final String category = booksSearch.getCategory();
+        final String comment = booksSearch.getComment();
+        final String editor = booksSearch.getEditor();
+        final String searchText = booksSearch.getSearchText();
+        final String title = booksSearch.getTitle();
+        final String year = booksSearch.getYear();
 
-            final ArrayList<Book> books = new ArrayList<Book>(length);
-            while (itr.hasNext()) {
-                books.add(itr.next());
-            }
+        int numberFound = 0;
 
-            final Query<Book> countQuery = dao.ofy().query(Book.class);
-            final int numberFound = countQuery.count();
+        if (u.isVoid(author) //
+                && u.isVoid(category) //
+                && u.isVoid(comment) //
+                && u.isVoid(editor) //
+                && u.isVoid(searchText) //
+                && u.isVoid(title) //
+                && u.isVoid(year) //
+        ) {
 
-            final BooksResult booksResult = new BooksResult();
-            booksResult.setBooks(books);
-            booksResult.setNbFound(numberFound);
-
-            return booksResult;
+            numberFound = dao.ofy().query(Book.class).count();
 
         } else {
-            // TODO PGU check that results not > 1000 else throw exception
+
+            final StringBuilder sb = new StringBuilder();
+            if (!u.isVoid(searchText)) {
+                sb.append(searchText);
+                sb.append(" ");
+            }
+
+            appendField(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);
+            appendField(BookDoc.AUTHOR, author, sb);
+            appendField(BookDoc.CATEGORY, category, sb);
+            appendField(BookDoc.COMMENT, comment, sb);
+            appendField(BookDoc.EDITOR, editor, sb);
+            appendField(BookDoc.TITLE, title, sb);
+            appendField(BookDoc.YEAR, year, sb);
 
             final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
                     .setReturningIdsOnly(true) //
@@ -69,15 +91,12 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                     .setNumberFoundAccuracy(1001) //
                     .build();
 
-            final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder()
-                    .setOptions(mainQueryOptions).build( //
-                            // BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._() + " " + //
-                            searchText //
-                    // TODO PGU Jul 16, 2012 update query
-                    );
+            final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
+                    .setOptions(mainQueryOptions) //
+                    .build(sb.toString());
 
             final Results<ScoredDocument> docs = s.idx().search(mainQuery);
-            final int numberFound = (int) docs.getNumberFound();
+            numberFound = (int) docs.getNumberFound();
 
             System.out.println("resultsSize " + docs.getResults().size());
             System.out.println("numberFound " + numberFound);
@@ -101,31 +120,38 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                 bookIds.add(Long.valueOf(doc.getId()));
             }
 
-            final Query<Book> query = dao.ofy().query(Book.class);
-            final String sortDirection = queryParameters.isAscending() ? "" : "-";
-            final String sortField = queryParameters.getSortField().toString().toLowerCase();
-            query.order(sortDirection + sortField);
-            query.filter("id in", bookIds);
-
-            final List<Book> _books = query.offset(start).limit(length).list();
-
-            final ArrayList<Book> books;
-            if (_books instanceof ArrayList) {
-                books = (ArrayList<Book>) _books;
-
-            } else {
-                books = new ArrayList<Book>(length);
-                books.addAll(_books);
-            }
-
-            final BooksResult booksResult = new BooksResult();
-            booksResult.setBooks(books);
-            booksResult.setNbFound(numberFound);
-
-            return booksResult;
-
+            booksQuery.filter("id in", bookIds);
         }
 
+        final List<Book> _books = booksQuery.list();
+
+        final ArrayList<Book> books;
+        if (_books instanceof ArrayList) {
+            books = (ArrayList<Book>) _books;
+
+        } else {
+            books = new ArrayList<Book>(length);
+            books.addAll(_books);
+        }
+
+        final BooksResult booksResult = new BooksResult();
+        booksResult.setBooks(books);
+        booksResult.setNbFound(numberFound);
+
+        return booksResult;
+
+    }
+
+    /**
+     * add handling of OR between values
+     */
+    private void appendField(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
+        if (!u.isVoid(fieldValue)) {
+            sb.append(" ");
+            sb.append(bookDoc.toString().toLowerCase());
+            sb.append(":");
+            sb.append("\"" + fieldValue + "\"");
+        }
     }
 
     private BooksResult backup() {

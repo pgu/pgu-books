@@ -6,6 +6,7 @@
     <g:HTMLPanel>
         <b:Navbar position="TOP">
             <b:Brand>Libros</b:Brand>
+            <b:NavSearch ui:field="sText" size="3" placeholder="Cualquier texto" alignment="LEFT"/>        
             <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"/>        
             <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"/>        
             <b:NavSearch ui:field="sEditor" size="2" placeholder="Editor" alignment="LEFT"/>        

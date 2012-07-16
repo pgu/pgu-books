@@ -9,12 +9,10 @@ import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
-import pgu.shared.dto.BooksQueryParameters;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.gwt.activity.shared.AbstractActivity;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -50,30 +48,18 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     }
 
     private void searchBooks(final BooksSearch booksSearch) {
-        if (booksSearch == null) {
-            view.clear();
-            return;
-        }
+        final BooksSearch search = booksSearch == null ? new BooksSearch() : booksSearch;
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
         // testBooks(booksSearch);
-        final BooksQueryParameters queryParameters = new BooksQueryParameters();
-        final int start = booksSearch.getStart();
-        final int length = booksSearch.getLength();
-
-        GWT.log("start " + start);
-        GWT.log("length " + length);
-        queryParameters.setSearchText(booksSearch.getTitle());
-
-        booksService.fetchBooks(queryParameters, start, length, new AsyncCallbackApp<BooksResult>(eventBus) {
+        booksService.fetchBooks(search, new AsyncCallbackApp<BooksResult>(eventBus) {
 
             @Override
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
-                booksResult.setBooksSearch(booksSearch);
+                booksResult.setBooksSearch(search);
                 view.setBooks(booksResult);
-
             }
         });
     }
