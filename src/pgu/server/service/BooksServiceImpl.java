@@ -71,29 +71,33 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
         } else {
 
+            // query is either on any text or on fields
             final StringBuilder sb = new StringBuilder();
             if (!u.isVoid(searchText)) {
-                sb.append(searchText);
-                sb.append(" ");
-            }
+                sb.append("\"" + searchText + "\"");
 
-            appendField(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);
-            appendField(BookDoc.AUTHOR, author, sb);
-            appendField(BookDoc.CATEGORY, category, sb);
-            appendField(BookDoc.COMMENT, comment, sb);
-            appendField(BookDoc.EDITOR, editor, sb);
-            appendField(BookDoc.TITLE, title, sb);
-            appendField(BookDoc.YEAR, year, sb);
+            } else {
+                appendField(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);
+                appendField(BookDoc.AUTHOR, author, sb);
+                appendField(BookDoc.CATEGORY, category, sb);
+                appendField(BookDoc.COMMENT, comment, sb);
+                appendField(BookDoc.EDITOR, editor, sb);
+                appendField(BookDoc.TITLE, title, sb);
+                appendField(BookDoc.YEAR, year, sb);
+            }
 
             final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
                     .setReturningIdsOnly(true) //
-                    .setLimit(1001) // must force the limit, if not, it is set to 20
+                    .setLimit(1000) // forces the limit because: default=20, max=1000
                     .setNumberFoundAccuracy(1001) //
                     .build();
 
+            final String _query = sb.toString();
+            System.out.println("query " + _query);
+
             final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
                     .setOptions(mainQueryOptions) //
-                    .build(sb.toString());
+                    .build(_query);
 
             final Results<ScoredDocument> docs = s.idx().search(mainQuery);
             numberFound = (int) docs.getNumberFound();
@@ -147,8 +151,10 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
      */
     private void appendField(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
         if (!u.isVoid(fieldValue)) {
-            sb.append(" ");
-            sb.append(bookDoc.toString().toLowerCase());
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+            sb.append(bookDoc.toString().toUpperCase());
             sb.append(":");
             sb.append("\"" + fieldValue + "\"");
         }
