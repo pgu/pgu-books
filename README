@@ -4,12 +4,9 @@ http://gwtbootstrap.github.com/
 
 TODOs
 =====
-* fix pager
-* add refresh?
-* edition of a book
-* deletion of books
 * import books by cron and notifications by email
+* fix pager
 * add missing books from .txt
 * add handling of OR and AND operators in search
-x handling null year
-x favicon.ico
+* edition of a book
+* deletion of books
