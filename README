@@ -2,3 +2,13 @@ https://developers.google.com/web-toolkit/doc/latest/DevGuideMvpActivitiesAndPla
 http://gwtbootstrap.github.com/gwt-bootstrap/apidocs/
 http://gwtbootstrap.github.com/
 
+TODOs
+=====
+* favicon.ico
+* edition of a book
+* deletion of books
+* import books by cron and notifications by email
+* add missing books from .txt
+* add handling of OR and AND operators in search
+* handling null year
+
