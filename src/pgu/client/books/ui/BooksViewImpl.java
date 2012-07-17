@@ -7,6 +7,7 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.utils.SortField;
 
+import com.github.gwtbootstrap.client.ui.Badge;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
@@ -34,6 +35,8 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @UiField
+    Badge                  booksFound;
+    @UiField
     FluidContainer         readonlyGrid;
     @UiField
     Pagination             pager;
@@ -43,6 +46,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         pager.setVisible(false);
+        booksFound.setVisible(false);
     }
 
     private void setHeaders(final BooksResult booksResult) {
@@ -138,6 +142,9 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void setBooks(final BooksResult booksResult) {
         readonlyGrid.clear();
+
+        booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
+        booksFound.setVisible(true);
 
         setHeaders(booksResult);
 
@@ -268,5 +275,6 @@ public class BooksViewImpl extends Composite implements BooksView {
     public void clear() {
         readonlyGrid.clear();
         pager.setVisible(false);
+        booksFound.setVisible(false);
     }
 }

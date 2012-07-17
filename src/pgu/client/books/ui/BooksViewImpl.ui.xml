@@ -3,8 +3,18 @@
             xmlns:g="urn:import:com.google.gwt.user.client.ui"
             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
             
+    <ui:style>
+        .booksFound {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .grid {
+            margin-top: 15px;
+        }
+    </ui:style>
     <g:HTMLPanel>
-        <b:FluidContainer ui:field="readonlyGrid" />
+        <b:Badge ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}"></b:Badge>
+        <b:FluidContainer ui:field="readonlyGrid" addStyleNames="{style.grid}" />
         <b:Pagination ui:field="pager" alignment="CENTERED" />
     </g:HTMLPanel>
 </ui:UiBinder> 
