@@ -18,7 +18,7 @@ public class Book implements IsSerializable {
         this.author = author;
         this.title = title;
         this.editor = editor;
-        this.year = year;
+        setYear(year);
         this.comment = comment;
         this.category = category;
     }

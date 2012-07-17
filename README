@@ -4,6 +4,8 @@ http://gwtbootstrap.github.com/
 
 TODOs
 =====
+* fix pager
+* add refresh?
 * edition of a book
 * deletion of books
 * import books by cron and notifications by email
