@@ -132,7 +132,7 @@ public class Book implements IsSerializable {
     }
 
     public void setYear(final Integer year) {
-        this.year = year;
+        this.year = year == null ? 0 : year;
     }
 
     public String getTitle() {

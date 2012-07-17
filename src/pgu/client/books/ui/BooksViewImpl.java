@@ -162,7 +162,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             authorCol.getElement().setInnerText(book.getAuthor());
             editorCol.getElement().setInnerText(book.getEditor());
             categoryCol.getElement().setInnerText(book.getCategory());
-            yearCol.getElement().setInnerText("" + book.getYear());
+            yearCol.getElement().setInnerText("" + (book.getYear() == 0 ? "" : book.getYear()));
             commentCol.getElement().setInnerText(book.getComment());
 
             final FluidRow row = new FluidRow();
