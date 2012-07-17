@@ -7,11 +7,11 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.utils.SortField;
 
-import com.github.gwtbootstrap.client.ui.Badge;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
+import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.Pagination;
 import com.github.gwtbootstrap.client.ui.base.InlineLabel;
@@ -35,7 +35,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @UiField
-    Badge                  booksFound;
+    Label                  booksFound;
     @UiField
     FluidContainer         readonlyGrid;
     @UiField

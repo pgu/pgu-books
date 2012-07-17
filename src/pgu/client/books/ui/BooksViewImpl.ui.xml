@@ -13,7 +13,7 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <b:Badge ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}"></b:Badge>
+        <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" />
         <b:FluidContainer ui:field="readonlyGrid" addStyleNames="{style.grid}" />
         <b:Pagination ui:field="pager" alignment="CENTERED" />
     </g:HTMLPanel>
