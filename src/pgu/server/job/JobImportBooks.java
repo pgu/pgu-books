@@ -51,7 +51,7 @@ public class JobImportBooks extends HttpServlet {
             return;
         }
 
-        service.setServletContext(getServletContext());
+        service.setExternalServletContext(getServletContext());
         service.importBooks(importResult.getLastLineNb(), 50);
     }
 

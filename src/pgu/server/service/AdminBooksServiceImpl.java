@@ -38,15 +38,10 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     private final DAO      dao = new DAO();
     private final AppUtils u   = new AppUtils();
 
-    private ServletContext servletContext;
+    private ServletContext externalServletContext;
 
-    @Override
-    public ServletContext getServletContext() {
-        return servletContext;
-    }
-
-    public void setServletContext(final ServletContext servletContext) {
-        this.servletContext = servletContext;
+    public void setExternalServletContext(final ServletContext servletContext) {
+        externalServletContext = servletContext;
     }
 
     @Override
@@ -71,7 +66,15 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         String line = null;
 
         try {
-            final InputStream is = getServletContext().getResourceAsStream("/WEB-INF/books/import/books.txt");
+            ServletContext servletContext = null;
+            try {
+                servletContext = getServletContext();
+
+            } catch (final NullPointerException npe) {
+                servletContext = externalServletContext;
+            }
+
+            final InputStream is = servletContext.getResourceAsStream("/WEB-INF/books/import/books.txt");
             final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             try {
                 while ((line = br.readLine()) != null) {
