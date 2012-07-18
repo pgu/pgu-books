@@ -7,6 +7,7 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.utils.SortField;
 
+import com.github.gwtbootstrap.client.ui.Badge;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
@@ -37,16 +38,20 @@ public class BooksViewImpl extends Composite implements BooksView {
     @UiField
     Label                  booksFound;
     @UiField
-    FluidContainer         readonlyGrid;
+    FluidContainer         booksGrid, toolBar;
     @UiField
     Pagination             pager;
+    @UiField
+    Button                 addBtn, editBtn, deleteBtn;
+    @UiField
+    Badge                  s10, s20, s30, s50;
 
     private BooksPresenter presenter;
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         pager.setVisible(false);
-        booksFound.setVisible(false);
+        toolBar.setVisible(false);
     }
 
     private void setHeaders(final BooksResult booksResult) {
@@ -78,7 +83,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         row.add(yearCol);
         row.add(commentCol);
 
-        readonlyGrid.add(row);
+        booksGrid.add(row);
     }
 
     private void addHeaderWithSort(final Column col, final String text, //
@@ -141,10 +146,14 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     @Override
     public void setBooks(final BooksResult booksResult) {
-        readonlyGrid.clear();
+        booksGrid.clear();
 
         booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
-        booksFound.setVisible(true);
+        // TODO PGU Jul 18, 2012 edition btns if admin
+        // TODO PGU Jul 18, 2012 select badge from appSetup
+        // TODO PGU Jul 18, 2012 select rows
+        // TODO PGU Jul 18, 2012 new form of edition
+        toolBar.setVisible(true);
 
         setHeaders(booksResult);
 
@@ -175,7 +184,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             row.add(yearCol);
             row.add(commentCol);
 
-            readonlyGrid.add(row);
+            booksGrid.add(row);
             count++;
         }
         // Anterior 1..10 Posterior
@@ -273,7 +282,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     @Override
     public void clear() {
-        readonlyGrid.clear();
+        booksGrid.clear();
         pager.setVisible(false);
         booksFound.setVisible(false);
     }

@@ -5,16 +5,32 @@
             
     <ui:style>
         .booksFound {
-            margin-left: 20px;
-            margin-right: 20px;
+            /* margin-left: 20px; */
+            margin-right: 5px;
         }
         .grid {
             margin-top: 15px;
         }
+        .actionBtn {
+            margin-right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel>
-        <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" />
-        <b:FluidContainer ui:field="readonlyGrid" addStyleNames="{style.grid}" />
+        <b:FluidContainer ui:field="toolBar" addStyleNames="{style.grid}" >
+            <b:Row>
+                <b:Column size="12">
+                    <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" />
+                    <b:Button ui:field="addBtn" icon="PLUS" type="SUCCESS" size="MINI" addStyleNames="{style.actionBtn}">Añadir</b:Button>
+                    <b:Button ui:field="editBtn" icon="PENCIL" type="PRIMARY" size="MINI" addStyleNames="{style.actionBtn}">Editar</b:Button>
+                    <b:Button ui:field="deleteBtn" icon="TRASH" type="DANGER" size="MINI" addStyleNames="{style.actionBtn}">Borrar</b:Button>
+                    <b:Badge ui:field="s10">10</b:Badge>
+                    <b:Badge ui:field="s20">20</b:Badge>
+                    <b:Badge ui:field="s30">30</b:Badge>
+                    <b:Badge ui:field="s50">50</b:Badge>
+                </b:Column>
+            </b:Row>
+        </b:FluidContainer>
+        <b:FluidContainer ui:field="booksGrid" addStyleNames="{style.grid}" />
         <b:Pagination ui:field="pager" alignment="CENTERED" />
     </g:HTMLPanel>
 </ui:UiBinder> 
