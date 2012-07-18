@@ -5,7 +5,6 @@ http://gwtbootstrap.github.com/
 TODOs
 =====
 * import books by cron and notifications by email
-* fix pager
 * add missing books from .txt
 * add handling of OR and AND operators in search
 * edition of a book: complete toolbar above the grid
