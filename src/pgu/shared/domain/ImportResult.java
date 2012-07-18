@@ -17,6 +17,7 @@ public class ImportResult implements IsSerializable {
     private boolean           done;
     private String            lastBook;
     private int               lastLineNb;
+    private boolean           lastImport;
 
     @Override
     public int hashCode() {
@@ -51,7 +52,8 @@ public class ImportResult implements IsSerializable {
     @Override
     public String toString() {
         return "ImportResult [id=" + id + ", start=" + start + ", length=" + length + ", misseds=" + misseds
-                + ", importDate=" + importDate + ", done=" + done + ", lastBook=" + lastBook + "]";
+                + ", importDate=" + importDate + ", done=" + done + ", lastBook=" + lastBook + ", lastLineNb="
+                + lastLineNb + ", lastImport=" + lastImport + "]";
     }
 
     public Long getId() {
@@ -116,6 +118,14 @@ public class ImportResult implements IsSerializable {
 
     public int getLastLineNb() {
         return lastLineNb;
+    }
+
+    public boolean isLastImport() {
+        return lastImport;
+    }
+
+    public void setLastImport(final boolean lastImport) {
+        this.lastImport = lastImport;
     }
 
 }

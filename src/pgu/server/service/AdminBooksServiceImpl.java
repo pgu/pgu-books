@@ -49,70 +49,99 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         final int stop = start + length;
         log.info(this, "Importing books from %s to %s", start, stop);
 
-        final InputStream is = getServletContext().getResourceAsStream("/WEB-INF/books/import/books.txt");
-        final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        final ArrayList<String> misseds = new ArrayList<String>();
+        Book lastBook = null;
+
+        int counter = 0;
+        int countImported = 0;
+
+        String line = null;
+
         try {
+            final InputStream is = getServletContext().getResourceAsStream("/WEB-INF/books/import/books.txt");
+            final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            try {
+                while ((line = br.readLine()) != null) {
 
-            final ArrayList<String> misseds = new ArrayList<String>();
-            Book lastBook = null;
+                    if (counter < start) {
+                        counter++;
+                        continue;
+                    }
 
-            int counter = 0;
-            int countImported = 0;
+                    if (counter >= stop) {
+                        break;
+                    }
 
-            String line = null;
-            while ((line = br.readLine()) != null) {
-
-                if (counter < start) {
                     counter++;
-                    continue;
+                    final String[] tokens = line.split("\", \"");
+                    if (tokens.length == 6) {
+                        countImported++;
+
+                        final String authorRaw = tokens[0].trim();
+                        final String author = authorRaw.isEmpty() ? "" : authorRaw.substring(1); // removes first "
+
+                        final String categoryRaw = tokens[5].trim();
+                        final String category = categoryRaw.isEmpty() ? "" : categoryRaw.substring(0,
+                                categoryRaw.length() - 1); // removes last "
+
+                        final String title = tokens[1].trim();
+                        final String editor = tokens[2].trim();
+                        final String _year = tokens[3].trim();
+                        final Integer year = u.isVoid(_year) ? null : Integer.valueOf(_year);
+                        final String comment = tokens[4].trim();
+
+                        final Book book = new Book(author, title, editor, year, comment, category);
+                        saveBook(book);
+                        lastBook = book;
+
+                    } else {
+                        misseds.add(line);
+                        log.warning(this, "The book %s has not been imported: %s", counter, line);
+                    }
                 }
 
-                if (counter >= stop) {
-                    break;
+                log.info(this, "Imported books: %s/%s in %s ms", countImported, length, System.currentTimeMillis()
+                        - startTime);
+
+                final ImportResult previousImportResult = dao.ofy().query(ImportResult.class)
+                        .filter("lastImport", true).get();
+                if (previousImportResult != null) {
+                    previousImportResult.setLastImport(false);
+                    dao.ofy().put(previousImportResult);
                 }
 
-                counter++;
-                final String[] tokens = line.split("\", \"");
-                if (tokens.length == 6) {
-                    countImported++;
+                importResult.setLastLineNb(counter);
+                importResult.setLastBook(lastBook == null ? "" : lastBook.toString());
+                importResult.setMisseds(misseds);
+                importResult.setDone(misseds.isEmpty());
+                importResult.setLastImport(true);
+                dao.ofy().put(importResult);
 
-                    final String authorRaw = tokens[0].trim();
-                    final String author = authorRaw.isEmpty() ? "" : authorRaw.substring(1); // removes first "
+                return importResult;
 
-                    final String categoryRaw = tokens[5].trim();
-                    final String category = categoryRaw.isEmpty() ? "" : categoryRaw.substring(0,
-                            categoryRaw.length() - 1); // removes last "
+            } catch (final IOException e) {
+                log.error(this, e);
 
-                    final String title = tokens[1].trim();
-                    final String editor = tokens[2].trim();
-                    final String _year = tokens[3].trim();
-                    final Integer year = u.isVoid(_year) ? null : Integer.valueOf(_year);
-                    final String comment = tokens[4].trim();
+                importResult.setLastLineNb(counter);
+                importResult.setLastBook(lastBook == null ? "" : lastBook.toString());
+                importResult.setMisseds(misseds);
+                importResult.setDone(false);
+                importResult.setLastImport(true);
+                dao.ofy().put(importResult);
 
-                    final Book book = new Book(author, title, editor, year, comment, category);
-                    saveBook(book);
-                    lastBook = book;
-
-                } else {
-                    misseds.add(line);
-                    log.warning(this, "The book %s has not been imported: %s", counter, line);
-                }
+                throw new RuntimeException(e);
             }
-
-            log.info(this, "Imported books: %s/%s in %s ms", countImported, length, System.currentTimeMillis()
-                    - startTime);
+        } catch (final Throwable t) {
+            log.error(this, t);
 
             importResult.setLastLineNb(counter);
-            importResult.setLastBook(lastBook.toString());
+            importResult.setLastBook(lastBook == null ? "" : lastBook.toString());
             importResult.setMisseds(misseds);
-            importResult.setDone(true);
+            importResult.setDone(false);
+            importResult.setLastImport(true);
             dao.ofy().put(importResult);
 
-            return importResult;
-
-        } catch (final IOException e) {
-            log.error(this, e);
-            throw new RuntimeException(e);
+            throw new RuntimeException(t);
         }
     }
 
