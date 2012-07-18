@@ -7,5 +7,7 @@ TODOs
 * import books by cron and notifications by email
 * add missing books from .txt
 * add handling of OR and AND operators in search
-* edition of a book: complete toolbar above the grid
+* selection of books
+* creation of a book
+* edition of a book
 * deletion of books
