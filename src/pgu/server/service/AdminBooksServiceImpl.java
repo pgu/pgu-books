@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import pgu.client.service.AdminBooksService;
 import pgu.server.access.nosql.AppDoc;
 import pgu.server.access.nosql.Search;
@@ -35,6 +37,17 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     private final Search   s   = new Search();
     private final DAO      dao = new DAO();
     private final AppUtils u   = new AppUtils();
+
+    private ServletContext servletContext;
+
+    @Override
+    public ServletContext getServletContext() {
+        return servletContext;
+    }
+
+    public void setServletContext(final ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 
     @Override
     public ImportResult importBooks(final int start, final int length) {
