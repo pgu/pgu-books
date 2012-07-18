@@ -13,6 +13,10 @@
     <servlet-name>login</servlet-name>
     <servlet-class>pgu.server.service.LoginServiceImpl</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>jobImportBooks</servlet-name>
+    <servlet-class>pgu.server.job.JobImportBooks</servlet-class>
+  </servlet>
   
   <servlet-mapping>
     <servlet-name>books</servlet-name>
@@ -26,6 +30,11 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/pgu_books/login</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jobImportBooks</servlet-name>
+    <url-pattern>/cron/jobImportBooks</url-pattern>
+  </servlet-mapping>
+  
   
   <welcome-file-list>
     <welcome-file>Pgu_books.html</welcome-file>
@@ -45,6 +54,15 @@
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
   
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
     <security-constraint>
         <web-resource-collection>
             <url-pattern>/pgu_books/adminBooks/*</url-pattern>

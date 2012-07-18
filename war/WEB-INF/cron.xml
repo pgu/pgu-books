@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cronentries>
+    <cron>
+        <url>/cron/jobImportBooks</url>
+        <description>Import books</description>
+        <schedule>every 60 minutes</schedule>
+    </cron>
+    <!-- 
+        <schedule>every 1 minutes</schedule>
+    --> 
+</cronentries>
