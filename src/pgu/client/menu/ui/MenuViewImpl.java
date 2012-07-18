@@ -44,6 +44,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     public MenuViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         logoutBtn.setVisible(false);
+        goToSetupBtn.setVisible(false); // wait for new options to setup
         goToImportBtn.setVisible(false);
         goToSearchBtn.setVisible(false);
         progressBar.setVisible(false);
