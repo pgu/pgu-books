@@ -191,78 +191,98 @@ public class BooksViewImpl extends Composite implements BooksView {
             booksGrid.add(row);
             count++;
         }
-        // Anterior 1..10 Posterior
-        final int start = booksResult.getBooksSearch().getStart();
-        final int length = booksResult.getBooksSearch().getLength();
-        final long nbFound = booksResult.getNbFound();
+        setPager(booksResult);
+    }
 
-        // numero record / length -> n° bloc
-        // numero record % length -> if > 0 then +1 to n° bloc
-        // 5 links before the current block then 4 links
-        // 01..10 -> 1 (records -> block)
-        // 11..20 -> 2
-        // 21..30 -> 3
-        // 31..40 -> 4
-        // 1..10 -> 5 current 4
+    public void setPager(final BooksResult booksResult) {
+
+        final int start = booksResult.getBooksSearch().getStart();
+        final int lengthPerPage = booksResult.getBooksSearch().getLength();
+        final long nbFoundTotal = booksResult.getNbFound();
 
         pager.clear();
 
-        if (nbFound == 0) {
+        if (nbFoundTotal == 0) {
             pager.setVisible(false);
-        } else {
-            final long blockIdx = start / length;
+            return;
+        }
 
-            long nbBlock = nbFound / length;
-            if (nbFound % length > 0) {
-                nbBlock++;
+        if (nbFoundTotal <= lengthPerPage) {
+            pager.setVisible(false);
+            return;
+        }
+
+        final long blockIdx = start / lengthPerPage;
+
+        long nbBlock = nbFoundTotal / lengthPerPage;
+        if (nbFoundTotal % lengthPerPage > 0) {
+            nbBlock++;
+        }
+
+        if (nbBlock <= 10) {
+
+            addPreviousLinkToPager(booksResult, blockIdx);
+            for (int i = 0; i < nbBlock; i++) {
+                addLinkToPager(booksResult, blockIdx, i);
             }
+            addNextLinkToPager(booksResult, blockIdx, nbBlock);
+            pager.setVisible(true);
+            return;
+
+        } else {
 
             final long startBlockIdx = blockIdx - 5;
             int startIdx = startBlockIdx > 0 ? (int) startBlockIdx : 0;
-            if (blockIdx + 4 > nbBlock - 1 //
-                    && nbBlock > 9) {
+            if (blockIdx + 4 > nbBlock - 1) {
                 startIdx = (int) (blockIdx - (10 - (nbBlock - blockIdx)));
             }
 
             final long lastBlockIdx = nbBlock - 1;
             final long endBlockIdx = blockIdx + 4;
             int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
-            if (blockIdx < 5 //
-                    && nbBlock > 9) {
+            if (blockIdx < 5) {
                 endIdx = 9;
             }
 
-            if (nbBlock > 1) {
-
-                final NavLink previousLink = new NavLink("Anterior");
-                pager.add(previousLink);
-                if (blockIdx == 0L) {
-                    previousLink.setActive(true);
-                } else {
-                    previousLink.addClickHandler(new PagerClickHandler((int) blockIdx - 1, booksResult));
-                }
-
-                for (int i = startIdx; i < endIdx + 1; i++) {
-                    final int numBlock = i + 1;
-                    final NavLink navLink = new NavLink("" + numBlock);
-                    pager.add(navLink);
-                    if (blockIdx == i) {
-                        navLink.setActive(true);
-                    } else {
-                        navLink.addClickHandler(new PagerClickHandler(i, booksResult));
-                    }
-                }
-
-                final NavLink nextLink = new NavLink("Siguiente");
-                pager.add(nextLink);
-                if (blockIdx == nbBlock - 1) {
-                    nextLink.setActive(true);
-                } else {
-                    nextLink.addClickHandler(new PagerClickHandler((int) blockIdx + 1, booksResult));
-                }
+            addPreviousLinkToPager(booksResult, blockIdx);
+            for (int i = startIdx; i < endIdx + 1; i++) {
+                addLinkToPager(booksResult, blockIdx, i);
             }
-
+            addNextLinkToPager(booksResult, blockIdx, nbBlock);
             pager.setVisible(true);
+            return;
+
+        }
+    }
+
+    private void addLinkToPager(final BooksResult booksResult, final long blockIdx, final int i) {
+        final int numBlock = i + 1;
+        final NavLink navLink = new NavLink("" + numBlock);
+        pager.add(navLink);
+        if (blockIdx == i) {
+            navLink.setActive(true);
+        } else {
+            navLink.addClickHandler(new PagerClickHandler(i, booksResult));
+        }
+    }
+
+    private void addNextLinkToPager(final BooksResult booksResult, final long blockIdx, final long nbBlock) {
+        final NavLink nextLink = new NavLink("Siguiente");
+        pager.add(nextLink);
+        if (blockIdx == nbBlock - 1) {
+            nextLink.setActive(true);
+        } else {
+            nextLink.addClickHandler(new PagerClickHandler((int) blockIdx + 1, booksResult));
+        }
+    }
+
+    private void addPreviousLinkToPager(final BooksResult booksResult, final long blockIdx) {
+        final NavLink previousLink = new NavLink("Anterior");
+        pager.add(previousLink);
+        if (blockIdx == 0L) {
+            previousLink.setActive(true);
+        } else {
+            previousLink.addClickHandler(new PagerClickHandler((int) blockIdx - 1, booksResult));
         }
     }
 
