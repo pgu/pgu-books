@@ -6,4 +6,6 @@ public interface BooksPresenter {
 
     void goToSearchBooks(BooksSearch booksSearch);
 
+    void updateResultsPerPage(int resultsPerPage);
+
 }

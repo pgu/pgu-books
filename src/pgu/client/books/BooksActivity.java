@@ -14,6 +14,7 @@ import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
+import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -29,12 +30,14 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     private final BooksView                      view;
     private final BooksServiceAsync              booksService;
     private final AppSetup                       appSetup;
+    private final LoginInfo                      loginInfo;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
         view = clientFactory.getBooksView();
         booksService = clientFactory.getBooksService();
         appSetup = clientFactory.getAppSetup();
+        loginInfo = clientFactory.getLoginInfo();
     }
 
     @Override
@@ -42,6 +45,11 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         this.eventBus = eventBus;
 
         view.setPresenter(this);
+
+        view.getNewBookWidget().setVisible(loginInfo.isLoggedIn());
+        view.getEditionBookWidget().setVisible(loginInfo.isLoggedIn());
+        view.getDeleteBooksWidget().setVisible(loginInfo.isLoggedIn());
+
         panel.setWidget(view.asWidget());
 
         searchBooks(place.getBooksSearch());
@@ -132,6 +140,11 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         handlerRegs.clear();
 
         super.onStop();
+    }
+
+    @Override
+    public void updateResultsPerPage(final int resultsPerPage) {
+        appSetup.setResultsPerPage(resultsPerPage);
     }
 
 }

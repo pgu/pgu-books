@@ -16,16 +16,19 @@ import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.Pagination;
 import com.github.gwtbootstrap.client.ui.base.InlineLabel;
+import com.github.gwtbootstrap.client.ui.constants.BadgeType;
 import com.github.gwtbootstrap.client.ui.constants.ButtonType;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BooksViewImpl extends Composite implements BooksView {
@@ -44,7 +47,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     @UiField
     Button                 addBtn, editBtn, deleteBtn;
     @UiField
-    Badge                  s10, s20, s30, s50;
+    Column                 colBadges;
 
     private BooksPresenter presenter;
 
@@ -146,14 +149,15 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     @Override
     public void setBooks(final BooksResult booksResult) {
+        colBadges.clear();
         booksGrid.clear();
 
         booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
-        // TODO PGU Jul 18, 2012 edition btns if admin
-        // TODO PGU Jul 18, 2012 select badge from appSetup
+        setBadgesForResultsPerPage(booksResult);
+
+        toolBar.setVisible(true);
         // TODO PGU Jul 18, 2012 select rows
         // TODO PGU Jul 18, 2012 new form of edition
-        toolBar.setVisible(true);
 
         setHeaders(booksResult);
 
@@ -262,6 +266,32 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
     }
 
+    private void setBadgesForResultsPerPage(final BooksResult booksResult) {
+        final int booksPerPage = booksResult.getBooksSearch().getLength();
+
+        final int[] bValues = new int[] { 10, 20, 30, 50 };
+        for (final int bValue : bValues) {
+            final Badge badge = new Badge();
+            badge.setText("" + bValue);
+            if (bValue == booksPerPage) {
+                badge.setType(BadgeType.INVERSE);
+
+            } else {
+                badge.setType(BadgeType.DEFAULT);
+                badge.getElement().getStyle().setCursor(Cursor.POINTER);
+                badge.addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(final ClickEvent event) {
+                        presenter.updateResultsPerPage(bValue);
+                        presenter.goToSearchBooks(booksResult.getBooksSearch());
+                    }
+                });
+            }
+            colBadges.add(badge);
+        }
+    }
+
     private class PagerClickHandler implements ClickHandler {
         private int               i = 0;
         private final BooksResult booksResult;
@@ -284,6 +314,21 @@ public class BooksViewImpl extends Composite implements BooksView {
     public void clear() {
         booksGrid.clear();
         pager.setVisible(false);
-        booksFound.setVisible(false);
+        toolBar.setVisible(false);
+    }
+
+    @Override
+    public HasVisibility getDeleteBooksWidget() {
+        return deleteBtn;
+    }
+
+    @Override
+    public HasVisibility getEditionBookWidget() {
+        return editBtn;
+    }
+
+    @Override
+    public HasVisibility getNewBookWidget() {
+        return addBtn;
     }
 }
