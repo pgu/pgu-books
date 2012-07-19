@@ -145,29 +145,101 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
     }
 
-    /**
-     * TODO add handling of OR between values
-     */
     private void appendFieldText(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
         if (!u.isVoid(fieldValue)) {
-            if (sb.length() > 0) {
-                sb.append(" ");
+
+            final String[] values = fieldValue.split(" OR ");
+
+            final StringBuilder _sb = new StringBuilder();
+            for (final String value : values) {
+
+                if (!u.isVoid(value)) {
+
+                    if (_sb.length() > 0) {
+                        _sb.append(" OR ");
+                    }
+                    _sb.append(bookDoc.toString().toUpperCase());
+                    _sb.append(":");
+                    _sb.append("\"" + value + "\"");
+                }
             }
-            sb.append(bookDoc.toString().toUpperCase());
-            sb.append(":");
-            sb.append("\"" + fieldValue + "\"");
+
+            if (sb.length() > 0) {
+                sb.append(" AND ");
+            }
+            sb.append("(");
+            sb.append(_sb.toString());
+            sb.append(")");
+
         }
     }
 
     private void appendFieldInt(final BookDoc bookDoc, final String fieldValue, final StringBuilder sb) {
         if (!u.isVoid(fieldValue)) {
-            if (sb.length() > 0) {
-                sb.append(" ");
+
+            final String[] values = fieldValue.split(" OR "); // 1980 OR 1981
+
+            final StringBuilder _sb = new StringBuilder();
+            for (final String value : values) {
+
+                if (!u.isVoid(value)) {
+
+                    if (_sb.length() > 0) {
+                        _sb.append(" OR ");
+                    }
+
+                    if (value.contains(" AND ")) { // >1980 AND <2010
+                        final String[] parts = value.split(" AND ");
+                        _sb.append("(");
+                        for (int i = 0; i < parts.length; i++) {
+                            if (i > 0) {
+                                _sb.append(" AND ");
+                            }
+                            addFilterInt(bookDoc, _sb, parts[i]);
+                        }
+                        _sb.append(")");
+
+                    } else {
+                        addFilterInt(bookDoc, _sb, value);
+                    }
+                }
             }
-            sb.append(bookDoc.toString().toUpperCase());
-            sb.append(" = ");
-            sb.append(fieldValue);
+
+            if (sb.length() > 0) {
+                sb.append(" AND ");
+            }
+            sb.append("(");
+            sb.append(_sb.toString());
+            sb.append(")");
         }
+    }
+
+    private void addFilterInt(final BookDoc bookDoc, final StringBuilder _sb, final String value) {
+        String operator = "=";
+        String _value = value;
+
+        if (value.contains("<")) {
+            operator = "<";
+            _value = value.replaceAll(operator, "").trim();
+
+        } else if (value.contains("<=")) {
+            operator = "<=";
+            _value = value.replaceAll(operator, "").trim();
+
+        } else if (value.contains(">")) {
+            operator = ">";
+            _value = value.replaceAll(operator, "").trim();
+
+        } else if (value.contains(">=")) {
+            operator = ">=";
+            _value = value.replaceAll(operator, "").trim();
+        }
+
+        _sb.append(bookDoc.toString().toUpperCase());
+        _sb.append(" ");
+        _sb.append(operator);
+        _sb.append(" ");
+        _sb.append(_value);
     }
 
     private BooksResult backup() {

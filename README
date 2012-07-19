@@ -4,8 +4,8 @@ http://gwtbootstrap.github.com/
 
 TODOs
 =====
+* add handling of OR and AND operators in search + icon <?> to inform the user
 * add missing books from .txt
-* add handling of OR and AND operators in search
 * selection of books
 * creation of a book
 * edition of a book
