@@ -45,7 +45,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         handlerRegs.add(eventBus.addHandler(SetupEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
-        final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory.getLoginInfo());
+        final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory);
         menuActivity.start(eventBus);
 
         view.getHeader().setWidget(menuView);

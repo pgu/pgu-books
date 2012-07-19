@@ -10,11 +10,13 @@ import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.Level;
+import pgu.client.app.utils.SearchUtils;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
+import pgu.shared.utils.SortField;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -31,6 +33,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     private final BooksServiceAsync              booksService;
     private final AppSetup                       appSetup;
     private final LoginInfo                      loginInfo;
+    private final SearchUtils                    u;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
@@ -38,6 +41,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         booksService = clientFactory.getBooksService();
         appSetup = clientFactory.getAppSetup();
         loginInfo = clientFactory.getLoginInfo();
+        u = new SearchUtils(clientFactory);
     }
 
     @Override
@@ -61,12 +65,10 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     }
 
     private void searchBooks(final BooksSearch booksSearch) {
-        final BooksSearch search = booksSearch == null ? new BooksSearch() : booksSearch;
-        search.setLength(appSetup.getResultsPerPage());
+        final BooksSearch search = booksSearch == null ? u.newBooksSearch() : u.updateSearch(booksSearch);
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
-        // testBooks(booksSearch);
         booksService.fetchBooks(search, new AsyncCallbackApp<BooksResult>(eventBus) {
 
             @Override
@@ -145,6 +147,12 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
         appSetup.setResultsPerPage(resultsPerPage);
+    }
+
+    @Override
+    public void updateSort(final SortField sortField, final boolean isAscending) {
+        appSetup.setSortField(sortField);
+        appSetup.setAscending(isAscending);
     }
 
 }

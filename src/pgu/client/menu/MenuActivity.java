@@ -5,6 +5,8 @@ import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
+import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.SearchUtils;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
 
@@ -15,13 +17,15 @@ public class MenuActivity implements MenuPresenter //
         , HideWaitingIndicatorEvent.Handler //
 {
 
-    private final MenuView  view;
-    private EventBus        eventBus;
-    private final LoginInfo loginInfo;
+    private final MenuView    view;
+    private EventBus          eventBus;
+    private final LoginInfo   loginInfo;
+    private final SearchUtils u;
 
-    public MenuActivity(final MenuView view, final LoginInfo loginInfo) {
+    public MenuActivity(final MenuView view, final ClientFactory clientFactory) {
         this.view = view;
-        this.loginInfo = loginInfo;
+        loginInfo = clientFactory.getLoginInfo();
+        u = new SearchUtils(clientFactory);
     }
 
     public void start(final EventBus eventBus) {
@@ -53,7 +57,7 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(new SearchBooksEvent(booksSearch));
+        eventBus.fireEvent(new SearchBooksEvent(u.updateSearch(booksSearch)));
     }
 
     @Override

@@ -106,4 +106,5 @@ public class ClientFactoryImpl implements ClientFactory {
     public AppSetup getAppSetup() {
         return appSetup;
     }
+
 }

@@ -41,4 +41,5 @@ public interface ClientFactory {
     SetupView getSetupView();
 
     AppSetup getAppSetup();
+
 }

@@ -118,20 +118,16 @@ public class BooksViewImpl extends Composite implements BooksView {
 
             @Override
             public void onClick(final ClickEvent event) {
-                final BooksSearch booksSearch = booksResult.getBooksSearch();
-                booksSearch.setSortField(sortField);
-                booksSearch.setAscending(true);
-                presenter.goToSearchBooks(booksSearch);
+                presenter.updateSort(sortField, true);
+                presenter.goToSearchBooks(booksResult.getBooksSearch());
             }
         });
         downBtn.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                final BooksSearch booksSearch = booksResult.getBooksSearch();
-                booksSearch.setSortField(sortField);
-                booksSearch.setAscending(false);
-                presenter.goToSearchBooks(booksSearch);
+                presenter.updateSort(sortField, false);
+                presenter.goToSearchBooks(booksResult.getBooksSearch());
             }
         });
     }

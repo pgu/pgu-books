@@ -59,11 +59,14 @@ public class MenuViewImpl extends Composite implements MenuView {
         onSearchTextKeyUp();
         popoverInfo.setAnimation(true);
         popoverInfo.setPlacement(Placement.BOTTOM);
-        popoverInfo.setText("Se puede utilizar el \"OR\": " + //
-                "Angel OR Adolfo. " + //
-                "También, para el campo \"Año\", se puede utilizar: " + //
-                ">1986 AND <1989 o " + //
-                "1982 OR >1986 AND <1989" //
+        popoverInfo.setText("Para todos los campos<br>" + //
+                "se puede utilizar \"OR\"<br>" + //
+                "Ej: angel <b>OR</b> adolfo<br>" + //
+                "<br>" + //
+                "Para el campo <i>Año</i>,<br>" + //
+                "también se puede utilizar<br>" + //
+                "Ej: <b>>1986 AND <1989</b><br>" + //
+                "o <b>1982 OR >1986 AND <1989</b>" //
         );
     }
 
@@ -89,8 +92,7 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("goToSearchBtn")
     public void clickGoToSearch(final ClickEvent e) {
-        final BooksSearch booksSearch = new BooksSearch();
-        presenter.searchBooks(booksSearch);
+        presenter.searchBooks(new BooksSearch());
     }
 
     @UiHandler("goToImportBtn")
@@ -161,7 +163,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     private void searchWithText() {
-        // TODO PGU Jul 19, 2012 recup config of sort
+
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setSearchText(sText.getTextBox().getText());
 
