@@ -28,6 +28,9 @@
             <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"/>        
             <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             <b:Button ui:field="searchOnFieldsBtn" icon="SEARCH">Buscar</b:Button>
+            <b:Popover ui:field="popoverInfo" heading="Información">
+                <b:Button icon="INFO_SIGN" type="INFO"></b:Button>
+            </b:Popover>
         </b:Navbar>
         <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
     </g:HTMLPanel>

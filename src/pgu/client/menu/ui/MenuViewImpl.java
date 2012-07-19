@@ -9,9 +9,11 @@ import pgu.shared.dto.BooksSearch;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavSearch;
+import com.github.gwtbootstrap.client.ui.Popover;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
+import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -40,6 +42,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
     NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn;
+    @UiField
+    Popover               popoverInfo;
 
     private MenuPresenter presenter;
 
@@ -53,6 +57,14 @@ public class MenuViewImpl extends Composite implements MenuView {
         onFieldsKeyPress();
         onSearchTextKeyPress();
         onSearchTextKeyUp();
+        popoverInfo.setAnimation(true);
+        popoverInfo.setPlacement(Placement.BOTTOM);
+        popoverInfo.setText("Se puede utilizar el \"OR\": " + //
+                "Angel OR Adolfo. " + //
+                "También, para el campo \"Año\", se puede utilizar: " + //
+                ">1986 AND <1989 o " + //
+                "1982 OR >1986 AND <1989" //
+        );
     }
 
     private void onSearchTextKeyUp() {
