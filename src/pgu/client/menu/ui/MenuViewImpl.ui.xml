@@ -25,7 +25,7 @@
             <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"/>        
             <b:NavSearch ui:field="sEditor" size="2" placeholder="Editor" alignment="LEFT"/>        
             <b:NavSearch ui:field="sCategory" size="2" placeholder="Categoría" alignment="LEFT"/>        
-            <b:NavSearch ui:field="sYear" size="1" placeholder="Año" alignment="LEFT"/>        
+            <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"/>        
             <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             <b:Button ui:field="searchOnFieldsBtn" icon="SEARCH">Buscar</b:Button>
         </b:Navbar>

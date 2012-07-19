@@ -17,6 +17,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -50,6 +52,17 @@ public class MenuViewImpl extends Composite implements MenuView {
         progressBar.setVisible(false);
         onFieldsKeyPress();
         onSearchTextKeyPress();
+        onSearchTextKeyUp();
+    }
+
+    private void onSearchTextKeyUp() {
+        sText.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+
+            @Override
+            public void onKeyUp(final KeyUpEvent event) {
+                sText.setTitle(sText.getTextBox().getText());
+            }
+        });
     }
 
     @Override
@@ -108,6 +121,13 @@ public class MenuViewImpl extends Composite implements MenuView {
                     }
                 }
             });
+            box.addKeyUpHandler(new KeyUpHandler() {
+
+                @Override
+                public void onKeyUp(final KeyUpEvent event) {
+                    box.setTitle(box.getText());
+                }
+            });
         }
     }
 
@@ -129,6 +149,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     private void searchWithText() {
+        // TODO PGU Jul 19, 2012 recup config of sort
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setSearchText(sText.getTextBox().getText());
 
