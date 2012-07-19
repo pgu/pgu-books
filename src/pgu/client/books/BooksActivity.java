@@ -2,8 +2,10 @@ package pgu.client.books;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.NotificationEvent;
+import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
@@ -18,12 +20,16 @@ import pgu.shared.dto.LoginInfo;
 import pgu.shared.utils.SortField;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class BooksActivity extends AbstractActivity implements BooksPresenter {
+public class BooksActivity extends AbstractActivity implements BooksPresenter //
+        , RefreshBooksEvent.Handler //
+{
 
     private EventBus                             eventBus;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
@@ -54,6 +60,23 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
         view.getDeleteBooksWidget().setVisible(loginInfo.isLoggedIn());
 
         panel.setWidget(view.asWidget());
+
+        handlerRegs.add(eventBus.addHandler(RefreshBooksEvent.TYPE, this));
+
+        handlerRegs.add(view.getNewBookWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                eventBus.fireEvent(new BookEditEvent(null));
+            }
+        }));
+        handlerRegs.add(view.getEditionBookWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                eventBus.fireEvent(new BookEditEvent(view.getSelectedBook()));
+            }
+        }));
 
         searchBooks(place.getBooksSearch());
     }
@@ -152,6 +175,11 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
     public void updateSort(final SortField sortField, final boolean isAscending) {
         appSetup.setSortField(sortField);
         appSetup.setAscending(isAscending);
+    }
+
+    @Override
+    public void onRefreshBooks(final RefreshBooksEvent event) {
+        searchBooks(place.getBooksSearch());
     }
 
 }

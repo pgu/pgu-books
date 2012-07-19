@@ -2,6 +2,7 @@ package pgu.client.app;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
@@ -10,6 +11,7 @@ import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
+import pgu.client.book.BookActivity;
 import pgu.client.books.BooksPlace;
 import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
@@ -25,8 +27,10 @@ public class AppActivity implements SearchBooksEvent.Handler //
         , ImportBooksEvent.Handler //
         , SetupEvent.Handler //
         , NotificationEvent.Handler //
+        , BookEditEvent.Handler //
 {
 
+    private ClientFactory                        clientFactory;
     private final AppView                        view;
     private final PlaceController                placeController;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
@@ -37,12 +41,14 @@ public class AppActivity implements SearchBooksEvent.Handler //
     }
 
     public void start(final EventBus eventBus, final ClientFactory clientFactory) {
+        this.clientFactory = clientFactory;
 
         handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(SetupEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(BookEditEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory);
@@ -121,6 +127,12 @@ public class AppActivity implements SearchBooksEvent.Handler //
     @Override
     public void onSetup(final SetupEvent event) {
         placeController.goTo(new SetupPlace());
+    }
+
+    @Override
+    public void onBookEdit(final BookEditEvent event) {
+        final BookActivity bookActivity = new BookActivity(clientFactory);
+        bookActivity.start(event.getBook());
     }
 
 }

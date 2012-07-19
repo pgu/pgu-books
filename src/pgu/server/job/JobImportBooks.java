@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.service.AdminBooksServiceImpl;
-import pgu.shared.AppUtils;
+import pgu.server.utils.AppUtils;
 import pgu.shared.domain.ImportResult;
 
 import com.googlecode.objectify.Key;

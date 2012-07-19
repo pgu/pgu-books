@@ -20,7 +20,7 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
-import pgu.shared.AppUtils;
+import pgu.server.utils.AppUtils;
 import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
 

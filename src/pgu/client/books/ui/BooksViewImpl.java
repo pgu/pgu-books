@@ -1,5 +1,6 @@
 package pgu.client.books.ui;
 
+import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
@@ -25,6 +26,8 @@ import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -152,8 +155,6 @@ public class BooksViewImpl extends Composite implements BooksView {
         setBadgesForResultsPerPage(booksResult);
 
         toolBar.setVisible(true);
-        // TODO PGU Jul 18, 2012 select rows
-        // TODO PGU Jul 18, 2012 new form of edition
 
         setHeaders(booksResult);
 
@@ -339,12 +340,61 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public HasVisibility getEditionBookWidget() {
-        return editBtn;
+    public HasClickAndVisibility getEditionBookWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return editBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                editBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return editBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                editBtn.fireEvent(event);
+            }
+
+        };
     }
 
     @Override
-    public HasVisibility getNewBookWidget() {
-        return addBtn;
+    public HasClickAndVisibility getNewBookWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                addBtn.fireEvent(event);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return addBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                addBtn.setVisible(visible);
+            }
+
+            @Override
+            public boolean isVisible() {
+                return addBtn.isVisible();
+            }
+        };
+    }
+
+    @Override
+    public Book getSelectedBook() {
+        // TODO PGU
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package pgu.client.app.mvp;
 
 import pgu.client.app.AppView;
 import pgu.client.app.utils.AppSetup;
+import pgu.client.books.BookView;
 import pgu.client.books.BooksView;
 import pgu.client.importBooks.ImportBooksView;
 import pgu.client.menu.MenuView;
@@ -41,5 +42,7 @@ public interface ClientFactory {
     SetupView getSetupView();
 
     AppSetup getAppSetup();
+
+    BookView getBookView();
 
 }

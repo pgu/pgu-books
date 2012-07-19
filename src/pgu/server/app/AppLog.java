@@ -3,7 +3,7 @@ package pgu.server.app;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import pgu.shared.AppUtils;
+import pgu.server.utils.AppUtils;
 
 public class AppLog {
 

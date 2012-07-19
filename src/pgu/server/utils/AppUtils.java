@@ -1,4 +1,4 @@
-package pgu.shared;
+package pgu.server.utils;
 
 import com.google.appengine.api.utils.SystemProperty;
 

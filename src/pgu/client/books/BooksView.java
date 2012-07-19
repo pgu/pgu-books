@@ -1,5 +1,7 @@
 package pgu.client.books;
 
+import pgu.client.app.utils.HasClickAndVisibility;
+import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 
 import com.google.gwt.user.client.ui.HasVisibility;
@@ -15,7 +17,9 @@ public interface BooksView extends IsWidget {
 
     HasVisibility getDeleteBooksWidget();
 
-    HasVisibility getEditionBookWidget();
+    HasClickAndVisibility getEditionBookWidget();
 
-    HasVisibility getNewBookWidget();
+    HasClickAndVisibility getNewBookWidget();
+
+    Book getSelectedBook();
 }
