@@ -11,7 +11,7 @@ public interface BooksView extends IsWidget {
 
     void setPresenter(BooksPresenter presenter);
 
-    void setBooks(BooksResult booksResult);
+    void setBooks(BooksResult booksResult, boolean isEditable);
 
     void clear();
 
@@ -22,4 +22,6 @@ public interface BooksView extends IsWidget {
     HasClickAndVisibility getNewBookWidget();
 
     Book getSelectedBook();
+
+    void clearHandlers();
 }

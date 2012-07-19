@@ -88,6 +88,8 @@ public class AppViewImpl extends Composite implements AppView {
 
             @Override
             public void setLevel(final Level level) {
+
+                String prefixHeading = "";
                 if (Level.ERROR == level) {
                     alert = new AlertBlock(AlertType.ERROR);
                     alert.setClose(true);
@@ -102,6 +104,7 @@ public class AppViewImpl extends Composite implements AppView {
                     alert = new AlertBlock(AlertType.SUCCESS);
                     alert.setClose(false);
                     hasCloseAction = false;
+                    prefixHeading = "<i class=\"icon-thumbs-up\"></i> ";
 
                 } else if (Level.WARNING == level) {
                     alert = new AlertBlock(AlertType.WARNING);
@@ -116,7 +119,7 @@ public class AppViewImpl extends Composite implements AppView {
                 }
                 alert.setAnimation(true);
                 alert.setHTML(text);
-                alert.setHeading(heading);
+                alert.setHeading(prefixHeading + heading);
             }
 
             @Override

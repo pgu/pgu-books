@@ -1,6 +1,12 @@
 .my-show-grid:hover {
     background: #DDD;
 }
+.row-selected {
+    background-color: #D9EDF7 !important;
+}
+.row-editable {
+    cursor: pointer;
+}
 .row-header {
     font-weight: bold;
 }

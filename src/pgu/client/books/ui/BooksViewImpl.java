@@ -1,5 +1,9 @@
 package pgu.client.books.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
@@ -147,9 +151,10 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public void setBooks(final BooksResult booksResult) {
+    public void setBooks(final BooksResult booksResult, final boolean isEditable) {
         colBadges.clear();
         booksGrid.clear();
+        selectedRows.clear();
 
         booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
         setBadgesForResultsPerPage(booksResult);
@@ -185,11 +190,32 @@ public class BooksViewImpl extends Composite implements BooksView {
             row.add(yearCol);
             row.add(commentCol);
 
+            if (isEditable) {
+                row.addStyleName("row-editable");
+                row2book.put(row, book);
+                handlerRegs.add(row.addDomHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(final ClickEvent event) {
+                        if (selectedRows.contains(row)) {
+                            selectedRows.remove(row);
+                            row.removeStyleName("row-selected");
+                        } else {
+                            selectedRows.add(row);
+                            row.addStyleName("row-selected");
+                        }
+                    }
+                }, ClickEvent.getType()));
+            }
+
             booksGrid.add(row);
             count++;
         }
         setPager(booksResult);
     }
+
+    private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
+    private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
 
     public void setPager(final BooksResult booksResult) {
 
@@ -394,7 +420,21 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     @Override
     public Book getSelectedBook() {
-        // TODO PGU
-        return null;
+        if (selectedRows.size() != 1) {
+            return null;
+        }
+
+        return row2book.get(selectedRows.iterator().next());
+    }
+
+    private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
+
+    @Override
+    public void clearHandlers() {
+        for (HandlerRegistration handlerReg : handlerRegs) {
+            handlerReg.removeHandler();
+            handlerReg = null;
+        }
+        handlerRegs.clear();
     }
 }

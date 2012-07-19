@@ -13,7 +13,6 @@ import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.SearchUtils;
 import pgu.client.service.BooksServiceAsync;
-import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
@@ -23,7 +22,6 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -39,6 +37,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     private final AppSetup                       appSetup;
     private final LoginInfo                      loginInfo;
     private final SearchUtils                    u;
+    private boolean                              isEditable  = false;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
@@ -55,9 +54,10 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
 
         view.setPresenter(this);
 
-        view.getNewBookWidget().setVisible(loginInfo.isLoggedIn());
-        view.getEditionBookWidget().setVisible(loginInfo.isLoggedIn());
-        view.getDeleteBooksWidget().setVisible(loginInfo.isLoggedIn());
+        isEditable = loginInfo.isLoggedIn();
+        view.getNewBookWidget().setVisible(isEditable);
+        view.getEditionBookWidget().setVisible(isEditable);
+        view.getDeleteBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
@@ -78,7 +78,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
             }
         }));
 
-        searchBooks(place.getBooksSearch());
+        searchBooks(place.getBooksSearch(), isEditable);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         eventBus.fireEvent(u.newSearchEvent(booksSearch));
     }
 
-    private void searchBooks(final BooksSearch booksSearch) {
+    private void searchBooks(final BooksSearch booksSearch, final boolean isEditable) {
         final BooksSearch search = booksSearch == null ? u.newBooksSearch() : u.updateSearch(booksSearch);
 
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
@@ -102,61 +102,15 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
                             "Más de 1000 resultados correspondan a su búsqueda. <br>Modifiquen los criterios, por favor"));
                 } else {
                     booksResult.setBooksSearch(search);
-                    view.setBooks(booksResult);
+                    view.setBooks(booksResult, isEditable);
                 }
             }
         });
     }
 
-    private void testBooks(final BooksSearch booksSearch) {
-        new Timer() {
-
-            @Override
-            public void run() {
-
-                int total;
-                try {
-                    total = Integer.parseInt(booksSearch.getTitle());
-                } catch (final IllegalArgumentException e) {
-                    total = 5;
-                }
-
-                final int start = booksSearch.getStart();
-
-                final int delta1 = booksSearch.getLength();
-                final int delta2 = total - booksSearch.getStart();
-
-                final int stop = delta2 > delta1 ? delta1 : delta2;
-
-                final ArrayList<Book> books = new ArrayList<Book>();
-                for (int i = start + 1; i < start + 1 + stop; i++) {
-
-                    final Book book = new Book() //
-                            .title("title " + i) //
-                            .author("author " + i) //
-                            .editor("editor " + i) //
-                            .category("cat " + i) //
-                            .year(1980 + i) //
-                            .comment("comment " + i) //
-                            .id(1L * i) //
-                    ;
-
-                    books.add(book);
-                }
-                final BooksResult booksResult = new BooksResult();
-                booksResult.setBooks(books);
-                booksResult.setBooksSearch(booksSearch);
-                booksResult.setNbFound(total);
-
-                eventBus.fireEvent(new HideWaitingIndicatorEvent());
-                view.setBooks(booksResult);
-            }
-
-        }.schedule(500);
-    }
-
     @Override
     public void onStop() {
+        view.clearHandlers();
         for (HandlerRegistration handlerReg : handlerRegs) {
             handlerReg.removeHandler();
             handlerReg = null;
@@ -179,7 +133,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
 
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
-        searchBooks(place.getBooksSearch());
+        searchBooks(place.getBooksSearch(), isEditable);
     }
 
 }
