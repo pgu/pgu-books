@@ -3,7 +3,7 @@
     <cron>
         <url>/cron/jobImportBooks</url>
         <description>Import books</description>
-        <schedule>every 60 minutes</schedule>
+        <schedule>every 120 minutes</schedule>
     </cron>
     <!-- 
         <schedule>every 1 minutes</schedule>
