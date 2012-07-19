@@ -10,6 +10,8 @@ import pgu.client.books.BookView;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.shared.domain.Book;
 
+import com.github.gwtbootstrap.client.ui.event.HiddenEvent;
+import com.github.gwtbootstrap.client.ui.event.HiddenHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -32,10 +34,10 @@ public class BookActivity {
     }
 
     private void addCloseHandler() {
-        view.getCloseHandler().addClickHandler(new ClickHandler() {
+        view.getCloseHandler().addHiddenHandler(new HiddenHandler() {
 
             @Override
-            public void onClick(final ClickEvent event) {
+            public void onHidden(final HiddenEvent hiddenEvent) {
                 eventBus.fireEvent(new RefreshBooksEvent());
             }
 

@@ -9,6 +9,7 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
 import com.github.gwtbootstrap.client.ui.constants.AlertType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -208,6 +209,11 @@ public class BookViewImpl extends Composite implements BookView {
     @Override
     public HasClickHandlers getCancelWidget() {
         return cancelBtn;
+    }
+
+    @Override
+    public HasVisibleHandlers getCloseHandler() {
+        return container;
     }
 
 }
