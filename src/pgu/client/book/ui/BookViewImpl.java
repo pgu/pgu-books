@@ -43,7 +43,6 @@ public class BookViewImpl extends Composite implements BookView {
     public BookViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
         progressBar.setVisible(false);
-        notification.setVisible(false);
     }
 
     @Override
@@ -191,7 +190,7 @@ public class BookViewImpl extends Composite implements BookView {
                         alert.close();
                     }
 
-                }.schedule(5000);
+                }.schedule(3000);
             }
 
             @Override

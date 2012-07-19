@@ -164,7 +164,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
     // https://developers.google.com/appengine/docs/java/search/overview
     @Override
-    public void saveBook(final Book book) {
+    public Book saveBook(final Book book) {
 
         if (null == book.getId()) { // creation
 
@@ -209,6 +209,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             // update book
             dao.ofy().put(book);
         }
+
+        return book;
     }
 
     private ScoredDocument fetchDocByBook(final Book book) {

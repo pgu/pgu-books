@@ -84,11 +84,13 @@ public class BookActivity {
                 }
 
                 view.getWaitingIndicator().setVisible(true);
-                adminBookService.saveBook(_book, new AsyncCallbackApp<Void>(eventBus) {
+
+                adminBookService.saveBook(_book, new AsyncCallbackApp<Book>(eventBus) {
 
                     @Override
-                    public void onSuccess(final Void result) {
-                        book = _book;
+                    public void onSuccess(final Book savedBook) {
+
+                        book = savedBook;
                         fillViewWithCurrentBook();
 
                         view.getWaitingIndicator().setVisible(false);

@@ -13,7 +13,7 @@ public interface AdminBooksService extends RemoteService {
 
     ImportResult importBooks(int start, int length);
 
-    void saveBook(Book book);
+    Book saveBook(Book book);
 
     void deleteBooks(ArrayList<Book> selectedBooks);
 

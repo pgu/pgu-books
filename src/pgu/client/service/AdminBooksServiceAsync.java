@@ -11,7 +11,7 @@ public interface AdminBooksServiceAsync {
 
     void importBooks(int start, int length, AsyncCallback<ImportResult> callback);
 
-    void saveBook(Book book, AsyncCallback<Void> callback);
+    void saveBook(Book book, AsyncCallback<Book> callback);
 
     void deleteBooks(ArrayList<Book> selectedBooks, AsyncCallback<Void> callback);
 
