@@ -2,7 +2,6 @@ package pgu.client.menu;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.ImportBooksEvent;
-import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
@@ -57,7 +56,7 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(new SearchBooksEvent(u.updateSearch(booksSearch)));
+        eventBus.fireEvent(u.newSearchEvent(booksSearch));
     }
 
     @Override

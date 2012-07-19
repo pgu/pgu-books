@@ -1,5 +1,6 @@
 package pgu.client.app.utils;
 
+import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.shared.dto.BooksSearch;
 
@@ -9,6 +10,11 @@ public class SearchUtils {
 
     public SearchUtils(final ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
+    }
+
+    public SearchBooksEvent newSearchEvent(final BooksSearch booksSearch) {
+        final BooksSearch search = booksSearch == null ? newBooksSearch() : updateSearch(booksSearch);
+        return new SearchBooksEvent(search);
     }
 
     public BooksSearch updateSearch(final BooksSearch booksSearch) {

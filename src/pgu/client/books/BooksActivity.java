@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.NotificationEvent;
-import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
@@ -61,7 +60,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter {
 
     @Override
     public void goToSearchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(new SearchBooksEvent(booksSearch));
+        eventBus.fireEvent(u.newSearchEvent(booksSearch));
     }
 
     private void searchBooks(final BooksSearch booksSearch) {
