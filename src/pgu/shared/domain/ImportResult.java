@@ -18,6 +18,7 @@ public class ImportResult implements IsSerializable {
     private String            lastBook;
     private int               lastLineNb;
     private boolean           lastImport;
+    private int               countImported;
 
     @Override
     public int hashCode() {
@@ -126,6 +127,14 @@ public class ImportResult implements IsSerializable {
 
     public void setLastImport(final boolean lastImport) {
         this.lastImport = lastImport;
+    }
+
+    public void setCountImported(final int countImported) {
+        this.countImported = countImported;
+    }
+
+    public int getCountImported() {
+        return countImported;
     }
 
 }

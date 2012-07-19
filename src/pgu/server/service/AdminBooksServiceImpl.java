@@ -126,6 +126,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     dao.ofy().put(previousImportResult);
                 }
 
+                importResult.setCountImported(countImported);
                 importResult.setLastLineNb(counter);
                 importResult.setLastBook(lastBook == null ? "" : lastBook.toString());
                 importResult.setMisseds(misseds);

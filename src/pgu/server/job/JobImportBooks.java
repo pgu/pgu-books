@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -22,6 +23,8 @@ import pgu.server.app.AppLog;
 import pgu.server.service.AdminBooksServiceImpl;
 import pgu.shared.AppUtils;
 import pgu.shared.domain.ImportResult;
+
+import com.googlecode.objectify.Key;
 
 @SuppressWarnings("serial")
 public class JobImportBooks extends HttpServlet {
@@ -56,20 +59,38 @@ public class JobImportBooks extends HttpServlet {
         final ImportResult importResult = dao.ofy().query(ImportResult.class).filter("lastImport", true).get();
         if (importResult == null) {
             final String message = "No previous import has been found";
-            sendMail(message);
+            if (u.isEnvProd()) {
+                sendMail(message);
+            }
             log.warning(this, message);
             return;
         }
 
         if (!importResult.isDone()) {
             final String message = "Something went wrong with the last import. Fix it before using the automatic import";
-            sendMail(message);
+            if (u.isEnvProd()) {
+                sendMail(message);
+            }
             log.warning(this, message);
             return;
         }
 
         service.setExternalServletContext(getServletContext());
         service.importBooks(importResult.getLastLineNb(), 50);
+
+        cleanOldImportResults();
+    }
+
+    private void cleanOldImportResults() {
+        final List<Key<ImportResult>> keyOldImportResults = dao.ofy().query(ImportResult.class) //
+                .filter("lastImport", false) //
+                .filter("done", true) //
+                .filter("countImported", 0) //
+                .listKeys();
+
+        if (keyOldImportResults.size() > 48) {
+            dao.ofy().delete(keyOldImportResults);
+        }
     }
 
     private void sendMail(final String message) {
@@ -81,7 +102,7 @@ public class JobImportBooks extends HttpServlet {
         final Message msg = new MimeMessage(session);
         try {
             msg.setFrom(new InternetAddress("guilcher.pascal.dev@gmail.com", "pgu-books"));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress("guilcher.pascal@gmail.com", "admin"));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress("guilcher.pascal@gmail.com", "owner"));
             msg.setSubject("Books import");
             msg.setText(message);
 
