@@ -1,9 +1,17 @@
 package pgu.server.job;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -38,25 +46,55 @@ public class JobImportBooks extends HttpServlet {
 
             final String value = req.getHeader("X-AppEngine-Cron");
             if (!"true".equalsIgnoreCase(value)) {
-                log.error(this, new UnsupportedOperationException(
-                        "The servlet has been called from something else than the cron job"));
+                final String message = "The servlet has been called from something else than the cron job";
+                sendMail(message);
+                log.error(this, new UnsupportedOperationException(message));
                 return;
             }
         }
 
         final ImportResult importResult = dao.ofy().query(ImportResult.class).filter("lastImport", true).get();
         if (importResult == null) {
-            log.warning(this, "No previous import has been found");
+            final String message = "No previous import has been found";
+            sendMail(message);
+            log.warning(this, message);
             return;
         }
 
         if (!importResult.isDone()) {
-            log.warning(this, "Something went wrong with the last import. Fix it before using the automatic import");
+            final String message = "Something went wrong with the last import. Fix it before using the automatic import";
+            sendMail(message);
+            log.warning(this, message);
             return;
         }
 
         service.setExternalServletContext(getServletContext());
         service.importBooks(importResult.getLastLineNb(), 50);
+    }
+
+    private void sendMail(final String message) {
+        log.info(this, "Send an email about [%s]", message);
+
+        final Properties props = new Properties();
+        final Session session = Session.getDefaultInstance(props, null);
+
+        final Message msg = new MimeMessage(session);
+        try {
+            msg.setFrom(new InternetAddress("guilcher.pascal.dev@gmail.com", "pgu-books"));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress("guilcher.pascal@gmail.com", "admin"));
+            msg.setSubject("Books import");
+            msg.setText(message);
+
+            Transport.send(msg);
+
+        } catch (final UnsupportedEncodingException e) {
+            log.error(this, e);
+            throw new RuntimeException(e);
+
+        } catch (final MessagingException e) {
+            log.error(this, e);
+            throw new RuntimeException(e);
+        }
     }
 
 }

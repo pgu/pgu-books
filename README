@@ -4,7 +4,8 @@ http://gwtbootstrap.github.com/
 
 TODOs
 =====
-* import books by cron and notifications by email
+* notifications by email
+* clean the impor results where imported = 0
 * add missing books from .txt
 * add handling of OR and AND operators in search
 * selection of books
