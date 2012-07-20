@@ -4,13 +4,13 @@
     xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
     
     <g:HTMLPanel>
-        <b:Modal ui:field="container" backdrop="STATIC" keyboard="true" animation="true">
+        <b:Modal ui:field="container" backdrop="STATIC" keyboard="true" animation="true" title="Borrar libros">
             <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
             <g:HTMLPanel ui:field="notification" />
             <b:Alert ui:field="message" type="DEFAULT" close="false" animation="true"></b:Alert>
             <b:ModalFooter>
                 <b:Button ui:field="cancelBtn" icon="UNDO">Anular</b:Button>
-                <b:Button ui:field="confirmBtn" icon="FIRE" type="PRIMARY">Guardar</b:Button>
+                <b:Button ui:field="confirmBtn" icon="OK" type="PRIMARY">Borrar</b:Button>
             </b:ModalFooter>
         </b:Modal>
     </g:HTMLPanel>

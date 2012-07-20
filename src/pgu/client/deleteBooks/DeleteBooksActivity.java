@@ -39,11 +39,14 @@ public class DeleteBooksActivity {
         }
 
         final StringBuilder sb = new StringBuilder();
-        sb.append("Es usted seguro de borrar los libros seleccionados?<br>");
+        sb.append("Es usted seguro de querer borrar los libros seleccionados?<br>");
+        sb.append("<ul>");
         for (final Book book : books) {
+            sb.append("<li>");
             sb.append(book.getTitle());
-            sb.append("<br>");
+            sb.append("</li>");
         }
+        sb.append("</ul>");
 
         view.getMessageWidget().setHTML(sb.toString());
         view.show();

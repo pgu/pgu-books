@@ -38,6 +38,7 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
 
     public DeleteBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
+        progressBar.setVisible(false);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
 
             @Override
             public void setText(final String text) {
-                message.setHeading("<i class=\"icon-warning-sign\"></i> Warning");
+                message.setHeading("<i class=\"icon-warning-sign\"></i> Warning<br>");
                 message.setText(text);
             }
 
@@ -92,7 +93,7 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
 
             @Override
             public void setHTML(final String html) {
-                message.setHeading("<i class=\"icon-warning-sign\"></i> Warning");
+                message.setHeading("<i class=\"icon-warning-sign\"></i> Warning<br>");
                 message.setHTML(html);
             }
 
