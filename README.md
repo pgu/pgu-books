@@ -11,6 +11,9 @@ http://gwtbootstrap.github.com/<br><br>
 TODOs<br>
 =====<br>
 * add more books from .txt<br>
+* deal with requests with more than 1000 books<br>
+* include books search engines<br>
+* include charts<br>
 </p>
 </body>
 </html>
