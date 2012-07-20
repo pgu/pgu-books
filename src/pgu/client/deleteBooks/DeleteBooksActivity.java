@@ -3,6 +3,7 @@ package pgu.client.deleteBooks;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.Level;
@@ -44,6 +45,8 @@ public class DeleteBooksActivity {
                     handlerReg = null;
                 }
                 handlerRegs.clear();
+
+                eventBus.fireEvent(new RefreshBooksEvent());
             }
 
         });
