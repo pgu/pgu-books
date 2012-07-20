@@ -74,7 +74,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             // query is either on any text or on fields
             final StringBuilder sb = new StringBuilder();
             if (!u.isVoid(searchText)) {
-                sb.append("\"" + searchText + "\"");
+                sb.append("~\"" + searchText + "\"");
 
             } else {
                 appendFieldText(BookDoc.DOC_TYPE, DocType.BOOK._(), sb);

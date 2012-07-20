@@ -27,4 +27,6 @@ public interface BooksView extends IsWidget {
     void clearHandlers();
 
     HashSet<Book> getSelectedBooks();
+
+    HasClickAndVisibility getRefreshBooksWidget();
 }

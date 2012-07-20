@@ -1,6 +1,5 @@
 package pgu.client.book;
 
-import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.ClientUtils;
@@ -10,8 +9,6 @@ import pgu.client.books.BookView;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.shared.domain.Book;
 
-import com.github.gwtbootstrap.client.ui.event.HiddenEvent;
-import com.github.gwtbootstrap.client.ui.event.HiddenHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -30,18 +27,6 @@ public class BookActivity {
 
         addSaveHandler();
         addCancelHandler();
-        addCloseHandler();
-    }
-
-    private void addCloseHandler() {
-        view.getCloseHandler().addHiddenHandler(new HiddenHandler() {
-
-            @Override
-            public void onHidden(final HiddenEvent hiddenEvent) {
-                eventBus.fireEvent(new RefreshBooksEvent());
-            }
-
-        });
     }
 
     private void addCancelHandler() {

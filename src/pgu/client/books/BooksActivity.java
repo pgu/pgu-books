@@ -59,6 +59,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         view.getCreateBookWidget().setVisible(isEditable);
         view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
+        view.getRefreshBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
@@ -83,6 +84,13 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
             @Override
             public void onClick(final ClickEvent event) {
                 eventBus.fireEvent(new DeleteBooksEvent(view.getSelectedBooks()));
+            }
+        }));
+        handlerRegs.add(view.getRefreshBooksWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                eventBus.fireEvent(new RefreshBooksEvent());
             }
         }));
 

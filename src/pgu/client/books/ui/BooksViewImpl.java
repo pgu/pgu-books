@@ -51,7 +51,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     @UiField
     Pagination             pager;
     @UiField
-    Button                 addBtn, editBtn, deleteBtn;
+    Button                 addBtn, editBtn, deleteBtn, refreshBtn;
     @UiField
     Column                 colBadges;
 
@@ -360,6 +360,33 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
+    public HasClickAndVisibility getRefreshBooksWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return refreshBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                refreshBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return refreshBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                refreshBtn.fireEvent(event);
+            }
+
+        };
+    }
+
+    @Override
     public HasClickAndVisibility getDeleteBooksWidget() {
         return new HasClickAndVisibility() {
 
@@ -468,4 +495,5 @@ public class BooksViewImpl extends Composite implements BooksView {
 
         return books;
     }
+
 }
