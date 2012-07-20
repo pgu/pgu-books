@@ -45,8 +45,6 @@ public class DeleteBooksActivity {
                     handlerReg = null;
                 }
                 handlerRegs.clear();
-
-                eventBus.fireEvent(new RefreshBooksEvent());
             }
 
         });
@@ -98,6 +96,7 @@ public class DeleteBooksActivity {
 
                         notification.show();
 
+                        eventBus.fireEvent(new RefreshBooksEvent());
                     }
 
                     @Override

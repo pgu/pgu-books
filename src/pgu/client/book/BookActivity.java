@@ -47,8 +47,6 @@ public class BookActivity {
                     handlerReg = null;
                 }
                 handlerRegs.clear();
-
-                eventBus.fireEvent(new RefreshBooksEvent());
             }
 
         });
@@ -111,6 +109,8 @@ public class BookActivity {
                         notification.setLevel(Level.SUCCESS);
 
                         notification.show();
+
+                        eventBus.fireEvent(new RefreshBooksEvent());
                     }
 
                     @Override
