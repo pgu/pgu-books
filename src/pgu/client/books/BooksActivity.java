@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
-import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
-import pgu.client.app.utils.Level;
 import pgu.client.app.utils.SearchUtils;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.BooksResult;
@@ -113,13 +111,14 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                if (booksResult.getNbFound() > 1000) {
-                    eventBus.fireEvent(new NotificationEvent(Level.WARNING, //
-                            "Más de 1000 resultados correspondan a su búsqueda. <br>Modifiquen los criterios, por favor"));
-                } else {
-                    booksResult.setBooksSearch(search);
-                    view.setBooks(booksResult, isEditable);
-                }
+                // TODO PGU Jul 20, 2012 see for the search limits...
+                // if (booksResult.getNbFound() > 1000) {
+                // eventBus.fireEvent(new NotificationEvent(Level.WARNING, //
+                // "Más de 1000 resultados correspondan a su búsqueda. <br>Modifiquen los criterios, por favor"));
+                // } else {
+                booksResult.setBooksSearch(search);
+                view.setBooks(booksResult, isEditable);
+                // }
             }
         });
     }
