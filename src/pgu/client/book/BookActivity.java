@@ -1,5 +1,8 @@
 package pgu.client.book;
 
+import java.util.ArrayList;
+
+import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.ClientUtils;
@@ -9,28 +12,50 @@ import pgu.client.books.BookView;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.shared.domain.Book;
 
+import com.github.gwtbootstrap.client.ui.event.HiddenEvent;
+import com.github.gwtbootstrap.client.ui.event.HiddenHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class BookActivity {
 
-    private final EventBus               eventBus;
-    private final BookView               view;
-    private final ClientUtils            u = new ClientUtils();
-    private final AdminBooksServiceAsync adminBookService;
+    private final EventBus                       eventBus;
+    private final BookView                       view;
+    private final ClientUtils                    u           = new ClientUtils();
+    private final AdminBooksServiceAsync         adminBookService;
+    private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
 
     public BookActivity(final ClientFactory clientFactory) {
         eventBus = clientFactory.getEventBus();
         view = clientFactory.getBookView();
         adminBookService = clientFactory.getAdminBooksService();
 
-        addSaveHandler();
-        addCancelHandler();
+        handlerRegs.add(addSaveHandler());
+        handlerRegs.add(addCancelHandler());
+        handlerRegs.add(addCloseHandler());
     }
 
-    private void addCancelHandler() {
-        view.getCancelWidget().addClickHandler(new ClickHandler() {
+    private HandlerRegistration addCloseHandler() {
+        return view.getCloseHandler().addHiddenHandler(new HiddenHandler() {
+
+            @Override
+            public void onHidden(final HiddenEvent hiddenEvent) {
+                for (HandlerRegistration handlerReg : handlerRegs) {
+                    handlerReg.removeHandler();
+                    handlerReg = null;
+                }
+                handlerRegs.clear();
+
+                eventBus.fireEvent(new RefreshBooksEvent());
+            }
+
+        });
+    }
+
+    private HandlerRegistration addCancelHandler() {
+        return view.getCancelWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
@@ -39,8 +64,8 @@ public class BookActivity {
         });
     }
 
-    private void addSaveHandler() {
-        view.getSaveWidget().addClickHandler(new ClickHandler() {
+    private HandlerRegistration addSaveHandler() {
+        return view.getSaveWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {

@@ -10,23 +10,43 @@ import pgu.client.app.utils.Notification;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.shared.domain.Book;
 
+import com.github.gwtbootstrap.client.ui.event.HiddenEvent;
+import com.github.gwtbootstrap.client.ui.event.HiddenHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class DeleteBooksActivity {
 
-    private final EventBus               eventBus;
-    private final DeleteBooksView        view;
-    private final AdminBooksServiceAsync adminBookService;
+    private final EventBus                       eventBus;
+    private final DeleteBooksView                view;
+    private final AdminBooksServiceAsync         adminBookService;
+    private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
 
     public DeleteBooksActivity(final ClientFactory clientFactory) {
         eventBus = clientFactory.getEventBus();
         view = clientFactory.getDeleteBooksView();
         adminBookService = clientFactory.getAdminBooksService();
 
-        addCancelHandler();
-        addConfirmHandler();
+        handlerRegs.add(addCancelHandler());
+        handlerRegs.add(addConfirmHandler());
+        handlerRegs.add(addCloseHandler());
+    }
+
+    private HandlerRegistration addCloseHandler() {
+        return view.getCloseHandler().addHiddenHandler(new HiddenHandler() {
+
+            @Override
+            public void onHidden(final HiddenEvent hiddenEvent) {
+                for (HandlerRegistration handlerReg : handlerRegs) {
+                    handlerReg.removeHandler();
+                    handlerReg = null;
+                }
+                handlerRegs.clear();
+            }
+
+        });
     }
 
     private final ArrayList<Book> selectedBooks = new ArrayList<Book>();
@@ -54,8 +74,8 @@ public class DeleteBooksActivity {
         selectedBooks.addAll(books);
     }
 
-    private void addConfirmHandler() {
-        view.getConfirmWidget().addClickHandler(new ClickHandler() {
+    private HandlerRegistration addConfirmHandler() {
+        return view.getConfirmWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
@@ -99,8 +119,8 @@ public class DeleteBooksActivity {
         });
     }
 
-    private void addCancelHandler() {
-        view.getCancelWidget().addClickHandler(new ClickHandler() {
+    private HandlerRegistration addCancelHandler() {
+        return view.getCancelWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {

@@ -2,6 +2,8 @@ package pgu.client.app.utils;
 
 import com.github.gwtbootstrap.client.ui.AlertBlock;
 import com.github.gwtbootstrap.client.ui.constants.AlertType;
+import com.github.gwtbootstrap.client.ui.event.ClosedEvent;
+import com.github.gwtbootstrap.client.ui.event.ClosedHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -90,6 +92,14 @@ public class NotificationImpl implements Notification {
         alert.setAnimation(true);
         alert.setHTML(text);
         alert.setHeading("<i class=\"" + iconHeading + "\"></i> " + heading);
+        alert.addClosedHandler(new ClosedHandler() {
+
+            @Override
+            public void onClosed(final ClosedEvent closedEvent) {
+                alert.removeFromParent();
+                alert = null;
+            }
+        });
     }
 
     @Override

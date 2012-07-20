@@ -8,6 +8,7 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -122,4 +123,8 @@ public class BookViewImpl extends Composite implements BookView {
         container.toggle();
     }
 
+    @Override
+    public HasVisibleHandlers getCloseHandler() {
+        return container;
+    }
 }

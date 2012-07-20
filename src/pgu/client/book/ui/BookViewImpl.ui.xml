@@ -22,7 +22,7 @@
                 <b:TextBox ui:field="commentBox" placeholder="Comentario"/>
             </b:WellForm>
             <b:ModalFooter>
-                <b:Button ui:field="cancelBtn" icon="UNDO" >Anular</b:Button>
+                <b:Button ui:field="cancelBtn" icon="UNDO" >Anular modificaciones</b:Button>
                 <b:Button ui:field="saveBtn" icon="FILE" type="PRIMARY">Guardar</b:Button>
             </b:ModalFooter>
         </b:Modal>

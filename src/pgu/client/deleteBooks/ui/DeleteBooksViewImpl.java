@@ -8,6 +8,7 @@ import com.github.gwtbootstrap.client.ui.Alert;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
+import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -102,6 +103,11 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
                 return message.getHTML();
             }
         };
+    }
+
+    @Override
+    public HasVisibleHandlers getCloseHandler() {
+        return container;
     }
 
 }
