@@ -60,7 +60,7 @@ public class NotificationImpl implements Notification {
             alert = new AlertBlock(AlertType.ERROR);
             alert.setClose(true);
             hasCloseAction = true;
-            iconHeading = "icon-fire";
+            iconHeading = "icon-bolt";
 
         } else if (Level.INFO == level) {
             alert = new AlertBlock(AlertType.INFO);
