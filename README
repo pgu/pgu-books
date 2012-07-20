@@ -1,11 +1,8 @@
-https://developers.google.com/web-toolkit/doc/latest/DevGuideMvpActivitiesAndPlaces
-http://gwtbootstrap.github.com/gwt-bootstrap/apidocs/
+GWT, gwtbootstrap, app engine API search
 http://gwtbootstrap.github.com/
+
+<a href="http://pgu-books.appspot.com/"><strong>&#8594; Go to the website</strong></a>
 
 TODOs
 =====
-* add missing books from .txt
-* selection of books
-* creation of a book
-* edition of a book
-* deletion of books
+* add more books from .txt
