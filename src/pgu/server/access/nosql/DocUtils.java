@@ -16,13 +16,13 @@ public class DocUtils {
     }
 
     public Long numLong(final BookDoc fieldName, final Document doc) {
-        final String text = text(fieldName, doc);
-        return text == null ? null : Long.getLong(text);
+        final Double n = num(fieldName, doc);
+        return n == null ? null : Long.valueOf(Math.round(n));
     }
 
     public Integer numInt(final BookDoc fieldName, final Document doc) {
-        final String text = text(fieldName, doc);
-        return text == null ? null : Integer.getInteger(text);
+        final Double n = num(fieldName, doc);
+        return n == null ? null : Integer.valueOf((int) Math.round(n));
     }
 
     public Double num(final BookDoc fieldName, final Document doc) {
