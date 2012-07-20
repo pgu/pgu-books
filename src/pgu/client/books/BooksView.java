@@ -1,10 +1,11 @@
 package pgu.client.books;
 
+import java.util.HashSet;
+
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 
-import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface BooksView extends IsWidget {
@@ -15,13 +16,15 @@ public interface BooksView extends IsWidget {
 
     void clear();
 
-    HasVisibility getDeleteBooksWidget();
+    HasClickAndVisibility getDeleteBooksWidget();
 
-    HasClickAndVisibility getEditionBookWidget();
+    HasClickAndVisibility getEditBookWidget();
 
-    HasClickAndVisibility getNewBookWidget();
+    HasClickAndVisibility getCreateBookWidget();
 
     Book getSelectedBook();
 
     void clearHandlers();
+
+    HashSet<Book> getSelectedBooks();
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+    xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+    
+    <g:HTMLPanel>
+        <b:Modal ui:field="container" backdrop="STATIC" keyboard="true" animation="true">
+            <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
+            <g:HTMLPanel ui:field="notification" />
+            <b:Alert ui:field="message" type="DEFAULT" close="false" animation="true"></b:Alert>
+            <b:ModalFooter>
+                <b:Button ui:field="cancelBtn" icon="UNDO">Anular</b:Button>
+                <b:Button ui:field="confirmBtn" icon="FIRE" type="PRIMARY">Guardar</b:Button>
+            </b:ModalFooter>
+        </b:Modal>
+    </g:HTMLPanel>
+</ui:UiBinder> 

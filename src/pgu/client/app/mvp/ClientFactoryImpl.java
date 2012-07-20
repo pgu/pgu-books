@@ -7,6 +7,8 @@ import pgu.client.book.ui.BookViewImpl;
 import pgu.client.books.BookView;
 import pgu.client.books.BooksView;
 import pgu.client.books.ui.BooksViewImpl;
+import pgu.client.deleteBooks.DeleteBooksView;
+import pgu.client.deleteBooks.ui.DeleteBooksViewImpl;
 import pgu.client.importBooks.ImportBooksView;
 import pgu.client.importBooks.ui.ImportBooksViewImpl;
 import pgu.client.menu.MenuView;
@@ -34,6 +36,7 @@ public class ClientFactoryImpl implements ClientFactory {
     private static MenuView               menuView          = new MenuViewImpl();
     private static BooksView              booksView         = new BooksViewImpl();
     private static BookView               bookView          = new BookViewImpl();
+    private static DeleteBooksView        deleteBooksView   = new DeleteBooksViewImpl();
     private static ImportBooksView        importBooksView   = new ImportBooksViewImpl();
     private static SetupView              setupView         = new SetupViewImpl();
 
@@ -113,6 +116,11 @@ public class ClientFactoryImpl implements ClientFactory {
     @Override
     public BookView getBookView() {
         return bookView;
+    }
+
+    @Override
+    public DeleteBooksView getDeleteBooksView() {
+        return deleteBooksView;
     }
 
 }

@@ -6,9 +6,8 @@ import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasVisibility;
-import com.google.gwt.user.client.ui.IsWidget;
 
-public interface BookView extends IsWidget {
+public interface BookView extends com.github.gwtbootstrap.client.ui.base.HasVisibility {
 
     HasText getBookTitleWidget();
 
@@ -25,8 +24,6 @@ public interface BookView extends IsWidget {
     HasText getFormTitle();
 
     HasClickHandlers getSaveWidget();
-
-    void show();
 
     HasVisibility getWaitingIndicator();
 

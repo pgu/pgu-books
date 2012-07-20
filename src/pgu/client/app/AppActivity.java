@@ -3,6 +3,7 @@ package pgu.client.app;
 import java.util.ArrayList;
 
 import pgu.client.app.event.BookEditEvent;
+import pgu.client.app.event.DeleteBooksEvent;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
@@ -13,6 +14,7 @@ import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
 import pgu.client.book.BookActivity;
 import pgu.client.books.BooksPlace;
+import pgu.client.deleteBooks.DeleteBooksActivity;
 import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
@@ -28,6 +30,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         , SetupEvent.Handler //
         , NotificationEvent.Handler //
         , BookEditEvent.Handler //
+        , DeleteBooksEvent.Handler //
 {
 
     private ClientFactory                        clientFactory;
@@ -49,6 +52,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(SetupEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(BookEditEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(DeleteBooksEvent.TYPE, this));
 
         final MenuView menuView = clientFactory.getMenuView();
         final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory);
@@ -133,6 +137,12 @@ public class AppActivity implements SearchBooksEvent.Handler //
     public void onBookEdit(final BookEditEvent event) {
         final BookActivity bookActivity = new BookActivity(clientFactory);
         bookActivity.start(event.getBook());
+    }
+
+    @Override
+    public void onDeleteBooks(final DeleteBooksEvent event) {
+        final DeleteBooksActivity deleteBooksActivity = new DeleteBooksActivity(clientFactory);
+        deleteBooksActivity.start(event.getBooks());
     }
 
 }

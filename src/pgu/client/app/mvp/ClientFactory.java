@@ -4,6 +4,7 @@ import pgu.client.app.AppView;
 import pgu.client.app.utils.AppSetup;
 import pgu.client.books.BookView;
 import pgu.client.books.BooksView;
+import pgu.client.deleteBooks.DeleteBooksView;
 import pgu.client.importBooks.ImportBooksView;
 import pgu.client.menu.MenuView;
 import pgu.client.service.AdminBooksServiceAsync;
@@ -44,5 +45,7 @@ public interface ClientFactory {
     AppSetup getAppSetup();
 
     BookView getBookView();
+
+    DeleteBooksView getDeleteBooksView();
 
 }

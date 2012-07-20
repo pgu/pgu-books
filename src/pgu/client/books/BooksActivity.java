@@ -3,6 +3,7 @@ package pgu.client.books;
 import java.util.ArrayList;
 
 import pgu.client.app.event.BookEditEvent;
+import pgu.client.app.event.DeleteBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.RefreshBooksEvent;
@@ -55,26 +56,33 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         view.setPresenter(this);
 
         isEditable = loginInfo.isLoggedIn();
-        view.getNewBookWidget().setVisible(isEditable);
-        view.getEditionBookWidget().setVisible(isEditable);
+        view.getCreateBookWidget().setVisible(isEditable);
+        view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
         handlerRegs.add(eventBus.addHandler(RefreshBooksEvent.TYPE, this));
 
-        handlerRegs.add(view.getNewBookWidget().addClickHandler(new ClickHandler() {
+        handlerRegs.add(view.getCreateBookWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
                 eventBus.fireEvent(new BookEditEvent(null));
             }
         }));
-        handlerRegs.add(view.getEditionBookWidget().addClickHandler(new ClickHandler() {
+        handlerRegs.add(view.getEditBookWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
                 eventBus.fireEvent(new BookEditEvent(view.getSelectedBook()));
+            }
+        }));
+        handlerRegs.add(view.getDeleteBooksWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                eventBus.fireEvent(new DeleteBooksEvent(view.getSelectedBooks()));
             }
         }));
 

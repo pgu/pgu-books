@@ -35,7 +35,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BooksViewImpl extends Composite implements BooksView {
@@ -361,12 +360,34 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public HasVisibility getDeleteBooksWidget() {
-        return deleteBtn;
+    public HasClickAndVisibility getDeleteBooksWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return deleteBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                deleteBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return deleteBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                deleteBtn.fireEvent(event);
+            }
+
+        };
     }
 
     @Override
-    public HasClickAndVisibility getEditionBookWidget() {
+    public HasClickAndVisibility getEditBookWidget() {
         return new HasClickAndVisibility() {
 
             @Override
@@ -393,7 +414,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public HasClickAndVisibility getNewBookWidget() {
+    public HasClickAndVisibility getCreateBookWidget() {
         return new HasClickAndVisibility() {
 
             @Override
@@ -436,5 +457,15 @@ public class BooksViewImpl extends Composite implements BooksView {
             handlerReg = null;
         }
         handlerRegs.clear();
+    }
+
+    @Override
+    public HashSet<Book> getSelectedBooks() {
+        final HashSet<Book> books = new HashSet<Book>();
+        for (final FluidRow row : selectedRows) {
+            books.add(row2book.get(row));
+        }
+
+        return books;
     }
 }

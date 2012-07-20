@@ -1,21 +1,18 @@
 package pgu.client.book.ui;
 
-import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
+import pgu.client.app.utils.NotificationImpl;
 import pgu.client.books.BookView;
 
-import com.github.gwtbootstrap.client.ui.AlertBlock;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
-import com.github.gwtbootstrap.client.ui.constants.AlertType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
@@ -108,101 +105,7 @@ public class BookViewImpl extends Composite implements BookView {
 
     @Override
     public Notification newNotification() {
-        return new Notification() {
-
-            private boolean    hasCloseAction = false;
-            private String     heading;
-            private String     text;
-            private AlertBlock alert;
-
-            @Override
-            public String getHTML() {
-                return text;
-            }
-
-            @Override
-            public void setHTML(final String text) {
-                this.text = text;
-            }
-
-            @Override
-            public void show() {
-                notification.add(alert);
-
-                if (!hasCloseAction) {
-                    addTimerForClosingNotification();
-                }
-            }
-
-            @Override
-            public void hide() {
-                alert.close();
-            }
-
-            @Override
-            public void toggle() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void setLevel(final Level level) {
-                if (Level.ERROR == level) {
-                    alert = new AlertBlock(AlertType.ERROR);
-                    alert.setClose(true);
-                    hasCloseAction = true;
-
-                } else if (Level.INFO == level) {
-                    alert = new AlertBlock(AlertType.INFO);
-                    alert.setClose(false);
-                    hasCloseAction = false;
-
-                } else if (Level.SUCCESS == level) {
-                    alert = new AlertBlock(AlertType.SUCCESS);
-                    alert.setClose(false);
-                    hasCloseAction = false;
-
-                } else if (Level.WARNING == level) {
-                    alert = new AlertBlock(AlertType.WARNING);
-                    alert.setClose(false);
-                    hasCloseAction = false;
-
-                } else {
-                    alert = new AlertBlock(AlertType.DEFAULT);
-                    alert.setClose(false);
-                    hasCloseAction = false;
-
-                }
-                alert.setAnimation(true);
-                alert.setHTML(text);
-                alert.setHeading(heading);
-            }
-
-            @Override
-            public void setHeading(final String heading) {
-                this.heading = heading;
-            }
-
-            private void addTimerForClosingNotification() {
-                new Timer() {
-
-                    @Override
-                    public void run() {
-                        alert.close();
-                    }
-
-                }.schedule(3000);
-            }
-
-            @Override
-            public String getText() {
-                return text;
-            }
-
-            @Override
-            public void setText(final String text) {
-                this.text = text;
-            }
-        };
+        return new NotificationImpl(notification, 3000);
     }
 
     @Override
@@ -213,6 +116,16 @@ public class BookViewImpl extends Composite implements BookView {
     @Override
     public HasVisibleHandlers getCloseHandler() {
         return container;
+    }
+
+    @Override
+    public void hide() {
+        container.hide();
+    }
+
+    @Override
+    public void toggle() {
+        container.toggle();
     }
 
 }
