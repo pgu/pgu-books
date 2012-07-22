@@ -110,4 +110,9 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
         return container;
     }
 
+    @Override
+    public void clear() {
+        notification.clear();
+    }
+
 }

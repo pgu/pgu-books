@@ -21,4 +21,6 @@ public interface DeleteBooksView extends com.github.gwtbootstrap.client.ui.base.
 
     HasVisibleHandlers getCloseHandler();
 
+    void clear();
+
 }

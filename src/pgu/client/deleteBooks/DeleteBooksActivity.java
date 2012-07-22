@@ -15,6 +15,7 @@ import com.github.gwtbootstrap.client.ui.event.HiddenEvent;
 import com.github.gwtbootstrap.client.ui.event.HiddenHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -40,6 +41,8 @@ public class DeleteBooksActivity {
 
             @Override
             public void onHidden(final HiddenEvent hiddenEvent) {
+                view.clear();
+
                 for (HandlerRegistration handlerReg : handlerRegs) {
                     handlerReg.removeHandler();
                     handlerReg = null;
@@ -95,6 +98,14 @@ public class DeleteBooksActivity {
                         notification.setLevel(Level.SUCCESS);
 
                         notification.show();
+                        new Timer() {
+
+                            @Override
+                            public void run() {
+                                view.hide();
+                            }
+
+                        }.schedule(3000);
 
                         eventBus.fireEvent(new RefreshBooksEvent());
                     }
