@@ -166,6 +166,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public Book saveBook(final Book book) {
 
+        final Integer year = book.getYear();
+        final String str_year = year == 0 ? "" : Integer.toString(year);
         if (null == book.getId()) { // creation
 
             // generate id for the book
@@ -179,7 +181,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     .text(BookDoc.AUTHOR, book.getAuthor()) //
                     .text(BookDoc.TITLE, book.getTitle()) //
                     .text(BookDoc.EDITOR, book.getEditor()) //
-                    .num(BookDoc.YEAR, book.getYear()) //
+                    .num(BookDoc.YEAR, year) //
+                    .text(BookDoc.STR_YEAR, str_year) // enables the search text
                     .text(BookDoc.COMMENT, book.getComment()) //
                     .text(BookDoc.CATEGORY, book.getCategory()) //
             ;
@@ -200,7 +203,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     .text(BookDoc.AUTHOR, book.getAuthor()) //
                     .text(BookDoc.TITLE, book.getTitle()) //
                     .text(BookDoc.EDITOR, book.getEditor()) //
-                    .num(BookDoc.YEAR, book.getYear()) //
+                    .num(BookDoc.YEAR, year) //
+                    .text(BookDoc.STR_YEAR, str_year) // enables the search text
                     .text(BookDoc.COMMENT, book.getComment()) //
                     .text(BookDoc.CATEGORY, book.getCategory()) //
             ;
@@ -267,6 +271,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                     .copyText(BookDoc.TITLE, doc) //
                     .copyText(BookDoc.EDITOR, doc) //
                     .copyNumInt(BookDoc.YEAR, doc) //
+                    .copyText(BookDoc.STR_YEAR, doc) //
                     .copyText(BookDoc.COMMENT, doc) //
                     .copyText(BookDoc.CATEGORY, doc) //
                     .text(BookDoc.ARCHIVE_DATE, now) //
