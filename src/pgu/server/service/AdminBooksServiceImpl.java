@@ -20,12 +20,14 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
+import pgu.server.domain.nosql.ValueDoc;
 import pgu.server.utils.AppUtils;
 import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.Query;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -166,27 +168,58 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public Book saveBook(final Book book) {
 
+        final String author = book.getAuthor();
+        final String category = book.getCategory();
+        final String comment = book.getComment();
+        final String editor = book.getEditor();
+        final String title = book.getTitle();
         final Integer year = book.getYear();
         final String str_year = year == 0 ? "" : Integer.toString(year);
+
         if (null == book.getId()) { // creation
 
             // generate id for the book
             dao.ofy().put(book);
 
+            final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
+                    .setReturningIdsOnly(true) //
+                    .setNumberFoundAccuracy(2) //
+                    .build();
+
+            final String _query = BookDoc.AUTHOR._() + ":\"" + book.getAuthor() + "\"";
+
+            final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
+                    .setOptions(mainQueryOptions) //
+                    .build(_query);
+
+            final Results<ScoredDocument> docs = s.idx().search(mainQuery);
+            final int numberFound = (int) docs.getNumberFound();
+            if (numberFound > 0) {
+                // do nothing
+            } else {
+                // create a doc for this value
+                final AppDoc valueDoc = new AppDoc() //
+                        .text(ValueDoc.DOC_TYPE._(), DocType.VALUE._()) //
+                        .text(ValueDoc.F._(), BookDoc.AUTHOR._()) //
+                        .text(ValueDoc.V._(), author) //
+                ;
+                s.idx().add(valueDoc.build());
+            }
+
             // create a doc for the book
-            final AppDoc doc = new AppDoc() //
+            final AppDoc bookDoc = new AppDoc() //
                     .setId(book.getId()) //
-                    .text(BookDoc.DOC_TYPE, DocType.BOOK._()) //
-                    .num(BookDoc.BOOK_ID, book.getId()) //
-                    .text(BookDoc.AUTHOR, book.getAuthor()) //
-                    .text(BookDoc.TITLE, book.getTitle()) //
-                    .text(BookDoc.EDITOR, book.getEditor()) //
-                    .num(BookDoc.YEAR, year) //
-                    .text(BookDoc.STR_YEAR, str_year) // enables the search text
-                    .text(BookDoc.COMMENT, book.getComment()) //
-                    .text(BookDoc.CATEGORY, book.getCategory()) //
+                    .text(BookDoc.DOC_TYPE._(), DocType.BOOK._()) //
+                    .num(BookDoc.BOOK_ID._(), book.getId()) //
+                    .text(BookDoc.AUTHOR._(), author) //
+                    .text(BookDoc.TITLE._(), title) //
+                    .text(BookDoc.EDITOR._(), editor) //
+                    .num(BookDoc.YEAR._(), year) //
+                    .text(BookDoc.STR_YEAR._(), str_year) // enables the search text
+                    .text(BookDoc.COMMENT._(), comment) //
+                    .text(BookDoc.CATEGORY._(), category) //
             ;
-            s.idx().add(doc.build());
+            s.idx().add(bookDoc.build());
 
         } else { // update
 
@@ -198,15 +231,15 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             // creates a new one with the same book id
             final AppDoc newDoc = new AppDoc() //
                     .setId(book.getId()) //
-                    .text(BookDoc.DOC_TYPE, DocType.BOOK._()) //
-                    .num(BookDoc.BOOK_ID, book.getId()) //
-                    .text(BookDoc.AUTHOR, book.getAuthor()) //
-                    .text(BookDoc.TITLE, book.getTitle()) //
-                    .text(BookDoc.EDITOR, book.getEditor()) //
-                    .num(BookDoc.YEAR, year) //
-                    .text(BookDoc.STR_YEAR, str_year) // enables the search text
-                    .text(BookDoc.COMMENT, book.getComment()) //
-                    .text(BookDoc.CATEGORY, book.getCategory()) //
+                    .text(BookDoc.DOC_TYPE._(), DocType.BOOK._()) //
+                    .num(BookDoc.BOOK_ID._(), book.getId()) //
+                    .text(BookDoc.AUTHOR._(), author) //
+                    .text(BookDoc.TITLE._(), title) //
+                    .text(BookDoc.EDITOR._(), editor) //
+                    .num(BookDoc.YEAR._(), year) //
+                    .text(BookDoc.STR_YEAR._(), str_year) // enables the search text
+                    .text(BookDoc.COMMENT._(), comment) //
+                    .text(BookDoc.CATEGORY._(), category) //
             ;
             s.idx().add(newDoc.build());
 
@@ -265,16 +298,16 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             final ScoredDocument doc = fetchDocByBook(book);
 
             final AppDoc archiveDoc = new AppDoc() //
-                    .text(BookDoc.DOC_TYPE, DocType.ARCHIVE_BOOK._()) //
-                    .copyNumLong(BookDoc.BOOK_ID, doc) //
-                    .copyText(BookDoc.AUTHOR, doc) //
-                    .copyText(BookDoc.TITLE, doc) //
-                    .copyText(BookDoc.EDITOR, doc) //
-                    .copyNumInt(BookDoc.YEAR, doc) //
-                    .copyText(BookDoc.STR_YEAR, doc) //
-                    .copyText(BookDoc.COMMENT, doc) //
-                    .copyText(BookDoc.CATEGORY, doc) //
-                    .text(BookDoc.ARCHIVE_DATE, now) //
+                    .text(BookDoc.DOC_TYPE._(), DocType.ARCHIVE_BOOK._()) //
+                    .copyNumLong(BookDoc.BOOK_ID._(), doc) //
+                    .copyText(BookDoc.AUTHOR._(), doc) //
+                    .copyText(BookDoc.TITLE._(), doc) //
+                    .copyText(BookDoc.EDITOR._(), doc) //
+                    .copyNumInt(BookDoc.YEAR._(), doc) //
+                    .copyText(BookDoc.STR_YEAR._(), doc) //
+                    .copyText(BookDoc.COMMENT._(), doc) //
+                    .copyText(BookDoc.CATEGORY._(), doc) //
+                    .text(BookDoc.ARCHIVE_DATE._(), now) //
             ;
 
             s.idx().remove(doc.getId()); // removes it from the index

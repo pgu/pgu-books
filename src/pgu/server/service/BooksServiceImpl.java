@@ -39,7 +39,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
      * https://developers.google.com/appengine/docs/java/datastore/queries#Query_Cursors
      * 
      * <pre>
-     * // first page: just the nb of books
+     * // first page: first X books with a cursor to next
      * 
      * // search doc -> suggestions -> in a htmlpanel above the search fields 
      * // -> selection of suggestions (one by fieldtype)
@@ -310,13 +310,13 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final ArrayList<Book> books = new ArrayList<Book>();
         for (final ScoredDocument doc : results) {
             final Book book = new Book() //
-                    .id(docU.numLong(BookDoc.BOOK_ID, doc)) //
-                    .author(docU.text(BookDoc.AUTHOR, doc)) //
-                    .title(docU.text(BookDoc.TITLE, doc)) //
-                    .editor(docU.text(BookDoc.EDITOR, doc)) //
-                    .year(docU.numInt(BookDoc.YEAR, doc)) //
-                    .comment(docU.text(BookDoc.COMMENT, doc)) //
-                    .category(docU.text(BookDoc.CATEGORY, doc)) //
+                    .id(docU.numLong(BookDoc.BOOK_ID._(), doc)) //
+                    .author(docU.text(BookDoc.AUTHOR._(), doc)) //
+                    .title(docU.text(BookDoc.TITLE._(), doc)) //
+                    .editor(docU.text(BookDoc.EDITOR._(), doc)) //
+                    .year(docU.numInt(BookDoc.YEAR._(), doc)) //
+                    .comment(docU.text(BookDoc.COMMENT._(), doc)) //
+                    .category(docU.text(BookDoc.CATEGORY._(), doc)) //
             ;
             books.add(book);
         }
