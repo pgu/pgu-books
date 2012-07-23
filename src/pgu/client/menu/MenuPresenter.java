@@ -10,4 +10,6 @@ public interface MenuPresenter {
 
     void goToSetup();
 
+    void searchSuggestions(String text);
+
 }

@@ -10,10 +10,13 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
+import pgu.server.domain.nosql.FieldValueDoc;
 import pgu.server.utils.AppUtils;
 import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
+import pgu.shared.dto.Suggestion;
+import pgu.shared.dto.SuggestionsResult;
 
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
@@ -344,5 +347,41 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         // booksResult.setNbFound(countResults.getNumberFound());
 
         return booksResult;
+    }
+
+    @Override
+    public SuggestionsResult searchSuggestions(final String text) {
+
+        final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
+                .setLimit(1000) //
+                .setNumberFoundAccuracy(1001) //
+                .setFieldsToReturn(FieldValueDoc.FIELD._(), FieldValueDoc.VALUE._()) //
+                .build();
+
+        final String _query = "~\"" + text + "\"";
+        log.info(this, "query [%s]", _query);
+
+        final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
+                .setOptions(mainQueryOptions) //
+                .build(_query);
+
+        final Results<ScoredDocument> docs = s.idx().search(mainQuery);
+        final int numberFound = (int) docs.getNumberFound();
+
+        log.info(this, "resultsSize [%s] numberFound [%s]", docs.getResults().size(), numberFound);
+
+        final ArrayList<Suggestion> suggestions = new ArrayList<Suggestion>(docs.getResults().size());
+
+        for (final ScoredDocument doc : docs) {
+            final Suggestion suggestion = new Suggestion();
+            suggestion.setField(docU.text(FieldValueDoc.FIELD._(), doc));
+            suggestion.setValue(docU.text(FieldValueDoc.VALUE._(), doc));
+            suggestions.add(suggestion);
+        }
+
+        // TODO PGU Jul 23, 2012 specify if more than 1000 suggestions
+        final SuggestionsResult suggestionsResult = new SuggestionsResult();
+        suggestionsResult.setSuggestions(suggestions);
+        return suggestionsResult;
     }
 }

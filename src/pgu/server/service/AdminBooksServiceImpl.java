@@ -285,13 +285,13 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         }
 
         final Iterator<ScoredDocument> bookDocItr = s.idx().search(Query.newBuilder().build("" + //
-                BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._())).iterator();
+                BookDoc.DOC_TYPE._() + ":" + DocType.BOOK.toString())).iterator();
         while (bookDocItr.hasNext()) {
             s.idx().remove(bookDocItr.next().getId());
         }
 
         final Iterator<ScoredDocument> archiveDocItr = s.archiveIdx().search(Query.newBuilder().build("" + //
-                BookDoc.DOC_TYPE._() + ":" + DocType.ARCHIVE_BOOK._())).iterator();
+                BookDoc.DOC_TYPE._() + ":" + DocType.ARCHIVE_BOOK.toString())).iterator();
         while (archiveDocItr.hasNext()) {
             s.archiveIdx().remove(archiveDocItr.next().getId());
         }

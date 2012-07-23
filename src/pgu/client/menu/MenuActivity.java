@@ -5,9 +5,12 @@ import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.SearchUtils;
+import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
+import pgu.shared.dto.SuggestionsResult;
 
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -16,15 +19,17 @@ public class MenuActivity implements MenuPresenter //
         , HideWaitingIndicatorEvent.Handler //
 {
 
-    private final MenuView    view;
-    private EventBus          eventBus;
-    private final LoginInfo   loginInfo;
-    private final SearchUtils u;
+    private final MenuView          view;
+    private EventBus                eventBus;
+    private final LoginInfo         loginInfo;
+    private final SearchUtils       u;
+    private final BooksServiceAsync booksService;
 
     public MenuActivity(final MenuView view, final ClientFactory clientFactory) {
         this.view = view;
         loginInfo = clientFactory.getLoginInfo();
         u = new SearchUtils(clientFactory);
+        booksService = clientFactory.getBooksService();
     }
 
     public void start(final EventBus eventBus) {
@@ -79,6 +84,25 @@ public class MenuActivity implements MenuPresenter //
     @Override
     public void goToSetup() {
         eventBus.fireEvent(new SetupEvent());
+    }
+
+    @Override
+    public void searchSuggestions(final String text) {
+        if (text.trim().isEmpty()) {
+            return;
+        }
+
+        booksService.searchSuggestions(text, new AsyncCallbackApp<SuggestionsResult>(eventBus) {
+
+            @Override
+            public void onSuccess(final SuggestionsResult result) {
+
+                view.getSuggestionsWidget().setSuggestions(result.getSuggestions());
+                view.getSuggestionsWidget().show();
+            }
+
+        });
+
     }
 
 }

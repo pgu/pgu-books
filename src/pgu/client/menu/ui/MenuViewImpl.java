@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import pgu.client.menu.MenuPresenter;
 import pgu.client.menu.MenuView;
 import pgu.shared.dto.BooksSearch;
+import pgu.shared.dto.Suggestion;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Column;
+import com.github.gwtbootstrap.client.ui.FluidContainer;
+import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.Popover;
@@ -26,7 +30,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MenuViewImpl extends Composite implements MenuView {
@@ -47,7 +50,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     Popover               popoverInfo;
     @UiField
-    HTMLPanel             suggestionsContainer;
+    FluidContainer        suggestionsContainer;
 
     private MenuPresenter presenter;
 
@@ -114,10 +117,10 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("searchBooksBtn")
     public void clickSearchOnFields(final ClickEvent e) {
-        searchOnFields();
+        searchBooks();
     }
 
-    private void searchOnFields() {
+    private void searchBooks() {
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setAuthor(sAuthor.getTextBox().getText());
         booksSearch.setCategory(sCategory.getTextBox().getText());
@@ -143,7 +146,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void onKeyPress(final KeyPressEvent event) {
                     if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-                        searchOnFields();
+                        searchBooks();
                     }
                 }
             });
@@ -175,11 +178,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     private void searchSuggestions() {
-
-        final BooksSearch booksSearch = new BooksSearch();
-        booksSearch.setSearchText(sText.getTextBox().getText());
-
-        presenter.searchBooks(booksSearch);
+        presenter.searchSuggestions(sText.getTextBox().getText());
     }
 
     @Override
@@ -346,6 +345,57 @@ public class MenuViewImpl extends Composite implements MenuView {
                 goToAppstatsBtn.setVisible(false);
             }
         };
+    }
+
+    private SuggestionsWidget suggestionsWidget = null;
+
+    @Override
+    public SuggestionsWidget getSuggestionsWidget() {
+        if (suggestionsWidget == null) {
+            suggestionsWidget = new SuggestionsWidget() {
+
+                @Override
+                public void toggle() {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public void show() {
+                    suggestionsContainer.setVisible(true);
+                }
+
+                @Override
+                public void hide() {
+                    suggestionsContainer.clear();
+                    suggestionsContainer.setVisible(false);
+                }
+
+                @Override
+                public void setSuggestions(final ArrayList<Suggestion> suggestions) {
+                    suggestionsContainer.clear();
+
+                    int counter = 1;
+                    FluidRow currentRow = new FluidRow();
+                    // TODO PGU Jul 23, 2012 voir booksviewimpl line 195 add dom handler
+                    for (final Suggestion suggestion : suggestions) {
+                        final Column col = new Column(2);
+                        col.getElement().setInnerHTML(suggestion.getField() + ": " + suggestion.getValue());
+                        currentRow.add(col);
+
+                        if (counter % 6 == 0) {
+
+                            suggestionsContainer.add(currentRow);
+
+                            currentRow = new FluidRow();
+                        }
+                        counter++;
+                    }
+
+                }
+            };
+
+        }
+        return suggestionsWidget;
     }
 
 }
