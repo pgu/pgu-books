@@ -33,6 +33,8 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     /**
      * http://code.google.com/p/google-app-engine-samples/source/browse/trunk/search/java/src/com/google/appengine/
      * demos/search/TextSearchServlet.java
+     * 
+     * https://developers.google.com/appengine/articles/scaling/overview
      */
     @Override
     public BooksResult fetchBooks(final BooksSearch booksSearch) {
