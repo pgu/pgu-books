@@ -21,4 +21,6 @@ public interface MenuView extends IsWidget {
 
     HasVisibility getSearchWidget();
 
+    HasVisibility getAppstatsWidget();
+
 }

@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,7 +42,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn;
+    NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
     @UiField
     Popover               popoverInfo;
 
@@ -53,6 +54,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToSetupBtn.setVisible(false); // wait for new options to setup
         goToImportBtn.setVisible(false);
         goToSearchBtn.setVisible(false);
+        goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
         onFieldsKeyPress();
         onSearchTextKeyPress();
@@ -93,6 +95,11 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiHandler("goToSearchBtn")
     public void clickGoToSearch(final ClickEvent e) {
         presenter.searchBooks(new BooksSearch());
+    }
+
+    @UiHandler("goToAppstatsBtn")
+    public void clickGoToAppstats(final ClickEvent e) {
+        Window.open("appstats/", "appstats", null);
     }
 
     @UiHandler("goToImportBtn")
@@ -311,6 +318,27 @@ public class MenuViewImpl extends Composite implements MenuView {
             @Override
             public void hide() {
                 goToSearchBtn.setVisible(false);
+            }
+        };
+    }
+
+    @Override
+    public HasVisibility getAppstatsWidget() {
+        return new HasVisibility() {
+
+            @Override
+            public void toggle() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void show() {
+                goToAppstatsBtn.setVisible(true);
+            }
+
+            @Override
+            public void hide() {
+                goToAppstatsBtn.setVisible(false);
             }
         };
     }
