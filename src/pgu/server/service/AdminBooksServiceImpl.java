@@ -27,7 +27,9 @@ import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.Query;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -278,23 +280,42 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             dao.ofy().delete(bookItr.next());
         }
 
-        final Iterator<ScoredDocument> fvDocItr = s.idx().search(Query.newBuilder().build("" + //
-                FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._())).iterator();
+        final String _fvQuery = FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._();
+
+        final Iterator<ScoredDocument> fvDocItr = getItrForDeletion(_fvQuery, s.idx());
         while (fvDocItr.hasNext()) {
             s.idx().remove(fvDocItr.next().getId());
         }
 
-        final Iterator<ScoredDocument> bookDocItr = s.idx().search(Query.newBuilder().build("" + //
-                BookDoc.DOC_TYPE._() + ":" + DocType.BOOK.toString())).iterator();
+        final String _booksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.BOOK.toString();
+
+        final Iterator<ScoredDocument> bookDocItr = getItrForDeletion(_booksQuery, s.idx());
         while (bookDocItr.hasNext()) {
             s.idx().remove(bookDocItr.next().getId());
         }
 
-        final Iterator<ScoredDocument> archiveDocItr = s.archiveIdx().search(Query.newBuilder().build("" + //
-                BookDoc.DOC_TYPE._() + ":" + DocType.ARCHIVE_BOOK.toString())).iterator();
+        final String _archivedBooksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.ARCHIVE_BOOK.toString();
+        final Iterator<ScoredDocument> archiveDocItr = getItrForDeletion(_archivedBooksQuery, s.archiveIdx());
         while (archiveDocItr.hasNext()) {
             s.archiveIdx().remove(archiveDocItr.next().getId());
         }
+    }
+
+    private Iterator<ScoredDocument> getItrForDeletion(final String _booksQuery, final Index idx) {
+        final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
+                .setReturningIdsOnly(true) //
+                .setLimit(1000) // forces the limit because: default=20, max=1000
+                .setNumberFoundAccuracy(1001) //
+                .build();
+
+        final com.google.appengine.api.search.Query booksQuery = com.google.appengine.api.search.Query.newBuilder() //
+                .setOptions(mainQueryOptions) //
+                .build(_booksQuery);
+
+        final Results<ScoredDocument> docs = idx.search(booksQuery);
+        log.info(this, "### %s docs found ###", docs.getResults().size());
+
+        return docs.iterator();
     }
 
     @Override
