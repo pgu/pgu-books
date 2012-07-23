@@ -373,6 +373,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void setSuggestions(final ArrayList<Suggestion> suggestions) {
                     suggestionsContainer.clear();
+                    GWT.log("suggestions size" + suggestions.size());
 
                     int counter = 1;
                     FluidRow currentRow = new FluidRow();
@@ -382,11 +383,12 @@ public class MenuViewImpl extends Composite implements MenuView {
                         col.getElement().setInnerHTML(suggestion.getField() + ": " + suggestion.getValue());
                         currentRow.add(col);
 
-                        if (counter % 6 == 0) {
-
+                        if (counter % 6 == 1) {
                             suggestionsContainer.add(currentRow);
 
+                        } else if (counter % 6 == 0) {
                             currentRow = new FluidRow();
+
                         }
                         counter++;
                     }
