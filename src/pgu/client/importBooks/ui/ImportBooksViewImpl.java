@@ -29,7 +29,7 @@ public class ImportBooksViewImpl extends Composite implements ImportBooksView {
     @UiField
     TextBox                      msg;
     @UiField
-    Button                       infoBtn, successBtn, warningBtn, errorBtn;
+    Button                       infoBtn, successBtn, warningBtn, errorBtn, deleteAllBtn;
 
     private ImportBooksPresenter presenter;
 
@@ -68,6 +68,11 @@ public class ImportBooksViewImpl extends Composite implements ImportBooksView {
     @UiHandler("errorBtn")
     public void clickError(final ClickEvent e) {
         presenter.display(Level.ERROR, msg.getText());
+    }
+
+    @UiHandler("deleteAllBtn")
+    public void clickDeleteAll(final ClickEvent e) {
+        presenter.deleteAll();
     }
 
 }

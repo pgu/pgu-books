@@ -20,6 +20,7 @@
                 <b:Button ui:field="successBtn" type="SUCCESS">Success</b:Button>
                 <b:Button ui:field="warningBtn" type="WARNING">Warning</b:Button>
                 <b:Button ui:field="errorBtn" type="DANGER">Error</b:Button>
+                <b:Button ui:field="deleteAllBtn" type="DANGER">Delete All</b:Button>
             </b:FormActions>
         </b:WellForm>    
         

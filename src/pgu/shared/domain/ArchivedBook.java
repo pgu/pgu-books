@@ -4,68 +4,32 @@ import javax.persistence.Id;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class Book implements IsSerializable {
-
-    public Book() {
-    }
-
-    public Book(final String author, //
-            final String title, //
-            final String editor, //
-            final Integer year, //
-            final String comment, //
-            final String category) {
-        this.author = author;
-        this.title = title;
-        this.editor = editor;
-        setYear(year);
-        this.comment = comment;
-        this.category = category;
-    }
-
-    public Book id(final Long id) {
-        setId(id);
-        return this;
-    }
-
-    public Book author(final String author) {
-        setAuthor(author);
-        return this;
-    }
-
-    public Book title(final String title) {
-        setTitle(title);
-        return this;
-    }
-
-    public Book editor(final String editor) {
-        setEditor(editor);
-        return this;
-    }
-
-    public Book year(final Integer year) {
-        setYear(year);
-        return this;
-    }
-
-    public Book comment(final String comment) {
-        setComment(comment);
-        return this;
-    }
-
-    public Book category(final String category) {
-        setCategory(category);
-        return this;
-    }
+public class ArchivedBook implements IsSerializable {
 
     @Id
     private Long    id;
+    private Long    bookId;
     private String  author;
     private String  editor;
     private Integer year;
     private String  title;
     private String  comment;
     private String  category;
+    private String  archiveDate;
+
+    public ArchivedBook() {
+    }
+
+    public ArchivedBook(final Book book, final String archiveDate) {
+        bookId = book.getId();
+        author = book.getAuthor();
+        editor = book.getEditor();
+        year = book.getYear();
+        title = book.getTitle();
+        comment = book.getComment();
+        category = book.getCategory();
+        this.archiveDate = archiveDate;
+    }
 
     @Override
     public int hashCode() {
@@ -86,7 +50,7 @@ public class Book implements IsSerializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Book other = (Book) obj;
+        final ArchivedBook other = (ArchivedBook) obj;
         if (id == null) {
             if (other.id != null) {
                 return false;
@@ -99,8 +63,9 @@ public class Book implements IsSerializable {
 
     @Override
     public String toString() {
-        return "Book [id=" + id + ", author=" + author + ", editor=" + editor + ", year=" + year + ", title=" + title
-                + ", comment=" + comment + ", category=" + category + "]";
+        return "ArchivedBook [id=" + id + ", bookId=" + bookId + ", author=" + author + ", editor=" + editor
+                + ", year=" + year + ", title=" + title + ", comment=" + comment + ", category=" + category
+                + ", archiveDate=" + archiveDate + "]";
     }
 
     public Long getId() {
@@ -109,6 +74,14 @@ public class Book implements IsSerializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(final Long bookId) {
+        this.bookId = bookId;
     }
 
     public String getAuthor() {
@@ -132,7 +105,7 @@ public class Book implements IsSerializable {
     }
 
     public void setYear(final Integer year) {
-        this.year = year == null ? 0 : year;
+        this.year = year;
     }
 
     public String getTitle() {
@@ -159,8 +132,12 @@ public class Book implements IsSerializable {
         this.category = category;
     }
 
-    public String getStrYear() {
-        return year == 0 ? "" : Integer.toString(year);
+    public String getArchiveDate() {
+        return archiveDate;
+    }
+
+    public void setArchiveDate(final String archiveDate) {
+        this.archiveDate = archiveDate;
     }
 
 }

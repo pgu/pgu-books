@@ -50,6 +50,14 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
      * 
      * // case-insensitive => IN => no cursor available
      * 
+     * insert a book: for each field/value, is there a doc
+     * si je cree un doc for each f/v of the book, je vais avoir des doublons et je n'en veux pas
+     * pour avoir des docs avec des valeurs uniques, si je cree des entites sql f/v
+     * je check sur ces entites si deja creer
+     * si l'entite n'a plus de book associes, supprimer le doc qui le reflete. 
+     * donc le doc a l'id du record sql
+     * 
+     * 
      * 
      * author: 
      * Pierre* -> 

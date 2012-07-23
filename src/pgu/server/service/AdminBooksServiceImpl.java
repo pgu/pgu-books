@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -20,14 +19,15 @@ import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.domain.nosql.DocType;
-import pgu.server.domain.nosql.ValueDoc;
+import pgu.server.domain.nosql.FieldValueDoc;
+import pgu.server.domain.sql.FieldValue;
 import pgu.server.utils.AppUtils;
+import pgu.shared.domain.ArchivedBook;
 import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.search.Query;
-import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -173,81 +173,79 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         final String comment = book.getComment();
         final String editor = book.getEditor();
         final String title = book.getTitle();
-        final Integer year = book.getYear();
-        final String str_year = year == 0 ? "" : Integer.toString(year);
+        final String str_year = book.getStrYear();
 
-        if (null == book.getId()) { // creation
+        final Long bookId = book.getId();
+        if (null == bookId) { // creation
+
+            // for each fields, save a doc
+            saveFieldValue(BookDoc.AUTHOR._(), author);
+            saveFieldValue(BookDoc.CATEGORY._(), category);
+            saveFieldValue(BookDoc.COMMENT._(), comment);
+            saveFieldValue(BookDoc.EDITOR._(), editor);
+            saveFieldValue(BookDoc.TITLE._(), title);
+            saveFieldValue(BookDoc.STR_YEAR._(), str_year);
 
             // generate id for the book
             dao.ofy().put(book);
 
-            final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
-                    .setReturningIdsOnly(true) //
-                    .setNumberFoundAccuracy(2) //
-                    .build();
-
-            final String _query = BookDoc.AUTHOR._() + ":\"" + book.getAuthor() + "\"";
-
-            final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
-                    .setOptions(mainQueryOptions) //
-                    .build(_query);
-
-            final Results<ScoredDocument> docs = s.idx().search(mainQuery);
-            final int numberFound = (int) docs.getNumberFound();
-            if (numberFound > 0) {
-                // do nothing
-            } else {
-                // create a doc for this value
-                final AppDoc valueDoc = new AppDoc() //
-                        .text(ValueDoc.DOC_TYPE._(), DocType.VALUE._()) //
-                        .text(ValueDoc.F._(), BookDoc.AUTHOR._()) //
-                        .text(ValueDoc.V._(), author) //
-                ;
-                s.idx().add(valueDoc.build());
-            }
-
-            // create a doc for the book
-            final AppDoc bookDoc = new AppDoc() //
-                    .setId(book.getId()) //
-                    .text(BookDoc.DOC_TYPE._(), DocType.BOOK._()) //
-                    .num(BookDoc.BOOK_ID._(), book.getId()) //
-                    .text(BookDoc.AUTHOR._(), author) //
-                    .text(BookDoc.TITLE._(), title) //
-                    .text(BookDoc.EDITOR._(), editor) //
-                    .num(BookDoc.YEAR._(), year) //
-                    .text(BookDoc.STR_YEAR._(), str_year) // enables the search text
-                    .text(BookDoc.COMMENT._(), comment) //
-                    .text(BookDoc.CATEGORY._(), category) //
-            ;
-            s.idx().add(bookDoc.build());
-
         } else { // update
 
-            // retrieves the doc with the book id
-            final ScoredDocument currentDoc = fetchDocByBook(book);
+            final Book bookUI = book;
+            final Book bookDB = dao.ofy().get(Book.class, bookId);
 
-            s.idx().remove(currentDoc.getId());
-
-            // creates a new one with the same book id
-            final AppDoc newDoc = new AppDoc() //
-                    .setId(book.getId()) //
-                    .text(BookDoc.DOC_TYPE._(), DocType.BOOK._()) //
-                    .num(BookDoc.BOOK_ID._(), book.getId()) //
-                    .text(BookDoc.AUTHOR._(), author) //
-                    .text(BookDoc.TITLE._(), title) //
-                    .text(BookDoc.EDITOR._(), editor) //
-                    .num(BookDoc.YEAR._(), year) //
-                    .text(BookDoc.STR_YEAR._(), str_year) // enables the search text
-                    .text(BookDoc.COMMENT._(), comment) //
-                    .text(BookDoc.CATEGORY._(), category) //
-            ;
-            s.idx().add(newDoc.build());
+            updateBookField(BookDoc.AUTHOR._(), bookDB.getAuthor(), bookUI.getAuthor());
+            updateBookField(BookDoc.CATEGORY._(), bookDB.getCategory(), bookUI.getCategory());
+            updateBookField(BookDoc.COMMENT._(), bookDB.getComment(), bookUI.getComment());
+            updateBookField(BookDoc.EDITOR._(), bookDB.getEditor(), bookUI.getEditor());
+            updateBookField(BookDoc.TITLE._(), bookDB.getTitle(), bookUI.getTitle());
+            updateBookField(BookDoc.STR_YEAR._(), bookDB.getStrYear(), bookUI.getStrYear());
 
             // update book
-            dao.ofy().put(book);
+            dao.ofy().put(bookUI);
         }
 
         return book;
+    }
+
+    private void updateBookField(final String field, final String valueDB, final String valueUI) {
+        if (!u.eq(valueUI, valueDB)) {
+
+            updateFieldValue(field, valueDB);
+
+            saveFieldValue(field, valueUI);
+        }
+    }
+
+    private void saveFieldValue(final String field, final String value) {
+
+        final FieldValue fv = dao.ofy().query(FieldValue.class) //
+                .filter(FieldValueDoc.FIELD._(), field) //
+                .filter(FieldValueDoc.VALUE._(), value) //
+                .get();
+
+        if (fv == null) {
+
+            // create a sql fv
+            final FieldValue newFv = new FieldValue();
+            newFv.setField(field);
+            newFv.setValue(value);
+            dao.ofy().put(newFv);
+
+            // create a doc fv
+            final AppDoc valueDoc = new AppDoc() //
+                    .text(FieldValueDoc.DOC_TYPE._(), DocType.FIELD_VALUE._()) //
+                    .text(FieldValueDoc.FIELD._(), field) //
+                    .text(FieldValueDoc.VALUE._(), value) //
+                    .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
+            ;
+            s.idx().add(valueDoc.build());
+
+        } else {
+            // update the counter of the sql fv
+            fv.setCounter(fv.getCounter() + 1);
+            dao.ofy().put(fv);
+        }
     }
 
     private ScoredDocument fetchDocByBook(final Book book) {
@@ -270,9 +268,20 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public void deleteAll() {
 
+        final QueryResultIterator<FieldValue> fvItr = dao.ofy().query(FieldValue.class).iterator();
+        while (fvItr.hasNext()) {
+            dao.ofy().delete(fvItr.next());
+        }
+
         final QueryResultIterator<Book> bookItr = dao.ofy().query(Book.class).iterator();
         while (bookItr.hasNext()) {
             dao.ofy().delete(bookItr.next());
+        }
+
+        final Iterator<ScoredDocument> fvDocItr = s.idx().search(Query.newBuilder().build("" + //
+                FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._())).iterator();
+        while (fvDocItr.hasNext()) {
+            s.idx().remove(fvDocItr.next().getId());
         }
 
         final Iterator<ScoredDocument> bookDocItr = s.idx().search(Query.newBuilder().build("" + //
@@ -291,34 +300,68 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public void deleteBooks(final ArrayList<Book> selectedBooks) {
 
-        final String now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        final ArrayList<Long> bookIds = new ArrayList<Long>(selectedBooks.size());
+        final String now = new SimpleDateFormat("yyyy/MM/dd HH:mm ss").format(new Date());
+        final ArrayList<ArchivedBook> archivedBooks = new ArrayList<ArchivedBook>(selectedBooks.size());
 
         for (final Book book : selectedBooks) {
-            final ScoredDocument doc = fetchDocByBook(book);
 
-            final AppDoc archiveDoc = new AppDoc() //
-                    .text(BookDoc.DOC_TYPE._(), DocType.ARCHIVE_BOOK._()) //
-                    .copyNumLong(BookDoc.BOOK_ID._(), doc) //
-                    .copyText(BookDoc.AUTHOR._(), doc) //
-                    .copyText(BookDoc.TITLE._(), doc) //
-                    .copyText(BookDoc.EDITOR._(), doc) //
-                    .copyNumInt(BookDoc.YEAR._(), doc) //
-                    .copyText(BookDoc.STR_YEAR._(), doc) //
-                    .copyText(BookDoc.COMMENT._(), doc) //
-                    .copyText(BookDoc.CATEGORY._(), doc) //
-                    .text(BookDoc.ARCHIVE_DATE._(), now) //
-            ;
+            updateFieldValue(BookDoc.AUTHOR._(), book.getAuthor());
+            updateFieldValue(BookDoc.CATEGORY._(), book.getCategory());
+            updateFieldValue(BookDoc.COMMENT._(), book.getComment());
+            updateFieldValue(BookDoc.EDITOR._(), book.getEditor());
+            updateFieldValue(BookDoc.TITLE._(), book.getTitle());
+            updateFieldValue(BookDoc.STR_YEAR._(), book.getStrYear());
 
-            s.idx().remove(doc.getId()); // removes it from the index
-            s.archiveIdx().add(archiveDoc.build()); // adds the archive
-
-            bookIds.add(book.getId());
+            archivedBooks.add(new ArchivedBook(book, now));
         }
 
-        // clean books
-        final Map<Long, Book> id2bookId = dao.ofy().get(Book.class, bookIds);
-        dao.ofy().delete(id2bookId.values());
+        dao.ofy().put(archivedBooks);
+        dao.ofy().delete(selectedBooks);
+    }
+
+    private void updateFieldValue(final String field, final String value) {
+
+        final FieldValue fv = dao.ofy().query(FieldValue.class) //
+                .filter(FieldValueDoc.FIELD._(), field) //
+                .filter(FieldValueDoc.VALUE._(), value) //
+                .get();
+
+        if (fv == null) {
+            final UnsupportedOperationException e = new UnsupportedOperationException( //
+                    String.format( //
+                            "We should have one entity for the field [%s] and the value [%s]" //
+                            , field //
+                            , value //
+                    ));
+            log.error(this, e);
+            throw e;
+        }
+
+        fv.setCounter(fv.getCounter() - 1);
+
+        if (fv.getCounter() == 0) {
+            final Results<ScoredDocument> docs = s.idx().search(Query.newBuilder().build("" + //
+                    FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._() + " " + //
+                    FieldValueDoc.FV_ID._() + "=" + fv.getId()) //
+                    );
+
+            if (docs.getResults().size() != 1) {
+                final UnsupportedOperationException e = new UnsupportedOperationException( //
+                        String.format( //
+                                "We should have one doc for the fieldValue [%s]" //
+                                , fv.getId() //
+                        ));
+                log.error(this, e);
+                throw e;
+            }
+
+            final ScoredDocument fvDoc = docs.iterator().next();
+            s.idx().remove(fvDoc.getId());
+
+            dao.ofy().delete(fv); // delete
+        } else {
+            dao.ofy().put(fv); // update
+        }
     }
 
 }

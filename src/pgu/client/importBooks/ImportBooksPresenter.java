@@ -8,4 +8,6 @@ public interface ImportBooksPresenter {
 
     void display(Level level, String text);
 
+    void deleteAll();
+
 }

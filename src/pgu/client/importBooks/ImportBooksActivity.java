@@ -1,5 +1,7 @@
 package pgu.client.importBooks;
 
+import java.util.Date;
+
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
@@ -11,6 +13,7 @@ import pgu.shared.domain.ImportResult;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 public class ImportBooksActivity extends AbstractActivity implements ImportBooksPresenter {
@@ -61,6 +64,19 @@ public class ImportBooksActivity extends AbstractActivity implements ImportBooks
     @Override
     public void display(final Level level, final String text) {
         eventBus.fireEvent(new NotificationEvent(level, text));
+    }
+
+    @Override
+    public void deleteAll() {
+        final Date start = new Date();
+        adminBooksService.deleteAll(new AsyncCallbackApp<Void>(eventBus) {
+
+            @Override
+            public void onSuccess(final Void result) {
+                Window.alert("Done! " + (new Date().getTime() - start.getTime()) + " ms");
+            }
+
+        });
     }
 
 }

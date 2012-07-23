@@ -10,7 +10,7 @@ public enum BookDoc {
     ARCHIVE_DATE;
 
     public String _() {
-        return toString();
+        return toString().toLowerCase();
     }
 
 }

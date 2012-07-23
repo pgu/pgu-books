@@ -26,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MenuViewImpl extends Composite implements MenuView {
@@ -38,13 +39,15 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     ProgressBar           progressBar;
     @UiField
-    Button                searchBtn, searchOnFieldsBtn;
+    Button                searchSuggestionsBtn, searchBooksBtn;
     @UiField
     NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
     NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
     @UiField
     Popover               popoverInfo;
+    @UiField
+    HTMLPanel             suggestionsContainer;
 
     private MenuPresenter presenter;
 
@@ -56,6 +59,8 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToSearchBtn.setVisible(false);
         goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
+        suggestionsContainer.setVisible(false);
+
         onFieldsKeyPress();
         onSearchTextKeyPress();
         onSearchTextKeyUp();
@@ -107,7 +112,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         presenter.importBooks();
     }
 
-    @UiHandler("searchOnFieldsBtn")
+    @UiHandler("searchBooksBtn")
     public void clickSearchOnFields(final ClickEvent e) {
         searchOnFields();
     }
@@ -152,9 +157,9 @@ public class MenuViewImpl extends Composite implements MenuView {
         }
     }
 
-    @UiHandler("searchBtn")
+    @UiHandler("searchSuggestionsBtn")
     public void clickSearch(final ClickEvent e) {
-        searchWithText();
+        searchSuggestions();
     }
 
     private void onSearchTextKeyPress() {
@@ -163,13 +168,13 @@ public class MenuViewImpl extends Composite implements MenuView {
             @Override
             public void onKeyPress(final KeyPressEvent event) {
                 if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-                    searchWithText();
+                    searchSuggestions();
                 }
             }
         });
     }
 
-    private void searchWithText() {
+    private void searchSuggestions() {
 
         final BooksSearch booksSearch = new BooksSearch();
         booksSearch.setSearchText(sText.getTextBox().getText());
