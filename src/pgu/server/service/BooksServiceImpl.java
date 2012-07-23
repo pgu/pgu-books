@@ -35,6 +35,39 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
      * demos/search/TextSearchServlet.java
      * 
      * https://developers.google.com/appengine/articles/scaling/overview
+     * 
+     * https://developers.google.com/appengine/docs/java/datastore/queries#Query_Cursors
+     * 
+     * <pre>
+     * // first page: just the nb of books
+     * 
+     * // search doc -> suggestions -> in a htmlpanel above the search fields 
+     * // -> selection of suggestions (one by fieldtype)
+     * // -> according to selections, fields are filled -> search exact on fields
+     * // => cursor available
+     * 
+     * // next/previous links only in the pager
+     * 
+     * // case-insensitive => IN => no cursor available
+     * 
+     * 
+     * author: 
+     * Pierre* -> 
+     * .filter("value >=", pierre) //
+     * .filter("value <", pierre + "\uFFFD") //
+     * .filter("value >=", Pierre) //
+     * .filter("value <", Pierre + "\uFFFD") //
+     * 
+     * author: 
+     * Pierre -> 
+     * .filter("value =", pierre) //
+     * .filter("value =", Pierre) //
+     * 
+     * author: 
+     * ~Pierre -> 
+     * doc search
+     * => in => no cursor
+     * </pre>
      */
     @Override
     public BooksResult fetchBooks(final BooksSearch booksSearch) {
