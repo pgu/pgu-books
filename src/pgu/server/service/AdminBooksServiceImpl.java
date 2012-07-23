@@ -280,7 +280,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             dao.ofy().delete(bookItr.next());
         }
 
-        final String _fvQuery = FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._();
+        final String _fvQuery = FieldValueDoc.FV_ID._() + ">0";
+        // final String _fvQuery = FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE.toString();
 
         final Iterator<ScoredDocument> fvDocItr = getItrForDeletion(_fvQuery, s.idx());
         while (fvDocItr.hasNext()) {
@@ -301,19 +302,19 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         }
     }
 
-    private Iterator<ScoredDocument> getItrForDeletion(final String _booksQuery, final Index idx) {
+    private Iterator<ScoredDocument> getItrForDeletion(final String _q, final Index idx) {
         final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
                 .setReturningIdsOnly(true) //
                 .setLimit(1000) // forces the limit because: default=20, max=1000
                 .setNumberFoundAccuracy(1001) //
                 .build();
 
-        final com.google.appengine.api.search.Query booksQuery = com.google.appengine.api.search.Query.newBuilder() //
+        final com.google.appengine.api.search.Query q = com.google.appengine.api.search.Query.newBuilder() //
                 .setOptions(mainQueryOptions) //
-                .build(_booksQuery);
+                .build(_q);
 
-        final Results<ScoredDocument> docs = idx.search(booksQuery);
-        log.info(this, "### %s docs found ###", docs.getResults().size());
+        final Results<ScoredDocument> docs = idx.search(q);
+        log.info(this, "### q[%s] \n    -> %s docs found", q, docs.getResults().size());
 
         return docs.iterator();
     }
