@@ -235,13 +235,13 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             dao.ofy().put(newFv);
 
             // create a doc fv
-            final AppDoc valueDoc = new AppDoc() //
+            final AppDoc fvDoc = new AppDoc() //
                     .text(FieldValueDoc.DOC_TYPE._(), DocType.FIELD_VALUE._()) //
                     .text(FieldValueDoc.FIELD._(), field) //
                     .text(FieldValueDoc.VALUE._(), value) //
                     .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
             ;
-            s.idx().add(valueDoc.build());
+            s.idx().add(fvDoc.build());
 
         } else {
             // update the counter of the sql fv

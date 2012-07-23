@@ -21,8 +21,8 @@
                 <b:NavLink icon="USER" ui:field="adminBtn">Admin</b:NavLink>
             </b:Nav>
         </b:Navbar>
-        <b:FluidContainer ui:field="suggestionsContainer">
-        </b:FluidContainer>
+        <b:NavPills ui:field="suggestionsContainer">
+        </b:NavPills>
         <b:Navbar>
             <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"/>        
             <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"/>        

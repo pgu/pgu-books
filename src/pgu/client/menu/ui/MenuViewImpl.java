@@ -8,10 +8,8 @@ import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.Suggestion;
 
 import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.Column;
-import com.github.gwtbootstrap.client.ui.FluidContainer;
-import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.NavPills;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.Popover;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
@@ -50,7 +48,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     Popover               popoverInfo;
     @UiField
-    FluidContainer        suggestionsContainer;
+    NavPills              suggestionsContainer;
 
     private MenuPresenter presenter;
 
@@ -373,24 +371,27 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void setSuggestions(final ArrayList<Suggestion> suggestions) {
                     suggestionsContainer.clear();
-                    GWT.log("suggestions size" + suggestions.size());
+                    GWT.log("suggestions size " + suggestions.size());
 
-                    int counter = 1;
-                    FluidRow currentRow = new FluidRow();
+                    // int counter = 1;
+                    // FluidRow currentRow = new FluidRow();
                     // TODO PGU Jul 23, 2012 voir booksviewimpl line 195 add dom handler
                     for (final Suggestion suggestion : suggestions) {
-                        final Column col = new Column(2);
-                        col.getElement().setInnerHTML(suggestion.getField() + ": " + suggestion.getValue());
-                        currentRow.add(col);
+                        // final Column col = new Column(2);
+                        final NavLink navLink = new NavLink();
+                        navLink.setText(suggestion.getField() + ": " + suggestion.getValue());
+                        suggestionsContainer.add(navLink);
+                        // col.getElement().setInnerHTML();
+                        // currentRow.add(col);
 
-                        if (counter % 6 == 1) {
-                            suggestionsContainer.add(currentRow);
-
-                        } else if (counter % 6 == 0) {
-                            currentRow = new FluidRow();
-
-                        }
-                        counter++;
+                        // if (counter % 6 == 1) {
+                        // suggestionsContainer.add(currentRow);
+                        //
+                        // } else if (counter % 6 == 0) {
+                        // currentRow = new FluidRow();
+                        //
+                        // }
+                        // counter++;
                     }
 
                 }

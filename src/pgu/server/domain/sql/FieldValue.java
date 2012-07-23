@@ -9,7 +9,7 @@ public class FieldValue {
 
     private String field;
     private String value;
-    private int    counter;
+    private int    counter = 1;
 
     @Override
     public int hashCode() {
