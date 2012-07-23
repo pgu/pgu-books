@@ -9,6 +9,10 @@
   <threadsafe>true</threadsafe>
   <precompilation-enabled>false</precompilation-enabled>
 
+  <admin-console>
+    <page name="Appstats" url="/appstats" />
+  </admin-console>
+  
   <!-- Configure serving/caching of GWT files -->
   <static-files>
     <include path="**" />
