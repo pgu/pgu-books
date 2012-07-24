@@ -3,9 +3,6 @@
             xmlns:g="urn:import:com.google.gwt.user.client.ui"
             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
     <ui:style>
-        .suggestionsRow {
-            margin-bottom: 5px;
-        }
         .suggestionsFound {
             margin-left: 18px;
         }
@@ -32,14 +29,14 @@
             </b:Nav>
         </b:Navbar>
         <b:NavPills ui:field="suggestionsContainer" />
-        <b:Row addStyleNames="{style.suggestionsRow}">
+        <b:Row ui:field="suggestionsRow">
             <b:Column size="3">
                 <b:Label ui:field="suggestionsFound" type="INFO" addStyleNames="{style.suggestionsFound}" />
             </b:Column>
         </b:Row>
         <b:Navbar>
             <b:Nav>
-                <b:NavLink icon="STAR" iconSize="LARGE" />
+                <b:NavLink icon="BOOK" iconSize="LARGE" />
                 <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"/>
             </b:Nav>        
             <b:Nav>

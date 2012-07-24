@@ -30,6 +30,9 @@
     min-height: 30px;
     line-height: 30px;
 }
+.suggestionsRow {
+    margin-bottom: 5px;
+}
 
 /* 
 .my-show-grid:hover [class*="span"] {

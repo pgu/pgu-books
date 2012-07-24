@@ -15,6 +15,7 @@ import com.github.gwtbootstrap.client.ui.NavPills;
 import com.github.gwtbootstrap.client.ui.NavSearch;
 import com.github.gwtbootstrap.client.ui.Popover;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
+import com.github.gwtbootstrap.client.ui.Row;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
 import com.github.gwtbootstrap.client.ui.constants.IconSize;
@@ -56,6 +57,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     NavPills              suggestionsContainer;
     @UiField
     Label                 suggestionsFound;
+    @UiField
+    Row                   suggestionsRow;
 
     private MenuPresenter presenter;
 
@@ -404,12 +407,14 @@ public class MenuViewImpl extends Composite implements MenuView {
 
                 @Override
                 public void show() {
+                    suggestionsRow.addStyleName("suggestionsRow");
                     suggestionsContainer.setVisible(true);
                     suggestionsFound.setVisible(true);
                 }
 
                 @Override
                 public void hide() {
+                    suggestionsRow.removeStyleName("suggestionsRow");
                     suggestionsContainer.clear();
                     suggestionsContainer.setVisible(false);
                     suggestionsFound.setVisible(false);
@@ -464,7 +469,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                     } else if (IconType.CALENDAR == icon) {
                         return sYear.getTextBox();
 
-                    } else if (IconType.STAR == icon) {
+                    } else if (IconType.BOOK == icon) {
                         return sTitle.getTextBox();
 
                     }
@@ -492,7 +497,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 return IconType.CALENDAR;
 
             } else if (SearchField.TITLE.toString().equals(fieldName)) {
-                return IconType.STAR;
+                return IconType.BOOK;
 
             }
             throw new IllegalArgumentException("Unknow search field: " + fieldName);
