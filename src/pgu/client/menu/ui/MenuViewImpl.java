@@ -90,7 +90,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 "puede dar como sugerencias<br>" + //
                 "\"Saint John Perse\"<br>" + //
                 "<br>" + //
-                "Al pinchar una sugerencia, la casilla de búsqueda correspondente se llena automáticamente" + //
+                "Al pinchar una sugerencia, la casilla de búsqueda correspondente se rellena automáticamente" + //
                 "" //
         );
     }
@@ -453,7 +453,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                     } else if (IconType.TAG == icon) {
                         return sCategory.getTextBox();
 
-                    } else if (IconType.COMMENT_ALT == icon) {
+                    } else if (IconType.COMMENT == icon) {
                         return sComment.getTextBox();
 
                     } else if (IconType.PRINT == icon) {
@@ -481,7 +481,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 return IconType.TAG;
 
             } else if (SearchField.COMMENT.toString().equals(fieldName)) {
-                return IconType.COMMENT_ALT;
+                return IconType.COMMENT;
 
             } else if (SearchField.EDITOR.toString().equals(fieldName)) {
                 return IconType.PRINT;
