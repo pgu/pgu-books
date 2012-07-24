@@ -93,7 +93,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     private void setSearchInfo() {
         searchInfo.setAnimation(true);
         searchInfo.setPlacement(Placement.BOTTOM);
-        searchInfo.setHeading("Información");
+        searchInfo.setHeading("Búsqueda");
         searchInfo.setText("La búsqueda es sensible al uso de mayúsculas y minúsculas." + //
                 " Para encontrar los valores exactos, se puede usar las sugerencias." + //
                 "" //
