@@ -18,6 +18,7 @@ import com.github.gwtbootstrap.client.ui.base.HasVisibility;
 import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
@@ -376,6 +377,25 @@ public class MenuViewImpl extends Composite implements MenuView {
                         final NavLink navLink = new NavLink();
                         navLink.setText(suggestion.getField() + ": " + suggestion.getValue());
                         suggestionsContainer.add(navLink);
+
+                        navLink.addClickHandler(new ClickHandler() {
+
+                            @Override
+                            public void onClick(final ClickEvent event) {
+                                navLink.setActive(!navLink.isActive());
+                                if (navLink.isActive()) {
+                                    final String text = navLink.getText();
+                                    if (text.contains("author")) {
+                                        sAuthor.getTextBox().setText(text.substring(text.indexOf(": ") + 2).trim());
+                                    }
+                                } else {
+                                    final String text = navLink.getText();
+                                    if (text.contains("author")) {
+                                        sAuthor.getTextBox().setText("");
+                                    }
+                                }
+                            }
+                        });
                     }
 
                 }
