@@ -17,6 +17,7 @@ import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.Suggestion;
 import pgu.shared.dto.SuggestionsResult;
+import pgu.shared.utils.SearchField;
 
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
@@ -374,7 +375,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
         for (final ScoredDocument doc : docs) {
             final Suggestion suggestion = new Suggestion();
-            suggestion.setField(docU.text(FieldValueDoc.FIELD._(), doc));
+            suggestion.setField(getFieldNameUI(doc));
             suggestion.setValue(docU.text(FieldValueDoc.VALUE._(), doc));
             suggestions.add(suggestion);
         }
@@ -383,5 +384,31 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final SuggestionsResult suggestionsResult = new SuggestionsResult();
         suggestionsResult.setSuggestions(suggestions);
         return suggestionsResult;
+    }
+
+    private String getFieldNameUI(final ScoredDocument doc) {
+        final String fieldName = docU.text(FieldValueDoc.FIELD._(), doc);
+
+        if (BookDoc.AUTHOR._().equals(fieldName)) {
+            return SearchField.AUTHOR.toString();
+
+        } else if (BookDoc.CATEGORY._().equals(fieldName)) {
+            return SearchField.CATEGORY.toString();
+
+        } else if (BookDoc.COMMENT._().equals(fieldName)) {
+            return SearchField.COMMENT.toString();
+
+        } else if (BookDoc.EDITOR._().equals(fieldName)) {
+            return SearchField.EDITOR.toString();
+
+        } else if (BookDoc.STR_YEAR._().equals(fieldName)) {
+            return SearchField.YEAR.toString();
+
+        } else if (BookDoc.TITLE._().equals(fieldName)) {
+            return SearchField.TITLE.toString();
+
+        }
+
+        throw new IllegalArgumentException("Unknown field name: " + fieldName);
     }
 }

@@ -6,6 +6,7 @@ import pgu.client.menu.MenuPresenter;
 import pgu.client.menu.MenuView;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.Suggestion;
+import pgu.shared.utils.SearchField;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.NavLink;
@@ -15,6 +16,7 @@ import com.github.gwtbootstrap.client.ui.Popover;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -374,35 +376,83 @@ public class MenuViewImpl extends Composite implements MenuView {
                     suggestionsContainer.clear();
 
                     for (final Suggestion suggestion : suggestions) {
-                        final NavLink navLink = new NavLink();
-                        navLink.setText(suggestion.getField() + ": " + suggestion.getValue());
-                        suggestionsContainer.add(navLink);
+                        suggestionsContainer.add(new SuggestionNavLink(suggestion));
 
-                        navLink.addClickHandler(new ClickHandler() {
-
-                            @Override
-                            public void onClick(final ClickEvent event) {
-                                navLink.setActive(!navLink.isActive());
-                                if (navLink.isActive()) {
-                                    final String text = navLink.getText();
-                                    if (text.contains("author")) {
-                                        sAuthor.getTextBox().setText(text.substring(text.indexOf(": ") + 2).trim());
-                                    }
-                                } else {
-                                    final String text = navLink.getText();
-                                    if (text.contains("author")) {
-                                        sAuthor.getTextBox().setText("");
-                                    }
-                                }
-                            }
-                        });
                     }
 
                 }
+
             };
 
         }
         return suggestionsWidget;
+    }
+
+    private class SuggestionNavLink extends NavLink {
+
+        public SuggestionNavLink(final Suggestion suggestion) {
+
+            final IconType icon = getSuggestionIcon(suggestion);
+            setIcon(icon);
+            setText(suggestion.getValue());
+            addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(final ClickEvent event) {
+                    setActive(!isActive());
+                    getSearchBox(icon).setText(isActive() ? getText() : "");
+                }
+
+                private TextBox getSearchBox(final IconType icon) {
+                    if (IconType.USER == icon) {
+                        return sAuthor.getTextBox();
+
+                    } else if (IconType.TAG == icon) {
+                        return sCategory.getTextBox();
+
+                    } else if (IconType.COMMENT_ALT == icon) {
+                        return sComment.getTextBox();
+
+                    } else if (IconType.PRINT == icon) {
+                        return sEditor.getTextBox();
+
+                    } else if (IconType.CALENDAR == icon) {
+                        return sYear.getTextBox();
+
+                    } else if (IconType.STAR == icon) {
+                        return sTitle.getTextBox();
+
+                    }
+                    throw new IllegalArgumentException("Unknown icon: " + icon);
+                }
+            });
+        }
+
+        private IconType getSuggestionIcon(final Suggestion suggestion) {
+            final String fieldName = suggestion.getField();
+
+            if (SearchField.AUTHOR.toString().equals(fieldName)) {
+                return IconType.USER;
+
+            } else if (SearchField.CATEGORY.toString().equals(fieldName)) {
+                return IconType.TAG;
+
+            } else if (SearchField.COMMENT.toString().equals(fieldName)) {
+                return IconType.COMMENT_ALT;
+
+            } else if (SearchField.EDITOR.toString().equals(fieldName)) {
+                return IconType.PRINT;
+
+            } else if (SearchField.YEAR.toString().equals(fieldName)) {
+                return IconType.CALENDAR;
+
+            } else if (SearchField.TITLE.toString().equals(fieldName)) {
+                return IconType.STAR;
+
+            }
+            throw new IllegalArgumentException("Unknow search field: " + fieldName);
+        }
+
     }
 
 }
