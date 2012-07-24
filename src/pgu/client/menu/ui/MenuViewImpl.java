@@ -371,27 +371,11 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void setSuggestions(final ArrayList<Suggestion> suggestions) {
                     suggestionsContainer.clear();
-                    GWT.log("suggestions size " + suggestions.size());
 
-                    // int counter = 1;
-                    // FluidRow currentRow = new FluidRow();
-                    // TODO PGU Jul 23, 2012 voir booksviewimpl line 195 add dom handler
                     for (final Suggestion suggestion : suggestions) {
-                        // final Column col = new Column(2);
                         final NavLink navLink = new NavLink();
                         navLink.setText(suggestion.getField() + ": " + suggestion.getValue());
                         suggestionsContainer.add(navLink);
-                        // col.getElement().setInnerHTML();
-                        // currentRow.add(col);
-
-                        // if (counter % 6 == 1) {
-                        // suggestionsContainer.add(currentRow);
-                        //
-                        // } else if (counter % 6 == 0) {
-                        // currentRow = new FluidRow();
-                        //
-                        // }
-                        // counter++;
                     }
 
                 }
