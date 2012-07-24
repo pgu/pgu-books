@@ -9,6 +9,7 @@ import pgu.shared.dto.Suggestion;
 import pgu.shared.utils.SearchField;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.NavPills;
 import com.github.gwtbootstrap.client.ui.NavSearch;
@@ -43,7 +44,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     ProgressBar           progressBar;
     @UiField
-    Button                searchSuggestionsBtn, searchBooksBtn;
+    Button                searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn;
     @UiField
     NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
@@ -52,6 +53,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     Popover               searchInfo, suggestionsInfo;
     @UiField
     NavPills              suggestionsContainer;
+    @UiField
+    Label                 suggestionsFound;
 
     private MenuPresenter presenter;
 
@@ -64,16 +67,18 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
         suggestionsContainer.setVisible(false);
+        suggestionsFound.setVisible(false);
 
         onFieldsKeyPress();
         onSearchTextKeyPress();
         onSearchTextKeyUp();
 
-        setSearchInfo();
-        setSuggestionsInfo();
+        initSearchInfo();
+        initSuggestionsInfo();
+
     }
 
-    private void setSuggestionsInfo() {
+    private void initSuggestionsInfo() {
         suggestionsInfo.setAnimation(true);
         suggestionsInfo.setPlacement(Placement.BOTTOM);
         suggestionsInfo.setHeading("Sugerencias");
@@ -90,7 +95,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         );
     }
 
-    private void setSearchInfo() {
+    private void initSearchInfo() {
         searchInfo.setAnimation(true);
         searchInfo.setPlacement(Placement.BOTTOM);
         searchInfo.setHeading("Búsqueda");
@@ -138,6 +143,23 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiHandler("searchBooksBtn")
     public void clickSearchOnFields(final ClickEvent e) {
         searchBooks();
+
+    }
+
+    @UiHandler("clearBooksBtn")
+    public void clickClearFields(final ClickEvent e) {
+        sTitle.getTextBox().setText("");
+        sAuthor.getTextBox().setText("");
+        sEditor.getTextBox().setText("");
+        sCategory.getTextBox().setText("");
+        sYear.getTextBox().setText("");
+        sComment.getTextBox().setText("");
+    }
+
+    @UiHandler("clearSuggestionsBtn")
+    public void clickClearSuggestions(final ClickEvent e) {
+        sText.getTextBox().setText("");
+        getSuggestionsWidget().hide();
     }
 
     private void searchBooks() {
@@ -382,23 +404,25 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void show() {
                     suggestionsContainer.setVisible(true);
+                    suggestionsFound.setVisible(true);
                 }
 
                 @Override
                 public void hide() {
                     suggestionsContainer.clear();
                     suggestionsContainer.setVisible(false);
+                    suggestionsFound.setVisible(false);
                 }
 
                 @Override
                 public void setSuggestions(final ArrayList<Suggestion> suggestions) {
                     suggestionsContainer.clear();
 
+                    suggestionsFound.setText("Sugerencias encontradas: " + suggestions.size());
+
                     for (final Suggestion suggestion : suggestions) {
                         suggestionsContainer.add(new SuggestionNavLink(suggestion));
-
                     }
-
                 }
 
             };
