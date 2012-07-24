@@ -94,14 +94,9 @@ public class MenuViewImpl extends Composite implements MenuView {
         searchInfo.setAnimation(true);
         searchInfo.setPlacement(Placement.BOTTOM);
         searchInfo.setHeading("Información");
-        searchInfo.setText("Para todos los campos<br>" + //
-                "se puede utilizar \"OR\"<br>" + //
-                "Ej: angel <b>OR</b> adolfo<br>" + //
-                "<br>" + //
-                "Para el campo <i>Año</i>,<br>" + //
-                "también se puede utilizar<br>" + //
-                "Ej: <b>>1986 AND <1989</b><br>" + //
-                "o <b>1982 OR >1986 AND <1989</b>" //
+        searchInfo.setText("La búsqueda es sensible al uso de mayúsculas y minúsculas." + //
+                " Para encontrar los valores exactos, se puede usar las sugerencias." + //
+                "" //
         );
     }
 
