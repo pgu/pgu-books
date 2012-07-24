@@ -34,7 +34,7 @@
             <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"/>        
             <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             <b:Button ui:field="searchBooksBtn" icon="SEARCH">Buscar libros</b:Button>
-            <b:Popover ui:field="searchInfo" heading="Información">
+            <b:Popover ui:field="searchInfo">
                 <b:Button icon="INFO_SIGN" type="INFO"></b:Button>
             </b:Popover>
         </b:Navbar>

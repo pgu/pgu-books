@@ -93,6 +93,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     private void setSearchInfo() {
         searchInfo.setAnimation(true);
         searchInfo.setPlacement(Placement.BOTTOM);
+        searchInfo.setHeading("Información");
         searchInfo.setText("Para todos los campos<br>" + //
                 "se puede utilizar \"OR\"<br>" + //
                 "Ej: angel <b>OR</b> adolfo<br>" + //
