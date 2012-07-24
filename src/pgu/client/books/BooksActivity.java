@@ -111,14 +111,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                // TODO PGU Jul 20, 2012 see for the search limits...
-                // if (booksResult.getNbFound() > 1000) {
-                // eventBus.fireEvent(new NotificationEvent(Level.WARNING, //
-                // "Más de 1000 resultados correspondan a su búsqueda. <br>Modifiquen los criterios, por favor"));
-                // } else {
-                booksResult.setBooksSearch(search);
                 view.setBooks(booksResult, isEditable);
-                // }
             }
         });
     }

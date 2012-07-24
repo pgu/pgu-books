@@ -17,9 +17,8 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
-import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.NavLink;
-import com.github.gwtbootstrap.client.ui.Pagination;
+import com.github.gwtbootstrap.client.ui.Pager;
 import com.github.gwtbootstrap.client.ui.base.InlineLabel;
 import com.github.gwtbootstrap.client.ui.constants.BadgeType;
 import com.github.gwtbootstrap.client.ui.constants.ButtonType;
@@ -44,12 +43,14 @@ public class BooksViewImpl extends Composite implements BooksView {
     interface BooksViewImplUiBinder extends UiBinder<Widget, BooksViewImpl> {
     }
 
-    @UiField
-    Label                  booksFound;
+    // @UiField
+    // Label booksFound;
     @UiField
     FluidContainer         booksGrid, toolBar;
+    // @UiField
+    // Pagination pagination;
     @UiField
-    Pagination             pager;
+    Pager                  pager;
     @UiField
     Button                 addBtn, editBtn, deleteBtn, refreshBtn;
     @UiField
@@ -59,8 +60,10 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
+        // pagination.setVisible(false);
         pager.setVisible(false);
         toolBar.setVisible(false);
+        refreshBtn.setVisible(false);
     }
 
     private void setHeaders(final BooksResult booksResult) {
@@ -155,7 +158,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         booksGrid.clear();
         selectedRows.clear();
 
-        booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
+        // booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
         setBadgesForResultsPerPage(booksResult);
 
         toolBar.setVisible(true);
@@ -210,27 +213,35 @@ public class BooksViewImpl extends Composite implements BooksView {
             booksGrid.add(row);
             count++;
         }
+        // setAdvancedPager(booksResult);
         setPager(booksResult);
+    }
+
+    private void setPager(final BooksResult booksResult) {
+        // TODO PGU
+
     }
 
     private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
     private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
 
-    public void setPager(final BooksResult booksResult) {
+    public void setAdvancedPager(final BooksResult booksResult) {
 
-        final int start = booksResult.getBooksSearch().getStart();
+        final int start = 0;
+        final long nbFoundTotal = 0;
+        // final int start = booksResult.getBooksSearch().getStart();
         final int lengthPerPage = booksResult.getBooksSearch().getLength();
-        final long nbFoundTotal = booksResult.getNbFound();
+        // final long nbFoundTotal = booksResult.getNbFound();
 
-        pager.clear();
+        // pagination.clear();
 
         if (nbFoundTotal == 0) {
-            pager.setVisible(false);
+            // pagination.setVisible(false);
             return;
         }
 
         if (nbFoundTotal <= lengthPerPage) {
-            pager.setVisible(false);
+            // pagination.setVisible(false);
             return;
         }
 
@@ -248,7 +259,7 @@ public class BooksViewImpl extends Composite implements BooksView {
                 addLinkToPager(booksResult, blockIdx, i);
             }
             addNextLinkToPager(booksResult, blockIdx, nbBlock);
-            pager.setVisible(true);
+            // pagination.setVisible(true);
             return;
 
         } else {
@@ -271,7 +282,7 @@ public class BooksViewImpl extends Composite implements BooksView {
                 addLinkToPager(booksResult, blockIdx, i);
             }
             addNextLinkToPager(booksResult, blockIdx, nbBlock);
-            pager.setVisible(true);
+            // pagination.setVisible(true);
             return;
 
         }
@@ -280,7 +291,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     private void addLinkToPager(final BooksResult booksResult, final long blockIdx, final int i) {
         final int numBlock = i + 1;
         final NavLink navLink = new NavLink("" + numBlock);
-        pager.add(navLink);
+        // pagination.add(navLink);
         if (blockIdx == i) {
             navLink.setActive(true);
         } else {
@@ -290,7 +301,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     private void addNextLinkToPager(final BooksResult booksResult, final long blockIdx, final long nbBlock) {
         final NavLink nextLink = new NavLink("Siguiente");
-        pager.add(nextLink);
+        // pagination.add(nextLink);
         if (blockIdx == nbBlock - 1) {
             nextLink.setActive(true);
         } else {
@@ -300,7 +311,7 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     private void addPreviousLinkToPager(final BooksResult booksResult, final long blockIdx) {
         final NavLink previousLink = new NavLink("Anterior");
-        pager.add(previousLink);
+        // pagination.add(previousLink);
         if (blockIdx == 0L) {
             previousLink.setActive(true);
         } else {
@@ -347,7 +358,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         public void onClick(final ClickEvent event) {
 
             final BooksSearch booksSearch = booksResult.getBooksSearch();
-            booksSearch.setStart(i * booksSearch.getLength());
+            // booksSearch.setStart(i * booksSearch.getLength());
             presenter.goToSearchBooks(booksSearch);
         }
     }
@@ -355,8 +366,9 @@ public class BooksViewImpl extends Composite implements BooksView {
     @Override
     public void clear() {
         booksGrid.clear();
-        pager.setVisible(false);
+        // pagination.setVisible(false);
         toolBar.setVisible(false);
+        pager.setVisible(false);
     }
 
     @Override

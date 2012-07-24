@@ -18,9 +18,9 @@
     <g:HTMLPanel>
         <b:FluidContainer ui:field="toolBar" addStyleNames="{style.grid}" >
             <b:Row>
-                <b:Column size="3">
-                    <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" />
-                </b:Column>
+<!--                 <b:Column size="3"> -->
+<!--                     <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" /> -->
+<!--                 </b:Column> -->
                 <b:Column size="6">
                     <b:Button ui:field="addBtn" icon="PLUS" iconSize="LARGE" type="SUCCESS" addStyleNames="{style.actionBtn}">Añadir</b:Button>
                     <b:Button ui:field="editBtn" icon="PENCIL" iconSize="LARGE" type="PRIMARY" addStyleNames="{style.actionBtn}">Editar</b:Button>
@@ -32,6 +32,7 @@
             </b:Row>
         </b:FluidContainer>
         <b:FluidContainer ui:field="booksGrid" addStyleNames="{style.grid}" />
-        <b:Pagination ui:field="pager" alignment="CENTERED" />
+<!--         <b:Pagination ui:field="pager" alignment="CENTERED" /> -->
+        <b:Pager ui:field="pager" aligned="true" left="&larr; Anterior" right="Siguiente &rarr;"/>
     </g:HTMLPanel>
 </ui:UiBinder> 
