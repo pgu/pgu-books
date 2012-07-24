@@ -9,8 +9,8 @@
             <g:HTMLPanel ui:field="notification" />
             <b:Alert ui:field="message" type="DEFAULT" close="false" animation="true"></b:Alert>
             <b:ModalFooter>
-                <b:Button ui:field="cancelBtn" icon="UNDO">Quitar</b:Button>
-                <b:Button ui:field="confirmBtn" icon="OK" type="PRIMARY">Borrar</b:Button>
+                <b:Button ui:field="cancelBtn" icon="UNDO" iconSize="LARGE" >Quitar</b:Button>
+                <b:Button ui:field="confirmBtn" icon="OK" iconSize="LARGE" type="PRIMARY">Borrar</b:Button>
             </b:ModalFooter>
         </b:Modal>
     </g:HTMLPanel>

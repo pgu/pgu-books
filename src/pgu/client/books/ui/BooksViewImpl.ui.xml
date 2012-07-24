@@ -22,10 +22,10 @@
                     <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" />
                 </b:Column>
                 <b:Column size="6">
-                    <b:Button ui:field="addBtn" icon="PLUS" type="SUCCESS" size="MINI" addStyleNames="{style.actionBtn}">Añadir</b:Button>
-                    <b:Button ui:field="editBtn" icon="PENCIL" type="PRIMARY" size="MINI" addStyleNames="{style.actionBtn}">Editar</b:Button>
-                    <b:Button ui:field="deleteBtn" icon="TRASH" type="DANGER" size="MINI" addStyleNames="{style.actionBtn}">Borrar</b:Button>
-                    <b:Button ui:field="refreshBtn" icon="REFRESH" type="DEFAULT" size="MINI" addStyleNames="{style.actionBtn}">Refrescar</b:Button>
+                    <b:Button ui:field="addBtn" icon="PLUS" iconSize="LARGE" type="SUCCESS" addStyleNames="{style.actionBtn}">Añadir</b:Button>
+                    <b:Button ui:field="editBtn" icon="PENCIL" iconSize="LARGE" type="PRIMARY" addStyleNames="{style.actionBtn}">Editar</b:Button>
+                    <b:Button ui:field="deleteBtn" icon="TRASH" iconSize="LARGE" type="DANGER" addStyleNames="{style.actionBtn}">Borrar</b:Button>
+                    <b:Button ui:field="refreshBtn" icon="REFRESH" iconSize="LARGE" type="DEFAULT" addStyleNames="{style.actionBtn}">Refrescar</b:Button>
                 </b:Column>
                 <b:Column size="3" ui:field="colBadges">
                 </b:Column>

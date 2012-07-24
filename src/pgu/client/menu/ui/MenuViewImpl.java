@@ -17,6 +17,7 @@ import com.github.gwtbootstrap.client.ui.Popover;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.base.HasVisibility;
+import com.github.gwtbootstrap.client.ui.constants.IconSize;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.core.client.GWT;
@@ -437,6 +438,7 @@ public class MenuViewImpl extends Composite implements MenuView {
 
             final IconType icon = getSuggestionIcon(suggestion);
             setIcon(icon);
+            setIconSize(IconSize.LARGE);
             setText(suggestion.getValue());
             addClickHandler(new ClickHandler() {
 
