@@ -49,7 +49,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
     @UiField
-    Popover               popoverInfo;
+    Popover               searchInfo, suggestionsInfo;
     @UiField
     NavPills              suggestionsContainer;
 
@@ -68,9 +68,32 @@ public class MenuViewImpl extends Composite implements MenuView {
         onFieldsKeyPress();
         onSearchTextKeyPress();
         onSearchTextKeyUp();
-        popoverInfo.setAnimation(true);
-        popoverInfo.setPlacement(Placement.BOTTOM);
-        popoverInfo.setText("Para todos los campos<br>" + //
+
+        setSearchInfo();
+        setSuggestionsInfo();
+    }
+
+    private void setSuggestionsInfo() {
+        suggestionsInfo.setAnimation(true);
+        suggestionsInfo.setPlacement(Placement.BOTTOM);
+        suggestionsInfo.setHeading("Sugerencias");
+        suggestionsInfo.setText("Se puede utilizar palabras o frases" + //
+                " para recuperar los valores que se puede utilizar" + //
+                " en las casillas de búsqueda<br>" + //
+                "<br>" + //
+                "Por ejemplo: \"john\"<br>" + //
+                "puede dar como sugerencias<br>" + //
+                "\"Saint John Perse\"<br>" + //
+                "<br>" + //
+                "Al pinchar una sugerencia, la casilla de búsqueda correspondente se llena automáticamente" + //
+                "" //
+        );
+    }
+
+    private void setSearchInfo() {
+        searchInfo.setAnimation(true);
+        searchInfo.setPlacement(Placement.BOTTOM);
+        searchInfo.setText("Para todos los campos<br>" + //
                 "se puede utilizar \"OR\"<br>" + //
                 "Ej: angel <b>OR</b> adolfo<br>" + //
                 "<br>" + //
