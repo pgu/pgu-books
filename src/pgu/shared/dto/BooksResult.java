@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class BooksResult implements IsSerializable {
 
     private ArrayList<Book> books;
-    private Integer         nextPageDestination;
+    private int             nextPageDestination;
     private String          nextCursor;
 
     public ArrayList<Book> getBooks() {
@@ -32,7 +32,7 @@ public class BooksResult implements IsSerializable {
         return nextCursor;
     }
 
-    public Integer getNextDestinationPage() {
+    public int getNextDestinationPage() {
         return nextPageDestination;
     }
 

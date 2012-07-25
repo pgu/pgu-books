@@ -2,6 +2,8 @@ package pgu.client.books;
 
 import java.util.HashMap;
 
+import pgu.client.app.AppState;
+import pgu.client.app.mvp.ClientFactory;
 import pgu.shared.dto.BooksSearch;
 
 import com.google.gwt.place.shared.Place;
@@ -9,53 +11,52 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 
 public class BooksPlace extends Place {
 
-    private static HashMap<String, BooksSearch> token2search = new HashMap<String, BooksSearch>();
+    public static ClientFactory                 clientFactory;
 
-    private final BooksSearch                   booksSearch;
+    private static HashMap<String, BooksSearch> token2search = new HashMap<String, BooksSearch>();
+    private static HashMap<String, Integer>     token2page   = new HashMap<String, Integer>();
+
+    private BooksSearch                         search;
+    private int                                 page;
 
     public BooksPlace() {
-        booksSearch = null;
+
+        final AppState appState = clientFactory.getAppState();
+        search = appState.getSearch();
+        page = appState.getDestinationPage();
     }
 
-    public BooksPlace(final BooksSearch booksSearch) {
-        if (booksSearch != null) {
-
-            final BooksSearch copy = booksSearch.copy();
-            final String token = getToken(copy);
-            if (!token2search.containsKey(token)) {
-                token2search.put(token, copy);
-            }
-        }
-
-        this.booksSearch = booksSearch;
+    public String getToken(final BooksSearch search, final int page) {
+        return Integer.toString(search.hashCode() + page);
     }
 
-    public String getToken(final BooksSearch booksSearch) {
-        if (booksSearch == null) {
-            return "";
-        }
-
-        return Integer.toString(booksSearch.hashCode());
+    public BooksPlace(final BooksSearch search, final int destinationPage) {
+        clientFactory.getAppState().setCurrentSearch(search, destinationPage);
     }
 
     public static class Tokenizer implements PlaceTokenizer<BooksPlace> {
+
         @Override
         public String getToken(final BooksPlace place) {
-
-            final BooksSearch bs = place.getBooksSearch();
-            return place.getToken(bs);
+            return BooksPlace.clientFactory.getHistoryToken(place.search, place.page);
         }
 
         @Override
         public BooksPlace getPlace(final String token) {
 
-            final BooksSearch bs = token2search.get(token);
-            return new BooksPlace(bs == null ? null : bs.copy());
+            final BooksSearch search = token2search.get(token);
+            final Integer page = token2page.get(token);
+
+            return new BooksPlace(search, page);
         }
     }
 
     public BooksSearch getBooksSearch() {
-        return booksSearch;
+        return search;
+    }
+
+    public int getPage() {
+        return page;
     }
 
 }

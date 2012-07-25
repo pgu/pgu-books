@@ -1,7 +1,7 @@
 package pgu.client.app.mvp;
 
+import pgu.client.app.AppState;
 import pgu.client.app.AppView;
-import pgu.client.app.utils.AppSetup;
 import pgu.client.books.BookView;
 import pgu.client.books.BooksView;
 import pgu.client.deleteBooks.DeleteBooksView;
@@ -42,10 +42,10 @@ public interface ClientFactory {
 
     SetupView getSetupView();
 
-    AppSetup getAppSetup();
-
     BookView getBookView();
 
     DeleteBooksView getDeleteBooksView();
+
+    AppState getAppState();
 
 }

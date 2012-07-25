@@ -1,16 +1,18 @@
 package pgu.client.books;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.RefreshBooksEvent;
+import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
-import pgu.client.app.utils.SearchUtils;
+import pgu.client.app.utils.SearchNavigation;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
@@ -32,28 +34,34 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
     private final BooksPlace                     place;
     private final BooksView                      view;
-    private final BooksServiceAsync              booksService;
     private final AppSetup                       appSetup;
     private final LoginInfo                      loginInfo;
-    private final SearchUtils                    u;
     private boolean                              isEditable  = false;
+
+    private BooksSearch                          booksSearch;
+    private int                                  destinationPage;
+
+    private final BooksServiceAsync              booksService;
+    private final ClientFactory                  clientFactory;
 
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
         view = clientFactory.getBooksView();
-        booksService = clientFactory.getBooksService();
         appSetup = clientFactory.getAppSetup();
         loginInfo = clientFactory.getLoginInfo();
-        u = new SearchUtils(clientFactory);
+        booksService = clientFactory.getBooksService();
+        this.clientFactory = clientFactory;
     }
 
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus) {
         this.eventBus = eventBus;
+        booksSearch = place.getBooksSearch();
+        destinationPage = place.getPage();
+        isEditable = loginInfo.isLoggedIn();
 
         view.setPresenter(this);
 
-        isEditable = loginInfo.isLoggedIn();
         view.getCreateBookWidget().setVisible(isEditable);
         view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
@@ -91,33 +99,61 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
                 eventBus.fireEvent(new RefreshBooksEvent());
             }
         }));
+        // handlerRegs.add(view.getPreviousPageWidget().addClickHandler(new ClickHandler() {
+        //
+        // @Override
+        // public void onClick(final ClickEvent event) {
+        // // TODO PGU Jul 25, 2012
+        // searchBooks();
+        // }
+        //
+        // }));
 
-        searchBooks(place.getBooksSearch(), isEditable);
+        searchBooks();
     }
 
     @Override
     public void goToSearchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(u.newSearchEvent(booksSearch));
+        eventBus.fireEvent(new SearchBooksEvent());
     }
 
-    private void searchBooks(final BooksSearch booksSearch, final boolean isEditable) {
-        final BooksSearch search = booksSearch == null ? u.newBooksSearch() : u.updateSearch(booksSearch);
-
+    private void searchBooks() {
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
-        booksService.fetchBooks(search, new AsyncCallbackApp<BooksResult>(eventBus) {
+        booksService.fetchBooks(currentSearch.copy(), new AsyncCallbackApp<BooksResult>(eventBus) {
 
             @Override
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                if (booksResult.getNextCursor() != null) {
-                    search.getPageNb2cursor().put(booksResult.getNextDestinationPage(), booksResult.getNextCursor());
+                final String nextCursor = booksResult.getNextCursor();
+                final int nextDestinationPage = booksResult.getNextDestinationPage();
+
+                if (nextCursor != null) {
+                    if (search2navigation.containsKey(currentSearch)) {
+
+                        final SearchNavigation navigation = new SearchNavigation();
+                        navigation.cursor = nextCursor;
+                        navigation.pageNb = nextDestinationPage;
+                        search2navigation.get(currentSearch).add(navigation);
+
+                    } else {
+                        final SearchNavigation navigation = new SearchNavigation();
+                        navigation.cursor = nextCursor;
+                        navigation.pageNb = nextDestinationPage;
+
+                        final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
+                        navigations.add(navigation);
+
+                        search2navigation.put(currentSearch.copy(), navigations);
+                    }
                 }
 
-                view.setBooks(booksResult.getBooks(), search, isEditable);
+                placeController.goTo(new BooksPlace(currentSearch.copy(), destinationPage));
             }
         });
+
+        view.setBooks(books, booksSearch, isEditable);
     }
 
     @Override
@@ -145,7 +181,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
 
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
-        searchBooks(place.getBooksSearch(), isEditable);
+        searchBooks();
     }
 
 }

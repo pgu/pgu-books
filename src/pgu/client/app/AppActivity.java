@@ -33,18 +33,22 @@ public class AppActivity implements SearchBooksEvent.Handler //
         , DeleteBooksEvent.Handler //
 {
 
-    private ClientFactory                        clientFactory;
+    private final ClientFactory                  clientFactory;
     private final AppView                        view;
+    private final MenuView                       menuView;
     private final PlaceController                placeController;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
 
-    public AppActivity(final PlaceController placeController, final AppView view) {
+    public AppActivity(final PlaceController placeController, final ClientFactory clientFactory) {
+        this.clientFactory = clientFactory;
         this.placeController = placeController;
-        this.view = view;
+
+        view = clientFactory.getAppView();
+        menuView = clientFactory.getMenuView();
+
     }
 
-    public void start(final EventBus eventBus, final ClientFactory clientFactory) {
-        this.clientFactory = clientFactory;
+    public void start(final EventBus eventBus) {
 
         handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
@@ -54,8 +58,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
         handlerRegs.add(eventBus.addHandler(BookEditEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(DeleteBooksEvent.TYPE, this));
 
-        final MenuView menuView = clientFactory.getMenuView();
-        final MenuActivity menuActivity = new MenuActivity(menuView, clientFactory);
+        final MenuActivity menuActivity = new MenuActivity(clientFactory);
         menuActivity.start(eventBus);
 
         view.getHeader().setWidget(menuView);
@@ -63,7 +66,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
 
     @Override
     public void onSearchBooks(final SearchBooksEvent event) {
-        placeController.goTo(new BooksPlace(event.getBooksSearch()));
+        placeController.goTo(new BooksPlace());
     }
 
     public void onStop() {

@@ -1,8 +1,8 @@
 package pgu.client.app.mvp;
 
+import pgu.client.app.AppState;
 import pgu.client.app.AppView;
 import pgu.client.app.ui.AppViewImpl;
-import pgu.client.app.utils.AppSetup;
 import pgu.client.book.ui.BookViewImpl;
 import pgu.client.books.BookView;
 import pgu.client.books.BooksView;
@@ -44,7 +44,7 @@ public class ClientFactoryImpl implements ClientFactory {
     private static LoginServiceAsync      loginService      = GWT.create(LoginService.class);
     private static AdminBooksServiceAsync adminBooksService = GWT.create(AdminBooksService.class);
 
-    private static AppSetup               appSetup          = new AppSetup();
+    private static AppState               appState          = new AppState();
 
     private LoginInfo                     loginInfo;
 
@@ -109,8 +109,8 @@ public class ClientFactoryImpl implements ClientFactory {
     }
 
     @Override
-    public AppSetup getAppSetup() {
-        return appSetup;
+    public AppState getAppState() {
+        return appState;
     }
 
     @Override

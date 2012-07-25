@@ -25,8 +25,8 @@ public class MenuActivity implements MenuPresenter //
     private final SearchUtils       u;
     private final BooksServiceAsync booksService;
 
-    public MenuActivity(final MenuView view, final ClientFactory clientFactory) {
-        this.view = view;
+    public MenuActivity(final ClientFactory clientFactory) {
+        view = clientFactory.getMenuView();
         loginInfo = clientFactory.getLoginInfo();
         u = new SearchUtils(clientFactory);
         booksService = clientFactory.getBooksService();

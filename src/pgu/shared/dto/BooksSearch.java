@@ -1,28 +1,24 @@
 package pgu.shared.dto;
 
-import java.util.HashMap;
-
 import pgu.shared.utils.SortField;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class BooksSearch implements IsSerializable {
 
-    private int                      length;
-    private SortField                sortField       = SortField.TITLE;
-    private boolean                  isAscending     = true;
+    // limit
+    private int       length      = 10;
+    // order
+    private SortField sortField   = SortField.TITLE;
+    private boolean   isAscending = true;
+    // filters
+    private String    title;
+    private String    author;
+    private String    editor;
+    private String    category;
+    private String    year;
+    private String    comment;
 
-    private String                   title;
-    private String                   author;
-    private String                   editor;
-    private String                   category;
-    private String                   year;
-    private String                   comment;
-
-    private Integer                  pageDestination = 0;
-    private HashMap<Integer, String> pageNb2cursor   = new HashMap<Integer, String>();
-
-    // TODO PGU Jul 25, 2012 review copy
     public BooksSearch copy() {
         final BooksSearch copy = new BooksSearch();
         copy.setAscending(isAscending);
@@ -36,8 +32,6 @@ public class BooksSearch implements IsSerializable {
         copy.setYear(year);
         return copy;
     }
-
-    // TODO PGU Jul 25, 2012 set equals/hashcode
 
     public String getTitle() {
         return title;
@@ -109,22 +103,6 @@ public class BooksSearch implements IsSerializable {
 
     public void setAscending(final boolean isAscending) {
         this.isAscending = isAscending;
-    }
-
-    public HashMap<Integer, String> getPageNb2cursor() {
-        return pageNb2cursor;
-    }
-
-    public Integer getPageDestination() {
-        return pageDestination;
-    }
-
-    public void setPageDestination(final Integer pageDestination) {
-        this.pageDestination = pageDestination;
-    }
-
-    public void setPageNb2cursor(final HashMap<Integer, String> pageNb2cursor) {
-        this.pageNb2cursor = pageNb2cursor;
     }
 
 }
