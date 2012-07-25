@@ -5,12 +5,14 @@ import java.util.HashSet;
 
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
+import pgu.client.app.event.GetConfigAndSearchEvent;
+import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
+import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.mvp.ClientFactory;
-import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.SearchNavigation;
 import pgu.client.service.BooksServiceAsync;
@@ -28,13 +30,13 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class BooksActivity extends AbstractActivity implements BooksPresenter //
         , RefreshBooksEvent.Handler //
+        , SearchBooksEvent.Handler //
 {
 
     private EventBus                             eventBus;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
     private final BooksPlace                     place;
     private final BooksView                      view;
-    private final AppSetup                       appSetup;
     private final LoginInfo                      loginInfo;
     private boolean                              isEditable  = false;
 
@@ -47,7 +49,6 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     public BooksActivity(final BooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
         view = clientFactory.getBooksView();
-        appSetup = clientFactory.getAppSetup();
         loginInfo = clientFactory.getLoginInfo();
         booksService = clientFactory.getBooksService();
         this.clientFactory = clientFactory;
@@ -56,8 +57,6 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus) {
         this.eventBus = eventBus;
-        booksSearch = place.getBooksSearch();
-        destinationPage = place.getPage();
         isEditable = loginInfo.isLoggedIn();
 
         view.setPresenter(this);
@@ -109,51 +108,17 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         //
         // }));
 
+        eventBus.fireEvent(new GetConfigAndSearchEvent());
+
         searchBooks();
     }
 
     @Override
     public void goToSearchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(new SearchBooksEvent());
+        eventBus.fireEvent(new GoToBooksEvent());
     }
 
     private void searchBooks() {
-        eventBus.fireEvent(new ShowWaitingIndicatorEvent());
-
-        booksService.fetchBooks(currentSearch.copy(), new AsyncCallbackApp<BooksResult>(eventBus) {
-
-            @Override
-            public void onSuccess(final BooksResult booksResult) {
-                eventBus.fireEvent(new HideWaitingIndicatorEvent());
-
-                final String nextCursor = booksResult.getNextCursor();
-                final int nextDestinationPage = booksResult.getNextDestinationPage();
-
-                if (nextCursor != null) {
-                    if (search2navigation.containsKey(currentSearch)) {
-
-                        final SearchNavigation navigation = new SearchNavigation();
-                        navigation.cursor = nextCursor;
-                        navigation.pageNb = nextDestinationPage;
-                        search2navigation.get(currentSearch).add(navigation);
-
-                    } else {
-                        final SearchNavigation navigation = new SearchNavigation();
-                        navigation.cursor = nextCursor;
-                        navigation.pageNb = nextDestinationPage;
-
-                        final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
-                        navigations.add(navigation);
-
-                        search2navigation.put(currentSearch.copy(), navigations);
-                    }
-                }
-
-                placeController.goTo(new BooksPlace(currentSearch.copy(), destinationPage));
-            }
-        });
-
-        view.setBooks(books, booksSearch, isEditable);
     }
 
     @Override
@@ -182,6 +147,48 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
         searchBooks();
+    }
+
+    @Override
+    public void onSearchBooks(final SearchBooksEvent event) {
+        eventBus.fireEvent(new ShowWaitingIndicatorEvent());
+
+        booksService.fetchBooks(event.getBooksSearch(), new AsyncCallbackApp<BooksResult>(eventBus) {
+
+            @Override
+            public void onSuccess(final BooksResult booksResult) {
+                eventBus.fireEvent(new HideWaitingIndicatorEvent());
+
+                final UpdateNavigationEvent updateNavigationEvent = new UpdateNavigationEvent();
+                updateNavigationEvent.setNextPage(booksResult.getNextPage());
+                updateNavigationEvent.setNextCursor(booksResult.getNextCursor());
+                eventBus.fireEvent(updateNavigationEvent);
+
+                // TODO PGU
+                if (nextCursor != null) {
+                    if (search2navigation.containsKey(currentSearch)) {
+
+                        final SearchNavigation navigation = new SearchNavigation();
+                        navigation.cursor = nextCursor;
+                        navigation.pageNb = nextDestinationPage;
+                        search2navigation.get(currentSearch).add(navigation);
+
+                    } else {
+                        final SearchNavigation navigation = new SearchNavigation();
+                        navigation.cursor = nextCursor;
+                        navigation.pageNb = nextDestinationPage;
+
+                        final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
+                        navigations.add(navigation);
+
+                        search2navigation.put(currentSearch.copy(), navigations);
+                    }
+                }
+
+                view.setBooks(books, booksSearch, isEditable);
+            }
+        });
+
     }
 
 }

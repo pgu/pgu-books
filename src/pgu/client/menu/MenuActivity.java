@@ -1,16 +1,18 @@
 package pgu.client.menu;
 
+import java.util.HashMap;
+
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.ImportBooksEvent;
+import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
-import pgu.client.app.utils.SearchUtils;
 import pgu.client.service.BooksServiceAsync;
-import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
 import pgu.shared.dto.SuggestionsResult;
+import pgu.shared.utils.SearchField;
 
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -22,13 +24,11 @@ public class MenuActivity implements MenuPresenter //
     private final MenuView          view;
     private EventBus                eventBus;
     private final LoginInfo         loginInfo;
-    private final SearchUtils       u;
     private final BooksServiceAsync booksService;
 
     public MenuActivity(final ClientFactory clientFactory) {
         view = clientFactory.getMenuView();
         loginInfo = clientFactory.getLoginInfo();
-        u = new SearchUtils(clientFactory);
         booksService = clientFactory.getBooksService();
     }
 
@@ -62,8 +62,19 @@ public class MenuActivity implements MenuPresenter //
     }
 
     @Override
-    public void searchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(u.newSearchEvent(booksSearch));
+    public void searchBooks() {
+
+        final HashMap<SearchField, String> filters = new HashMap<SearchField, String>();
+        filters.put(SearchField.AUTHOR, view.getFilterAuthor());
+        filters.put(SearchField.CATEGORY, view.getFilterCategory());
+        filters.put(SearchField.COMMENT, view.getFilterComment());
+        filters.put(SearchField.EDITOR, view.getFilterEditor());
+        filters.put(SearchField.TITLE, view.getFilterTitle());
+        filters.put(SearchField.YEAR, view.getFilterYear());
+
+        final GoToBooksEvent event = new GoToBooksEvent();
+        event.setFilters(filters);
+        eventBus.fireEvent(event);
     }
 
     @Override

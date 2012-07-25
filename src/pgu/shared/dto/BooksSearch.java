@@ -12,12 +12,12 @@ public class BooksSearch implements IsSerializable {
     private SortField sortField   = SortField.TITLE;
     private boolean   isAscending = true;
     // filters
-    private String    title;
     private String    author;
-    private String    editor;
     private String    category;
-    private String    year;
     private String    comment;
+    private String    editor;
+    private String    title;
+    private String    year;
 
     public BooksSearch copy() {
         final BooksSearch copy = new BooksSearch();

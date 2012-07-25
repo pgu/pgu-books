@@ -34,4 +34,16 @@ public interface MenuView extends IsWidget {
 
     SuggestionsWidget getSuggestionsWidget();
 
+    String getFilterAuthor();
+
+    String getFilterCategory();
+
+    String getFilterComment();
+
+    String getFilterEditor();
+
+    String getFilterTitle();
+
+    String getFilterYear();
+
 }

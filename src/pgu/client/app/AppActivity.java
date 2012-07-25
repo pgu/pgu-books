@@ -1,9 +1,13 @@
 package pgu.client.app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
+import pgu.client.app.event.GetConfigAndSearchEvent;
+import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
@@ -19,18 +23,21 @@ import pgu.client.importBooks.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
 import pgu.client.setup.SetupPlace;
+import pgu.shared.dto.BooksSearch;
+import pgu.shared.utils.SearchField;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class AppActivity implements SearchBooksEvent.Handler //
+public class AppActivity implements GoToBooksEvent.Handler //
         , TechnicalErrorEvent.Handler //
         , ImportBooksEvent.Handler //
         , SetupEvent.Handler //
         , NotificationEvent.Handler //
         , BookEditEvent.Handler //
         , DeleteBooksEvent.Handler //
+        , GetConfigAndSearchEvent.Handler //
 {
 
     private final ClientFactory                  clientFactory;
@@ -38,6 +45,7 @@ public class AppActivity implements SearchBooksEvent.Handler //
     private final MenuView                       menuView;
     private final PlaceController                placeController;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
+    private EventBus                             eventBus;
 
     public AppActivity(final PlaceController placeController, final ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
@@ -49,8 +57,9 @@ public class AppActivity implements SearchBooksEvent.Handler //
     }
 
     public void start(final EventBus eventBus) {
+        this.eventBus = eventBus;
 
-        handlerRegs.add(eventBus.addHandler(SearchBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(GoToBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
@@ -64,8 +73,32 @@ public class AppActivity implements SearchBooksEvent.Handler //
         view.getHeader().setWidget(menuView);
     }
 
+    private final HashSet<BooksSearch> searches      = new HashSet<BooksSearch>();
+    private BooksSearch                currentSearch = new BooksSearch();
+
     @Override
-    public void onSearchBooks(final SearchBooksEvent event) {
+    public void onGoToBooks(final GoToBooksEvent event) {
+
+        final HashMap<SearchField, String> filters = event.getFilters();
+        if (!filters.isEmpty()) {
+
+            final BooksSearch search = new BooksSearch();
+            search.setAuthor(filters.get(SearchField.AUTHOR));
+            search.setCategory(filters.get(SearchField.CATEGORY));
+            search.setComment(filters.get(SearchField.COMMENT));
+            search.setEditor(filters.get(SearchField.EDITOR));
+            search.setTitle(filters.get(SearchField.TITLE));
+            search.setYear(filters.get(SearchField.YEAR));
+
+            search.setLength(currentSearch.getLength());
+            search.setSortField(currentSearch.getSortField());
+            search.setAscending(currentSearch.isAscending());
+
+            searches.add(currentSearch);
+            currentSearch = search;
+
+        }
+
         placeController.goTo(new BooksPlace());
     }
 
@@ -146,6 +179,11 @@ public class AppActivity implements SearchBooksEvent.Handler //
     public void onDeleteBooks(final DeleteBooksEvent event) {
         final DeleteBooksActivity deleteBooksActivity = new DeleteBooksActivity(clientFactory);
         deleteBooksActivity.start(event.getBooks());
+    }
+
+    @Override
+    public void onGetConfigAndSearch(final GetConfigAndSearchEvent event) {
+        eventBus.fireEvent(new SearchBooksEvent(currentSearch.copy()));
     }
 
 }

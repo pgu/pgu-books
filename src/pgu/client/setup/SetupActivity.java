@@ -2,7 +2,6 @@ package pgu.client.setup;
 
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.mvp.ClientFactory;
-import pgu.client.app.utils.AppSetup;
 import pgu.client.app.utils.Level;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -11,13 +10,13 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 public class SetupActivity extends AbstractActivity implements SetupPresenter {
 
-    private final SetupView view;
-    private final AppSetup  appSetup;
-    private EventBus        eventBus;
+    private final SetupView     view;
+    private EventBus            eventBus;
+    private final ClientFactory clientFactory;
 
     public SetupActivity(final SetupPlace place, final ClientFactory clientFactory) {
         view = clientFactory.getSetupView();
-        appSetup = clientFactory.getAppSetup();
+        this.clientFactory = clientFactory;
     }
 
     @Override
@@ -26,12 +25,12 @@ public class SetupActivity extends AbstractActivity implements SetupPresenter {
         view.setPresenter(this);
         panel.setWidget(view.asWidget());
 
-        view.getResultsPerPage().setResultsNb(appSetup.getResultsPerPage());
+        view.getResultsPerPage().setResultsNb(clientFactory.getAppState().getResultsPerPage());
     }
 
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
-        appSetup.setResultsPerPage(resultsPerPage);
+        // appSetup.setResultsPerPage(resultsPerPage);
         eventBus.fireEvent(new NotificationEvent(Level.INFO, "Preferencias guardadas"));
     }
 }

@@ -32,7 +32,7 @@ public class BooksResult implements IsSerializable {
         return nextCursor;
     }
 
-    public int getNextDestinationPage() {
+    public int getNextPage() {
         return nextPageDestination;
     }
 

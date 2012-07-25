@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import pgu.client.menu.MenuPresenter;
 import pgu.client.menu.MenuView;
-import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.Suggestion;
 import pgu.shared.utils.SearchField;
 
@@ -131,7 +130,7 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("goToSearchBtn")
     public void clickGoToSearch(final ClickEvent e) {
-        presenter.searchBooks(new BooksSearch());
+        searchBooks();
     }
 
     @UiHandler("goToAppstatsBtn")
@@ -167,15 +166,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     private void searchBooks() {
-        final BooksSearch booksSearch = new BooksSearch();
-        booksSearch.setAuthor(sAuthor.getTextBox().getText());
-        booksSearch.setCategory(sCategory.getTextBox().getText());
-        booksSearch.setComment(sComment.getTextBox().getText());
-        booksSearch.setEditor(sEditor.getTextBox().getText());
-        booksSearch.setTitle(sTitle.getTextBox().getText());
-        booksSearch.setYear(sYear.getTextBox().getText());
-
-        presenter.searchBooks(booksSearch);
+        presenter.searchBooks();
     }
 
     private void onFieldsKeyPress() {
@@ -503,6 +494,36 @@ public class MenuViewImpl extends Composite implements MenuView {
             throw new IllegalArgumentException("Unknow search field: " + fieldName);
         }
 
+    }
+
+    @Override
+    public String getFilterAuthor() {
+        return sAuthor.getTextBox().getText();
+    }
+
+    @Override
+    public String getFilterCategory() {
+        return sCategory.getTextBox().getText();
+    }
+
+    @Override
+    public String getFilterComment() {
+        return sComment.getTextBox().getText();
+    }
+
+    @Override
+    public String getFilterEditor() {
+        return sEditor.getTextBox().getText();
+    }
+
+    @Override
+    public String getFilterTitle() {
+        return sTitle.getTextBox().getText();
+    }
+
+    @Override
+    public String getFilterYear() {
+        return sYear.getTextBox().getText();
     }
 
 }
