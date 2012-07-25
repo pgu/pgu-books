@@ -74,7 +74,8 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         addFilterNum(BookDoc.YEAR, booksSearch.getYear(), booksQuery);
 
         // fetch results
-        final QueryResultIterator<Book> bookItr = dao.ofy().query(Book.class).iterator();
+        log.info(this, "query: [%s]", booksQuery);
+        final QueryResultIterator<Book> bookItr = booksQuery.iterator();
 
         final ArrayList<Book> books = new ArrayList<Book>(length);
         while (bookItr.hasNext()) {

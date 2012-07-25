@@ -8,19 +8,19 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class BooksSearch implements IsSerializable {
 
-    private int                            length;
-    private SortField                      sortField       = SortField.TITLE;
-    private boolean                        isAscending     = true;
+    private int                      length;
+    private SortField                sortField       = SortField.TITLE;
+    private boolean                  isAscending     = true;
 
-    private String                         title;
-    private String                         author;
-    private String                         editor;
-    private String                         category;
-    private String                         year;
-    private String                         comment;
+    private String                   title;
+    private String                   author;
+    private String                   editor;
+    private String                   category;
+    private String                   year;
+    private String                   comment;
 
-    private Integer                        pageDestination = 0;
-    private final HashMap<Integer, String> pageNb2cursor   = new HashMap<Integer, String>();
+    private Integer                  pageDestination = 0;
+    private HashMap<Integer, String> pageNb2cursor   = new HashMap<Integer, String>();
 
     // TODO PGU Jul 25, 2012 review copy
     public BooksSearch copy() {
@@ -121,6 +121,10 @@ public class BooksSearch implements IsSerializable {
 
     public void setPageDestination(final Integer pageDestination) {
         this.pageDestination = pageDestination;
+    }
+
+    public void setPageNb2cursor(final HashMap<Integer, String> pageNb2cursor) {
+        this.pageNb2cursor = pageNb2cursor;
     }
 
 }
