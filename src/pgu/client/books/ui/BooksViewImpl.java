@@ -216,9 +216,39 @@ public class BooksViewImpl extends Composite implements BooksView {
         setPager(booksSearch);
     }
 
-    private void setPager(final BooksSearch booksResult) {
-        // TODO PGU
+    private void setPager(final BooksSearch booksSearch) {
 
+        if (booksSearch.getPageDestination() == 0) {
+            pager.getLeft().setVisible(false);
+        }
+
+        if (!booksSearch.getPageNb2cursor().containsKey(booksSearch.getPageDestination() + 1)) {
+            pager.getRight().setVisible(false);
+        }
+
+        if (pager.getLeft().isVisible()) {
+            handlerRegs.add(pager.getLeft().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(final ClickEvent event) {
+                    booksSearch.setPageDestination(booksSearch.getPageDestination() - 1);
+                    presenter.goToSearchBooks(booksSearch);
+                }
+            }));
+        }
+
+        if (pager.getRight().isVisible()) {
+            handlerRegs.add(pager.getRight().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(final ClickEvent event) {
+                    booksSearch.setPageDestination(booksSearch.getPageDestination() + 1);
+                    presenter.goToSearchBooks(booksSearch);
+                }
+            }));
+        }
+
+        pager.setVisible(true);
     }
 
     private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
