@@ -83,10 +83,12 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
         // add new cursor
         final Cursor newCursor = bookItr.getCursor();
-        booksSearch.getPageNb2cursor().put(pageDestination + 1, newCursor.toWebSafeString());
 
         final BooksResult booksResult = new BooksResult();
         booksResult.setBooks(books);
+        booksResult.setNextPageDestination(pageDestination + 1);
+        booksResult.setNextCursor(newCursor.toWebSafeString());
+        // TODO PGU Jul 25, 2012 nb found?
         return booksResult;
 
     }

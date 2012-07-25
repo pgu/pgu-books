@@ -8,7 +8,6 @@ import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.BooksPresenter;
 import pgu.client.books.BooksView;
 import pgu.shared.domain.Book;
-import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.utils.SortField;
 
@@ -153,7 +152,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public void setBooks(final BooksResult booksResult, final BooksSearch booksSearch, final boolean isEditable) {
+    public void setBooks(final ArrayList<Book> books, final BooksSearch booksSearch, final boolean isEditable) {
         colBadges.clear();
         booksGrid.clear();
         selectedRows.clear();
@@ -166,7 +165,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         setHeaders(booksSearch);
 
         int count = 0;
-        for (final Book book : booksResult.getBooks()) {
+        for (final Book book : books) {
 
             final Column titleCol = new Column(2);
             final Column authorCol = new Column(2);
