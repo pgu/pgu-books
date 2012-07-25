@@ -111,7 +111,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
             public void onSuccess(final BooksResult booksResult) {
                 eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                view.setBooks(booksResult, isEditable);
+                view.setBooks(booksResult, search, isEditable);
             }
         });
     }

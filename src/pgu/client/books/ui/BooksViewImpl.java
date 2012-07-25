@@ -66,10 +66,10 @@ public class BooksViewImpl extends Composite implements BooksView {
         refreshBtn.setVisible(false);
     }
 
-    private void setHeaders(final BooksResult booksResult) {
+    private void setHeaders(final BooksSearch booksSearch) {
 
-        final SortField sortField = booksResult.getBooksSearch().getSortField();
-        final boolean isAscending = booksResult.getBooksSearch().isAscending();
+        final SortField sortField = booksSearch.getSortField();
+        final boolean isAscending = booksSearch.isAscending();
 
         final Column titleCol = new Column(2);
         final Column authorCol = new Column(2);
@@ -78,11 +78,11 @@ public class BooksViewImpl extends Composite implements BooksView {
         final Column yearCol = new Column(2);
         final Column commentCol = new Column(2);
 
-        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending, booksResult);
-        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending, booksResult);
-        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending, booksResult);
-        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending, booksResult);
-        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending, booksResult);
+        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending, booksSearch);
+        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending, booksSearch);
+        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending, booksSearch);
+        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending, booksSearch);
+        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending, booksSearch);
         commentCol.add(getColumnLabel("Comentario"));
 
         final FluidRow row = new FluidRow();
@@ -102,7 +102,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             final SortField sortField, //
             final SortField selectedSortField, //
             final boolean isAscending, //
-            final BooksResult booksResult) {
+            final BooksSearch booksSearch) {
 
         final boolean isSelected = sortField == selectedSortField;
 
@@ -128,7 +128,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             @Override
             public void onClick(final ClickEvent event) {
                 presenter.updateSort(sortField, true);
-                presenter.goToSearchBooks(booksResult.getBooksSearch());
+                presenter.goToSearchBooks(booksSearch);
             }
         });
         downBtn.addClickHandler(new ClickHandler() {
@@ -136,7 +136,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             @Override
             public void onClick(final ClickEvent event) {
                 presenter.updateSort(sortField, false);
-                presenter.goToSearchBooks(booksResult.getBooksSearch());
+                presenter.goToSearchBooks(booksSearch);
             }
         });
     }
@@ -153,17 +153,17 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public void setBooks(final BooksResult booksResult, final boolean isEditable) {
+    public void setBooks(final BooksResult booksResult, final BooksSearch booksSearch, final boolean isEditable) {
         colBadges.clear();
         booksGrid.clear();
         selectedRows.clear();
 
         // booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
-        setBadgesForResultsPerPage(booksResult);
+        setBadgesForResultsPerPage(booksSearch);
 
         toolBar.setVisible(true);
 
-        setHeaders(booksResult);
+        setHeaders(booksSearch);
 
         int count = 0;
         for (final Book book : booksResult.getBooks()) {
@@ -214,10 +214,10 @@ public class BooksViewImpl extends Composite implements BooksView {
             count++;
         }
         // setAdvancedPager(booksResult);
-        setPager(booksResult);
+        setPager(booksSearch);
     }
 
-    private void setPager(final BooksResult booksResult) {
+    private void setPager(final BooksSearch booksResult) {
         // TODO PGU
 
     }
@@ -225,12 +225,12 @@ public class BooksViewImpl extends Composite implements BooksView {
     private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
     private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
 
-    public void setAdvancedPager(final BooksResult booksResult) {
+    public void setAdvancedPager(final BooksSearch booksSearch) {
 
         final int start = 0;
         final long nbFoundTotal = 0;
         // final int start = booksResult.getBooksSearch().getStart();
-        final int lengthPerPage = booksResult.getBooksSearch().getLength();
+        final int lengthPerPage = booksSearch.getLength();
         // final long nbFoundTotal = booksResult.getNbFound();
 
         // pagination.clear();
@@ -254,11 +254,11 @@ public class BooksViewImpl extends Composite implements BooksView {
 
         if (nbBlock <= 10) {
 
-            addPreviousLinkToPager(booksResult, blockIdx);
+            addPreviousLinkToPager(booksSearch, blockIdx);
             for (int i = 0; i < nbBlock; i++) {
-                addLinkToPager(booksResult, blockIdx, i);
+                addLinkToPager(booksSearch, blockIdx, i);
             }
-            addNextLinkToPager(booksResult, blockIdx, nbBlock);
+            addNextLinkToPager(booksSearch, blockIdx, nbBlock);
             // pagination.setVisible(true);
             return;
 
@@ -277,18 +277,18 @@ public class BooksViewImpl extends Composite implements BooksView {
                 endIdx = 9;
             }
 
-            addPreviousLinkToPager(booksResult, blockIdx);
+            addPreviousLinkToPager(booksSearch, blockIdx);
             for (int i = startIdx; i < endIdx + 1; i++) {
-                addLinkToPager(booksResult, blockIdx, i);
+                addLinkToPager(booksSearch, blockIdx, i);
             }
-            addNextLinkToPager(booksResult, blockIdx, nbBlock);
+            addNextLinkToPager(booksSearch, blockIdx, nbBlock);
             // pagination.setVisible(true);
             return;
 
         }
     }
 
-    private void addLinkToPager(final BooksResult booksResult, final long blockIdx, final int i) {
+    private void addLinkToPager(final BooksSearch booksResult, final long blockIdx, final int i) {
         final int numBlock = i + 1;
         final NavLink navLink = new NavLink("" + numBlock);
         // pagination.add(navLink);
@@ -299,7 +299,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
     }
 
-    private void addNextLinkToPager(final BooksResult booksResult, final long blockIdx, final long nbBlock) {
+    private void addNextLinkToPager(final BooksSearch booksResult, final long blockIdx, final long nbBlock) {
         final NavLink nextLink = new NavLink("Siguiente");
         // pagination.add(nextLink);
         if (blockIdx == nbBlock - 1) {
@@ -309,7 +309,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
     }
 
-    private void addPreviousLinkToPager(final BooksResult booksResult, final long blockIdx) {
+    private void addPreviousLinkToPager(final BooksSearch booksResult, final long blockIdx) {
         final NavLink previousLink = new NavLink("Anterior");
         // pagination.add(previousLink);
         if (blockIdx == 0L) {
@@ -319,8 +319,8 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
     }
 
-    private void setBadgesForResultsPerPage(final BooksResult booksResult) {
-        final int booksPerPage = booksResult.getBooksSearch().getLength();
+    private void setBadgesForResultsPerPage(final BooksSearch booksSearch) {
+        final int booksPerPage = booksSearch.getLength();
 
         final int[] bValues = new int[] { 10, 20, 30, 50 };
         for (final int bValue : bValues) {
@@ -337,7 +337,7 @@ public class BooksViewImpl extends Composite implements BooksView {
                     @Override
                     public void onClick(final ClickEvent event) {
                         presenter.updateResultsPerPage(bValue);
-                        presenter.goToSearchBooks(booksResult.getBooksSearch());
+                        presenter.goToSearchBooks(booksSearch);
                     }
                 });
             }
@@ -347,17 +347,16 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     private class PagerClickHandler implements ClickHandler {
         private int               i = 0;
-        private final BooksResult booksResult;
+        private final BooksSearch booksSearch;
 
-        public PagerClickHandler(final int i, final BooksResult booksResult) {
+        public PagerClickHandler(final int i, final BooksSearch booksSearch) {
             this.i = i;
-            this.booksResult = booksResult;
+            this.booksSearch = booksSearch;
         }
 
         @Override
         public void onClick(final ClickEvent event) {
 
-            final BooksSearch booksSearch = booksResult.getBooksSearch();
             // booksSearch.setStart(i * booksSearch.getLength());
             presenter.goToSearchBooks(booksSearch);
         }

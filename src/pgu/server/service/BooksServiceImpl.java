@@ -55,13 +55,10 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         booksQuery.order(order);
 
         // cursor
-        final String cursor = booksSearch.getCursor();
+        final Integer pageDestination = booksSearch.getPageDestination();
+        final String cursor = booksSearch.getPageNb2cursor().get(pageDestination);
         if (!u.isVoid(cursor)) {
-            if (booksSearch.isForward()) {
-                booksQuery.startCursor(Cursor.fromWebSafeString(cursor));
-            } else {
-                booksQuery.endCursor(Cursor.fromWebSafeString(cursor));
-            }
+            booksQuery.startCursor(Cursor.fromWebSafeString(cursor));
         }
 
         // limit
@@ -84,13 +81,12 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             books.add(bookItr.next());
         }
 
+        // add new cursor
         final Cursor newCursor = bookItr.getCursor();
+        booksSearch.getPageNb2cursor().put(pageDestination + 1, newCursor.toWebSafeString());
 
         final BooksResult booksResult = new BooksResult();
         booksResult.setBooks(books);
-        booksResult.setBooksSearch(booksSearch);
-        booksResult.setNewCursor(newCursor == null ? null : newCursor.toWebSafeString());
-
         return booksResult;
 
     }
