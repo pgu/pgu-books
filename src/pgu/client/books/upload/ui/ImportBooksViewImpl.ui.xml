@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+    xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+    
+    <g:HTMLPanel>
+        <b:WellForm>
+            <b:ControlLabel>Start</b:ControlLabel>
+            <b:TextBox ui:field="startBox" placeholder="0"/>
+            <b:ControlLabel>Length</b:ControlLabel>
+            <b:TextBox ui:field="lengthBox" placeholder="10"/>
+            <b:FormActions>
+                <b:SubmitButton ui:field="importBtn" addStyleNames="btn" type="PRIMARY">Submit</b:SubmitButton>
+            </b:FormActions>
+        </b:WellForm>    
+        <b:WellForm>
+            <b:TextBox ui:field="msg" placeholder="A text to show..."/>
+            <b:FormActions>
+                <b:Button ui:field="infoBtn" type="INFO">Info</b:Button>
+                <b:Button ui:field="successBtn" type="SUCCESS">Success</b:Button>
+                <b:Button ui:field="warningBtn" type="WARNING">Warning</b:Button>
+                <b:Button ui:field="errorBtn" type="DANGER">Error</b:Button>
+                <b:Button ui:field="deleteAllBtn" type="DANGER">Delete All</b:Button>
+            </b:FormActions>
+        </b:WellForm>    
+        
+    </g:HTMLPanel>
+</ui:UiBinder> 
