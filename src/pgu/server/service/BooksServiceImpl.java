@@ -60,8 +60,9 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         }
 
         // limit
-        final int length = booksSearch.getLength();
-        booksQuery.limit(length);
+        final int searchLength = booksSearch.getLength();
+        final int qLength = searchLength + 1;
+        booksQuery.limit(qLength);
 
         // filters
         addFilterText(BookDoc.AUTHOR, booksSearch.getAuthor(), booksQuery);
@@ -75,19 +76,32 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         log.info(this, "query: [%s]", booksQuery);
         final QueryResultIterator<Book> bookItr = booksQuery.iterator();
 
-        final ArrayList<Book> books = new ArrayList<Book>(length);
-        while (bookItr.hasNext()) {
-            books.add(bookItr.next());
-        }
+        final ArrayList<Book> books = new ArrayList<Book>(searchLength);
+        int counter = 0;
+        Cursor newCursor = null;
+        boolean hasNextPage = false;
 
-        // add new cursor
-        final Cursor newCursor = bookItr.getCursor();
+        while (bookItr.hasNext()) {
+            counter++;
+
+            if (counter <= searchLength) {
+                books.add(bookItr.next());
+            }
+
+            if (counter == searchLength) {
+                newCursor = bookItr.getCursor();
+
+            } else if (counter == qLength) {
+                hasNextPage = true;
+                break; // weird: itr is broken
+            }
+        }
 
         // search result
         final BooksResult booksResult = new BooksResult();
         booksResult.setBooks(books);
 
-        if (newCursor != null) {
+        if (hasNextPage) {
             booksResult.setNextPage(page + 1);
             booksResult.setNextCursor(newCursor.toWebSafeString());
         }

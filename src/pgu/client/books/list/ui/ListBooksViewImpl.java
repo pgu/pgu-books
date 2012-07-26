@@ -70,11 +70,11 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
     private void initHeadersRow() {
 
-        titleCol = new SortHeader("Título", SortField.TITLE);
+        titleCol = new SortHeader("Título", SortField.TITLE, 3);
         authorCol = new SortHeader("Autor", SortField.AUTHOR);
         editorCol = new SortHeader("Editor", SortField.EDITOR);
         categoryCol = new SortHeader("Categoría", SortField.CATEGORY);
-        yearCol = new SortHeader("Año", SortField.YEAR);
+        yearCol = new SortHeader("Año", SortField.YEAR, 1);
 
         final Column commentCol = new Column(2);
         commentCol.add(getColumnLabel("Comentario"));
@@ -115,7 +115,11 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
         private final SortField sortField;
 
         public SortHeader(final String text, final SortField sortField) {
-            super(2);
+            this(text, sortField, 2);
+        }
+
+        public SortHeader(final String text, final SortField sortField, final int size) {
+            super(size);
 
             this.sortField = sortField;
 
@@ -152,7 +156,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
     private InlineLabel getColumnLabel(final String text) {
         final InlineLabel label = new InlineLabel(text);
-        label.getElement().getStyle().setMarginRight(20, Unit.PX);
+        label.getElement().getStyle().setMarginRight(7, Unit.PX);
         return label;
     }
 
@@ -174,11 +178,11 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
         int count = 0;
         for (final Book book : books) {
 
-            final Column titleCol = new Column(2);
+            final Column titleCol = new Column(3);
             final Column authorCol = new Column(2);
             final Column editorCol = new Column(2);
             final Column categoryCol = new Column(2);
-            final Column yearCol = new Column(2);
+            final Column yearCol = new Column(1);
             final Column commentCol = new Column(2);
 
             titleCol.getElement().setInnerText(book.getTitle());

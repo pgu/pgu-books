@@ -42,11 +42,11 @@ public class ListBooksPlace extends Place {
 
             String hashcode, page;
             if (parts[0].contains("h:")) {
-                hashcode = parts[0];
-                page = parts[1];
+                hashcode = parts[0].substring(2);
+                page = parts[1].substring(2);
             } else {
-                hashcode = parts[1];
-                page = parts[0];
+                hashcode = parts[1].substring(2);
+                page = parts[0].substring(2);
             }
 
             return new ListBooksPlace(hashcode, Integer.valueOf(page));
