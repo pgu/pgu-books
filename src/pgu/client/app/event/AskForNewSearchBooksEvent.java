@@ -15,15 +15,10 @@ public class AskForNewSearchBooksEvent extends GwtEvent<AskForNewSearchBooksEven
         void onAskForNewSearchBooks(AskForNewSearchBooksEvent event);
     }
 
-    public static final Type<Handler> TYPE = new Type<Handler>();
+    public static final Type<Handler> TYPE           = new Type<Handler>();
 
-    private final int                 page;
-    private final String              searchHashcode;
-
-    public AskForNewSearchBooksEvent() {
-        page = 0;
-        searchHashcode = null;
-    }
+    private int                       page           = 0;
+    private String                    searchHashcode = null;
 
     public AskForNewSearchBooksEvent(final int page, final String searchHashcode) {
         this.page = page;

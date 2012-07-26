@@ -116,15 +116,7 @@ public class AppActivity implements //
 
         currentSearch = search;
 
-        if (!search2page2cursor.containsKey(search)) {
-            final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
-            page2cursor.put(PAGE_INIT, CURSOR_INIT);
-            search2page2cursor.put(search.copy(), page2cursor);
-        }
-
-        page = PAGE_INIT;
-
-        placeController.goTo(new ListBooksPlace(search.hashCode(), PAGE_INIT));
+        updateSearchAndGoToPlace();
     }
 
     public void onStop() {
@@ -284,7 +276,7 @@ public class AppActivity implements //
         currentSearch.setSortField(event.getSortField());
         currentSearch.setAscending(event.isAscending());
 
-        u.fire(eventBus, new AskForNewSearchBooksEvent());
+        updateSearchAndGoToPlace();
     }
 
     @Override
@@ -292,7 +284,20 @@ public class AppActivity implements //
 
         currentSearch.setLength(event.getResultsPerPage());
 
-        u.fire(eventBus, new AskForNewSearchBooksEvent());
+        updateSearchAndGoToPlace();
+    }
+
+    private void updateSearchAndGoToPlace() {
+
+        if (!search2page2cursor.containsKey(currentSearch)) {
+            final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
+            page2cursor.put(PAGE_INIT, CURSOR_INIT);
+            search2page2cursor.put(currentSearch.copy(), page2cursor);
+        }
+
+        page = PAGE_INIT;
+
+        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), PAGE_INIT));
     }
 
 }

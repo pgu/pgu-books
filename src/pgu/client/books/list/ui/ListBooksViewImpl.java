@@ -18,7 +18,6 @@ import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
 import com.github.gwtbootstrap.client.ui.Pager;
 import com.github.gwtbootstrap.client.ui.base.InlineLabel;
-import com.github.gwtbootstrap.client.ui.constants.BadgeType;
 import com.github.gwtbootstrap.client.ui.constants.ButtonType;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
@@ -353,7 +352,14 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
                 results50 //
                 )) {
 
-            b.setType(length == Integer.valueOf(b.getText()) ? BadgeType.INVERSE : BadgeType.DEFAULT);
+            final boolean isSelected = length == Integer.valueOf(b.getText());
+            if (isSelected) {
+                b.addStyleName("badge-inverse");
+
+            } else {
+                b.removeStyleName("badge-inverse");
+
+            }
         }
     }
 
