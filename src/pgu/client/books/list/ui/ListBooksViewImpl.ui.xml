@@ -17,6 +17,9 @@
         .badge {
             cursor: pointer;
         }
+        .pager {
+            margin-left: 20px;
+        }
     </ui:style>
     <g:HTMLPanel>
         <b:FluidContainer ui:field="toolBar" addStyleNames="{style.grid}" >
@@ -38,8 +41,14 @@
                 </b:Column>
             </b:Row>
         </b:FluidContainer>
+        
         <b:FluidContainer ui:field="booksGrid" addStyleNames="{style.grid}" />
 <!--         <b:Pagination ui:field="pager" alignment="CENTERED" /> -->
-        <b:Pager ui:field="pager" aligned="true" left="&larr; Anterior" right="Siguiente &rarr;"/>
+
+        <b:FluidContainer addStyleNames="{style.grid}" >
+            <b:Row>
+                <b:Pager ui:field="pager" aligned="true" left="&larr; Anterior" right="Siguiente &rarr;" addStyleNames="{style.pager}"/>
+            </b:Row>
+        </b:FluidContainer>
     </g:HTMLPanel>
 </ui:UiBinder> 
