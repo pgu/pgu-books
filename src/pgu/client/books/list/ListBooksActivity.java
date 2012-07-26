@@ -23,9 +23,11 @@ import pgu.shared.dto.LoginInfo;
 import pgu.shared.utils.SortField;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -104,7 +106,13 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             }
         }));
 
-        eventBus.fireEvent(new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                eventBus.fireEvent(new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
+            }
+        });
+
     }
 
     @Override

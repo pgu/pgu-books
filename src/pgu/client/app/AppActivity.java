@@ -18,6 +18,7 @@ import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.event.UpdateResultsPerPageEvent;
 import pgu.client.app.event.UpdateSortEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
 import pgu.client.books.delete.DeleteBooksActivity;
@@ -56,6 +57,7 @@ public class AppActivity implements //
     private final PlaceController                placeController;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
     private EventBus                             eventBus;
+    private final ClientUtils                    u           = new ClientUtils();
 
     private static final int                     PAGE_INIT   = 0;
     private static final String                  CURSOR_INIT = null;
@@ -203,7 +205,7 @@ public class AppActivity implements //
     @Override
     public void onAskForNewSearchBooks(final AskForNewSearchBooksEvent event) {
 
-        if (null != event.getSearchHashcode()) {
+        if (!u.isVoid(event.getSearchHashcode())) {
 
             final int eventPage = event.getPage();
             final int searchHashcode = Integer.valueOf(event.getSearchHashcode());
@@ -222,10 +224,10 @@ public class AppActivity implements //
                 if (page2cursor.containsKey(eventPage)) {
                     final String eventCursor = page2cursor.get(eventPage);
 
-                    eventBus.fireEvent(new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
-
                     currentSearch = askedSearch;
                     page = eventPage;
+
+                    eventBus.fireEvent(new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
                     return;
                 }
 
@@ -241,9 +243,9 @@ public class AppActivity implements //
             search2page2cursor.put(search, page2cursor);
         }
 
-        eventBus.fireEvent(new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
-
         page = PAGE_INIT;
+
+        eventBus.fireEvent(new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
     }
 
     @Override
