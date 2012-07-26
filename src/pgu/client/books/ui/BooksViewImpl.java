@@ -127,7 +127,6 @@ public class BooksViewImpl extends Composite implements BooksView {
             @Override
             public void onClick(final ClickEvent event) {
                 presenter.updateSort(sortField, true);
-                presenter.goToSearchBooks(booksSearch);
             }
         });
         downBtn.addClickHandler(new ClickHandler() {
@@ -135,7 +134,6 @@ public class BooksViewImpl extends Composite implements BooksView {
             @Override
             public void onClick(final ClickEvent event) {
                 presenter.updateSort(sortField, false);
-                presenter.goToSearchBooks(booksSearch);
             }
         });
     }
@@ -366,7 +364,6 @@ public class BooksViewImpl extends Composite implements BooksView {
                     @Override
                     public void onClick(final ClickEvent event) {
                         presenter.updateResultsPerPage(bValue);
-                        presenter.goToSearchBooks(booksSearch);
                     }
                 });
             }

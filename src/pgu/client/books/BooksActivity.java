@@ -11,6 +11,8 @@ import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.event.UpdateNavigationEvent;
+import pgu.client.app.event.UpdateResultsPerPageEvent;
+import pgu.client.app.event.UpdateSortEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.service.BooksServiceAsync;
@@ -107,16 +109,11 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         // }));
 
         eventBus.fireEvent(new AskForNewSearchBooksEvent());
-
-        searchBooks();
     }
 
     @Override
     public void goToSearchBooks(final BooksSearch booksSearch) {
         eventBus.fireEvent(new GoToBooksEvent());
-    }
-
-    private void searchBooks() {
     }
 
     @Override
@@ -133,20 +130,17 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
 
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
-        // TODO PGU Jul 26, 2012
-        appSetup.setResultsPerPage(resultsPerPage);
+        eventBus.fireEvent(new UpdateResultsPerPageEvent(resultsPerPage));
     }
 
     @Override
     public void updateSort(final SortField sortField, final boolean isAscending) {
-        // TODO PGU Jul 26, 2012
-        appSetup.setSortField(sortField);
-        appSetup.setAscending(isAscending);
+        eventBus.fireEvent(new UpdateSortEvent(sortField, isAscending));
     }
 
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
-        searchBooks();
+        // TODO PGU Jul 26, 2012 TBD
     }
 
     @Override

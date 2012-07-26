@@ -2,7 +2,6 @@ package pgu.client.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import pgu.client.app.event.AskForNewSearchBooksEvent;
 import pgu.client.app.event.AskForNextPageSearchBooksEvent;
@@ -16,6 +15,8 @@ import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.event.UpdateNavigationEvent;
+import pgu.client.app.event.UpdateResultsPerPageEvent;
+import pgu.client.app.event.UpdateSortEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
@@ -44,6 +45,8 @@ public class AppActivity implements GoToBooksEvent.Handler //
         , AskForNextPageSearchBooksEvent.Handler //
         , AskForPreviousPageSearchBooksEvent.Handler //
         , UpdateNavigationEvent.Handler //
+        , UpdateResultsPerPageEvent.Handler //
+        , UpdateSortEvent.Handler //
 {
 
     private final ClientFactory                  clientFactory;
@@ -81,31 +84,26 @@ public class AppActivity implements GoToBooksEvent.Handler //
         view.getHeader().setWidget(menuView);
     }
 
-    private final HashSet<BooksSearch> searches      = new HashSet<BooksSearch>();
-    private BooksSearch                currentSearch = new BooksSearch();
+    private BooksSearch currentSearch = new BooksSearch();
 
     @Override
     public void onGoToBooks(final GoToBooksEvent event) {
 
         final HashMap<SearchField, String> filters = event.getFilters();
-        if (!filters.isEmpty()) {
 
-            final BooksSearch search = new BooksSearch();
-            search.setAuthor(filters.get(SearchField.AUTHOR));
-            search.setCategory(filters.get(SearchField.CATEGORY));
-            search.setComment(filters.get(SearchField.COMMENT));
-            search.setEditor(filters.get(SearchField.EDITOR));
-            search.setTitle(filters.get(SearchField.TITLE));
-            search.setYear(filters.get(SearchField.YEAR));
+        final BooksSearch search = new BooksSearch();
+        search.setAuthor(filters.get(SearchField.AUTHOR));
+        search.setCategory(filters.get(SearchField.CATEGORY));
+        search.setComment(filters.get(SearchField.COMMENT));
+        search.setEditor(filters.get(SearchField.EDITOR));
+        search.setTitle(filters.get(SearchField.TITLE));
+        search.setYear(filters.get(SearchField.YEAR));
 
-            search.setLength(currentSearch.getLength());
-            search.setSortField(currentSearch.getSortField());
-            search.setAscending(currentSearch.isAscending());
+        search.setLength(currentSearch.getLength());
+        search.setSortField(currentSearch.getSortField());
+        search.setAscending(currentSearch.isAscending());
 
-            searches.add(currentSearch);
-            currentSearch = search;
-
-        }
+        currentSearch = search;
 
         placeController.goTo(new BooksPlace());
     }
@@ -240,6 +238,23 @@ public class AppActivity implements GoToBooksEvent.Handler //
                 event.getNextPage() //
                 , event.getNextCursor() //
                 );
+    }
+
+    @Override
+    public void onUpdateSort(final UpdateSortEvent event) {
+
+        currentSearch.setSortField(event.getSortField());
+        currentSearch.setAscending(event.isAscending());
+
+        eventBus.fireEvent(new AskForNewSearchBooksEvent());
+    }
+
+    @Override
+    public void onUpdateResultsPerPage(final UpdateResultsPerPageEvent event) {
+
+        currentSearch.setLength(event.getResultsPerPage());
+
+        eventBus.fireEvent(new AskForNewSearchBooksEvent());
     }
 
 }
