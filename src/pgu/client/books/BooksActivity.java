@@ -2,13 +2,13 @@ package pgu.client.books;
 
 import java.util.ArrayList;
 
+import pgu.client.app.event.AskForNewSearchBooksEvent;
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
-import pgu.client.app.event.GetConfigAndSearchEvent;
+import pgu.client.app.event.DoSearchBooksEvent;
 import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.RefreshBooksEvent;
-import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.mvp.ClientFactory;
@@ -28,7 +28,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class BooksActivity extends AbstractActivity implements BooksPresenter //
         , RefreshBooksEvent.Handler //
-        , SearchBooksEvent.Handler //
+        , DoSearchBooksEvent.Handler //
 {
 
     private EventBus                             eventBus;
@@ -106,7 +106,7 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         //
         // }));
 
-        eventBus.fireEvent(new GetConfigAndSearchEvent());
+        eventBus.fireEvent(new AskForNewSearchBooksEvent());
 
         searchBooks();
     }
@@ -150,17 +150,19 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     }
 
     @Override
-    public void onSearchBooks(final SearchBooksEvent event) {
+    public void onDoSearchBooks(final DoSearchBooksEvent event) {
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
-        booksService.fetchBooks(event.getBooksSearch(), event.getPage(), event.getCursor(),
+        final BooksSearch search = event.getBooksSearch();
+
+        booksService.fetchBooks(search, event.getPage(), event.getCursor(),
                 new AsyncCallbackApp<BooksResult>(eventBus) {
 
                     @Override
                     public void onSuccess(final BooksResult booksResult) {
                         eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                        eventBus.fireEvent(new UpdateNavigationEvent(booksResult.getNextPage(), booksResult
+                        eventBus.fireEvent(new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult
                                 .getNextCursor()));
 
                         // TODO PGU Jul 26, 2012 review booksSearch here...

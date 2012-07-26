@@ -4,20 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import pgu.client.app.event.AskForNewSearchBooksEvent;
+import pgu.client.app.event.AskForNextPageSearchBooksEvent;
+import pgu.client.app.event.AskForPreviousPageSearchBooksEvent;
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
-import pgu.client.app.event.GetConfigAndSearchEvent;
+import pgu.client.app.event.DoSearchBooksEvent;
 import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.ImportBooksEvent;
 import pgu.client.app.event.NotificationEvent;
-import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
 import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
-import pgu.client.app.utils.SearchNavigation;
 import pgu.client.book.BookActivity;
 import pgu.client.books.BooksPlace;
 import pgu.client.deleteBooks.DeleteBooksActivity;
@@ -39,7 +40,9 @@ public class AppActivity implements GoToBooksEvent.Handler //
         , NotificationEvent.Handler //
         , BookEditEvent.Handler //
         , DeleteBooksEvent.Handler //
-        , GetConfigAndSearchEvent.Handler //
+        , AskForNewSearchBooksEvent.Handler //
+        , AskForNextPageSearchBooksEvent.Handler //
+        , AskForPreviousPageSearchBooksEvent.Handler //
         , UpdateNavigationEvent.Handler //
 {
 
@@ -50,13 +53,15 @@ public class AppActivity implements GoToBooksEvent.Handler //
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
     private EventBus                             eventBus;
 
+    private static final int                     PAGE_INIT   = 0;
+    private static final String                  CURSOR_INIT = null;
+
     public AppActivity(final PlaceController placeController, final ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
         this.placeController = placeController;
 
         view = clientFactory.getAppView();
         menuView = clientFactory.getMenuView();
-
     }
 
     public void start(final EventBus eventBus) {
@@ -184,41 +189,57 @@ public class AppActivity implements GoToBooksEvent.Handler //
         deleteBooksActivity.start(event.getBooks());
     }
 
+    private int                                                   page               = PAGE_INIT;
+
+    private static HashMap<BooksSearch, HashMap<Integer, String>> search2page2cursor = new HashMap<BooksSearch, HashMap<Integer, String>>();
+
     @Override
-    public void onGetConfigAndSearch(final GetConfigAndSearchEvent event) {
-        // TODO PGU Jul 26, 2012
-        final int page = 0;
-        final String cursor = "cursor";
-        eventBus.fireEvent(new SearchBooksEvent(currentSearch.copy(), page, cursor));
+    public void onAskForNewSearchBooks(final AskForNewSearchBooksEvent event) {
+
+        final BooksSearch search = currentSearch.copy();
+
+        if (!search2page2cursor.containsKey(search)) {
+            final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
+            page2cursor.put(PAGE_INIT, CURSOR_INIT);
+            search2page2cursor.put(search, page2cursor);
+        }
+
+        eventBus.fireEvent(new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
+
+        page = PAGE_INIT;
+    }
+
+    @Override
+    public void onAskForPreviousSearchBooks(final AskForPreviousPageSearchBooksEvent event) {
+        final BooksSearch search = currentSearch.copy();
+
+        final int previousPage = page - 1;
+        final String previousCursor = search2page2cursor.get(currentSearch).get(previousPage);
+
+        eventBus.fireEvent(new DoSearchBooksEvent(search, previousPage, previousCursor));
+
+        page = previousPage;
+    }
+
+    @Override
+    public void onAskForNextSearchBooks(final AskForNextPageSearchBooksEvent event) {
+        final BooksSearch search = currentSearch.copy();
+
+        final int nextPage = page + 1;
+        final String nextCursor = search2page2cursor.get(currentSearch).get(nextPage);
+
+        eventBus.fireEvent(new DoSearchBooksEvent(search, nextPage, nextCursor));
+
+        page = nextPage;
     }
 
     @Override
     public void onUpdateNavigation(final UpdateNavigationEvent event) {
-        // TODO PGU Jul 26, 2012
-        final String nextCursor = event.getNextCursor();
-        final int nextPage = event.getNextPage();
 
-        // TODO PGU
-        if (nextCursor != null) {
-            if (search2navigation.containsKey(currentSearch)) {
-
-                final SearchNavigation navigation = new SearchNavigation();
-                navigation.cursor = nextCursor;
-                navigation.pageNb = nextDestinationPage;
-                search2navigation.get(currentSearch).add(navigation);
-
-            } else {
-                final SearchNavigation navigation = new SearchNavigation();
-                navigation.cursor = nextCursor;
-                navigation.pageNb = nextDestinationPage;
-
-                final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
-                navigations.add(navigation);
-
-                search2navigation.put(currentSearch.copy(), navigations);
-            }
-        }
-
+        search2page2cursor.get(event.getSearch()).put( //
+                event.getNextPage() //
+                , event.getNextCursor() //
+                );
     }
 
 }

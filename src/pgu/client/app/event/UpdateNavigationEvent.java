@@ -1,5 +1,7 @@
 package pgu.client.app.event;
 
+import pgu.shared.dto.BooksSearch;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
@@ -17,10 +19,12 @@ public class UpdateNavigationEvent extends GwtEvent<UpdateNavigationEvent.Handle
 
     public static final Type<Handler> TYPE = new Type<Handler>();
 
+    private final BooksSearch         search;
     private final int                 nextPage;
     private final String              nextCursor;
 
-    public UpdateNavigationEvent(final int nextPage, final String nextCursor) {
+    public UpdateNavigationEvent(final BooksSearch search, final int nextPage, final String nextCursor) {
+        this.search = search;
         this.nextPage = nextPage;
         this.nextCursor = nextCursor;
     }
@@ -41,6 +45,10 @@ public class UpdateNavigationEvent extends GwtEvent<UpdateNavigationEvent.Handle
 
     public String getNextCursor() {
         return nextCursor;
+    }
+
+    public BooksSearch getSearch() {
+        return search;
     }
 
 }

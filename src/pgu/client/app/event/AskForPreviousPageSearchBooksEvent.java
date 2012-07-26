@@ -5,14 +5,14 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class GetConfigAndSearchEvent extends GwtEvent<GetConfigAndSearchEvent.Handler> {
+public class AskForPreviousPageSearchBooksEvent extends GwtEvent<AskForPreviousPageSearchBooksEvent.Handler> {
 
-    public interface HasGetConfigAndSearchHandlers extends HasHandlers {
-        HandlerRegistration addGetConfigAndSearchHandler(GetConfigAndSearchEvent.Handler handler);
+    public interface HasAskForPreviousSearchBooksHandlers extends HasHandlers {
+        HandlerRegistration addAskForPreviousSearchBooksHandler(AskForPreviousPageSearchBooksEvent.Handler handler);
     }
 
     public interface Handler extends EventHandler {
-        void onGetConfigAndSearch(GetConfigAndSearchEvent event);
+        void onAskForPreviousSearchBooks(AskForPreviousPageSearchBooksEvent event);
     }
 
     public static final Type<Handler> TYPE = new Type<Handler>();
@@ -24,7 +24,7 @@ public class GetConfigAndSearchEvent extends GwtEvent<GetConfigAndSearchEvent.Ha
 
     @Override
     protected void dispatch(final Handler handler) {
-        handler.onGetConfigAndSearch(this);
+        handler.onAskForPreviousSearchBooks(this);
     }
 
 }

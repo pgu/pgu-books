@@ -7,14 +7,14 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class SearchBooksEvent extends GwtEvent<SearchBooksEvent.Handler> {
+public class DoSearchBooksEvent extends GwtEvent<DoSearchBooksEvent.Handler> {
 
-    public interface HasSearchBooksHandlers extends HasHandlers {
-        HandlerRegistration addSearchBooksHandler(SearchBooksEvent.Handler handler);
+    public interface HasDoSearchBooksHandlers extends HasHandlers {
+        HandlerRegistration addDoSearchBooksHandler(DoSearchBooksEvent.Handler handler);
     }
 
     public interface Handler extends EventHandler {
-        void onSearchBooks(SearchBooksEvent event);
+        void onDoSearchBooks(DoSearchBooksEvent event);
     }
 
     public static final Type<Handler> TYPE = new Type<Handler>();
@@ -23,7 +23,7 @@ public class SearchBooksEvent extends GwtEvent<SearchBooksEvent.Handler> {
     private final int                 page;
     private final String              cursor;
 
-    public SearchBooksEvent(final BooksSearch booksSearch, final int page, final String cursor) {
+    public DoSearchBooksEvent(final BooksSearch booksSearch, final int page, final String cursor) {
         this.booksSearch = booksSearch;
         this.page = page;
         this.cursor = cursor;
@@ -36,7 +36,7 @@ public class SearchBooksEvent extends GwtEvent<SearchBooksEvent.Handler> {
 
     @Override
     protected void dispatch(final Handler handler) {
-        handler.onSearchBooks(this);
+        handler.onDoSearchBooks(this);
     }
 
     public BooksSearch getBooksSearch() {
