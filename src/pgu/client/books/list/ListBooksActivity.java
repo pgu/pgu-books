@@ -104,8 +104,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             }
         }));
 
-        // TODO PGU place.getPage()...
-        eventBus.fireEvent(new AskForNewSearchBooksEvent());
+        eventBus.fireEvent(new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
     }
 
     @Override

@@ -49,4 +49,12 @@ public class ListBooksPlace extends Place {
         }
     }
 
+    public String getSearchHashcode() {
+        return searchHashcode;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
 }

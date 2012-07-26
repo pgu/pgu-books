@@ -17,6 +17,19 @@ public class AskForNewSearchBooksEvent extends GwtEvent<AskForNewSearchBooksEven
 
     public static final Type<Handler> TYPE = new Type<Handler>();
 
+    private final int                 page;
+    private final String              searchHashcode;
+
+    public AskForNewSearchBooksEvent() {
+        page = 0;
+        searchHashcode = null;
+    }
+
+    public AskForNewSearchBooksEvent(final int page, final String searchHashcode) {
+        this.page = page;
+        this.searchHashcode = searchHashcode;
+    }
+
     @Override
     public Type<Handler> getAssociatedType() {
         return TYPE;
@@ -25,6 +38,14 @@ public class AskForNewSearchBooksEvent extends GwtEvent<AskForNewSearchBooksEven
     @Override
     protected void dispatch(final Handler handler) {
         handler.onAskForNewSearchBooks(this);
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public String getSearchHashcode() {
+        return searchHashcode;
     }
 
 }

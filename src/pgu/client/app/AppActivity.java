@@ -203,6 +203,36 @@ public class AppActivity implements //
     @Override
     public void onAskForNewSearchBooks(final AskForNewSearchBooksEvent event) {
 
+        if (null != event.getSearchHashcode()) {
+
+            final int eventPage = event.getPage();
+            final int searchHashcode = Integer.valueOf(event.getSearchHashcode());
+
+            BooksSearch askedSearch = null;
+            for (final BooksSearch search : search2page2cursor.keySet()) {
+                if (search.hashCode() == searchHashcode) {
+                    askedSearch = search;
+                    break;
+                }
+            }
+
+            if (askedSearch != null) {
+                final HashMap<Integer, String> page2cursor = search2page2cursor.get(askedSearch);
+
+                if (page2cursor.containsKey(eventPage)) {
+                    final String eventCursor = page2cursor.get(eventPage);
+
+                    eventBus.fireEvent(new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
+
+                    currentSearch = askedSearch;
+                    page = eventPage;
+                    return;
+                }
+
+            }
+        }
+        //
+        // else
         final BooksSearch search = currentSearch.copy();
 
         if (!search2page2cursor.containsKey(search)) {
@@ -243,10 +273,13 @@ public class AppActivity implements //
     @Override
     public void onUpdateNavigation(final UpdateNavigationEvent event) {
 
-        search2page2cursor.get(event.getSearch()).put( //
-                event.getNextPage() //
-                , event.getNextCursor() //
-                );
+        final String nextCursor = event.getNextCursor();
+        if (nextCursor != null) {
+            search2page2cursor.get(event.getSearch()).put( //
+                    event.getNextPage() //
+                    , nextCursor //
+                    );
+        }
     }
 
     @Override
