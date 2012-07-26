@@ -6,6 +6,7 @@ import java.util.HashSet;
 import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
 import pgu.client.service.AdminBooksServiceAsync;
@@ -25,6 +26,7 @@ public class DeleteBooksActivity {
     private final DeleteBooksView                view;
     private final AdminBooksServiceAsync         adminBookService;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
+    private final ClientUtils                    u           = new ClientUtils();
 
     public DeleteBooksActivity(final ClientFactory clientFactory) {
         eventBus = clientFactory.getEventBus();
@@ -107,7 +109,7 @@ public class DeleteBooksActivity {
 
                         }.schedule(3000);
 
-                        eventBus.fireEvent(new RefreshBooksEvent());
+                        u.fire(eventBus, new RefreshBooksEvent());
                     }
 
                     @Override

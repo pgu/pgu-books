@@ -2,13 +2,14 @@ package pgu.client.menu;
 
 import java.util.HashMap;
 
+import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.ImportBooksEvent;
-import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.LoginInfo;
 import pgu.shared.dto.SuggestionsResult;
@@ -25,6 +26,7 @@ public class MenuActivity implements MenuPresenter //
     private EventBus                eventBus;
     private final LoginInfo         loginInfo;
     private final BooksServiceAsync booksService;
+    private final ClientUtils       u = new ClientUtils();
 
     public MenuActivity(final ClientFactory clientFactory) {
         view = clientFactory.getMenuView();
@@ -74,7 +76,7 @@ public class MenuActivity implements MenuPresenter //
 
         final GoToBooksEvent event = new GoToBooksEvent();
         event.setFilters(filters);
-        eventBus.fireEvent(event);
+        u.fire(eventBus, event);
     }
 
     @Override
@@ -89,12 +91,12 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void importBooks() {
-        eventBus.fireEvent(new ImportBooksEvent());
+        u.fire(eventBus, new ImportBooksEvent());
     }
 
     @Override
     public void goToSetup() {
-        eventBus.fireEvent(new SetupEvent());
+        u.fire(eventBus, new SetupEvent());
     }
 
     @Override

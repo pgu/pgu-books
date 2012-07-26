@@ -165,8 +165,8 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     public void setBooks(final ArrayList<Book> books) {
 
         // do not remove the header's row
-        for (int i = 1; i < booksGrid.getWidgetCount(); i++) {
-            booksGrid.getWidget(i).removeFromParent();
+        for (int i = booksGrid.getWidgetCount() - 1; i > 0; i--) {
+            booksGrid.remove(i);
         }
 
         selectedRows.clear();

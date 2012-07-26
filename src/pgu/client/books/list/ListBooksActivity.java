@@ -16,6 +16,7 @@ import pgu.client.app.event.UpdateResultsPerPageEvent;
 import pgu.client.app.event.UpdateSortEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
@@ -23,11 +24,9 @@ import pgu.shared.dto.LoginInfo;
 import pgu.shared.utils.SortField;
 
 import com.google.gwt.activity.shared.AbstractActivity;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -45,6 +44,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     private final BooksServiceAsync              booksService;
     private final ClientFactory                  clientFactory;
+    private final ClientUtils                    u           = new ClientUtils();
 
     public ListBooksActivity(final ListBooksPlace place, final ClientFactory clientFactory) {
         this.place = place;
@@ -74,45 +74,39 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new BookEditEvent(null));
+                u.fire(eventBus, new BookEditEvent(null));
             }
         }));
         handlerRegs.add(view.getEditBookWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new BookEditEvent(view.getSelectedBook()));
+                u.fire(eventBus, new BookEditEvent(view.getSelectedBook()));
             }
         }));
         handlerRegs.add(view.getDeleteBooksWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new DeleteBooksEvent(view.getSelectedBooks()));
+                u.fire(eventBus, new DeleteBooksEvent(view.getSelectedBooks()));
             }
         }));
         handlerRegs.add(view.getPreviousPageWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new AskForPreviousPageSearchBooksEvent());
+                u.fire(eventBus, new AskForPreviousPageSearchBooksEvent());
             }
         }));
         handlerRegs.add(view.getNextPageWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new AskForNextPageSearchBooksEvent());
+                u.fire(eventBus, new AskForNextPageSearchBooksEvent());
             }
         }));
 
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                eventBus.fireEvent(new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
-            }
-        });
-
+        u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
     }
 
     @Override
@@ -129,12 +123,12 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
-        eventBus.fireEvent(new UpdateResultsPerPageEvent(resultsPerPage));
+        u.fire(eventBus, new UpdateResultsPerPageEvent(resultsPerPage));
     }
 
     @Override
     public void updateSort(final SortField sortField, final boolean isAscending) {
-        eventBus.fireEvent(new UpdateSortEvent(sortField, isAscending));
+        u.fire(eventBus, new UpdateSortEvent(sortField, isAscending));
     }
 
     @Override
@@ -144,7 +138,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void onDoSearchBooks(final DoSearchBooksEvent event) {
-        eventBus.fireEvent(new ShowWaitingIndicatorEvent());
+        u.fire(eventBus, new ShowWaitingIndicatorEvent());
 
         final BooksSearch search = event.getBooksSearch();
         final int page = event.getPage();
@@ -153,15 +147,15 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onSuccess(final BooksResult booksResult) {
-                eventBus.fireEvent(new HideWaitingIndicatorEvent());
+                u.fire(eventBus, new HideWaitingIndicatorEvent());
 
-                eventBus.fireEvent(new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult
-                        .getNextCursor()));
+                u.fire(eventBus,
+                        new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult.getNextCursor()));
 
                 view.setResultsPerPage(search.getLength());
                 view.setCurrentSort(search.getSortField(), search.isAscending());
                 view.isFirstPage(page == 0);
-                view.hasNextPage(booksResult.getNextCursor() != null);
+                view.hasNextPage(!u.isVoid(booksResult.getNextCursor()));
                 view.isEditable(isEditable);
                 view.setBooks(booksResult.getBooks());
             }

@@ -8,7 +8,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 public abstract class AsyncCallbackApp<T> implements AsyncCallback<T> {
 
-    private final EventBus eventBus;
+    private final EventBus    eventBus;
+    private final ClientUtils u = new ClientUtils();
 
     public AsyncCallbackApp(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -16,8 +17,8 @@ public abstract class AsyncCallbackApp<T> implements AsyncCallback<T> {
 
     @Override
     public void onFailure(final Throwable caught) {
-        eventBus.fireEvent(new HideWaitingIndicatorEvent());
-        eventBus.fireEvent(new TechnicalErrorEvent(caught));
+        u.fire(eventBus, new HideWaitingIndicatorEvent());
+        u.fire(eventBus, new TechnicalErrorEvent(caught));
     }
 
 }

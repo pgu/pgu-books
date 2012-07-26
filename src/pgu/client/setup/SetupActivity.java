@@ -2,6 +2,7 @@ package pgu.client.setup;
 
 import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.mvp.ClientFactory;
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.app.utils.Level;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -13,6 +14,7 @@ public class SetupActivity extends AbstractActivity implements SetupPresenter {
     private final SetupView     view;
     private EventBus            eventBus;
     private final ClientFactory clientFactory;
+    private final ClientUtils   u = new ClientUtils();
 
     public SetupActivity(final SetupPlace place, final ClientFactory clientFactory) {
         view = clientFactory.getSetupView();
@@ -31,6 +33,6 @@ public class SetupActivity extends AbstractActivity implements SetupPresenter {
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
         // appSetup.setResultsPerPage(resultsPerPage);
-        eventBus.fireEvent(new NotificationEvent(Level.INFO, "Preferencias guardadas"));
+        u.fire(eventBus, new NotificationEvent(Level.INFO, "Preferencias guardadas"));
     }
 }

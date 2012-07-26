@@ -21,7 +21,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class EditBookActivity {
 
     private final EventBus                       eventBus;
-    private final EditBookView                       view;
+    private final EditBookView                   view;
     private final ClientUtils                    u           = new ClientUtils();
     private final AdminBooksServiceAsync         adminBookService;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
@@ -109,7 +109,7 @@ public class EditBookActivity {
 
                         notification.show();
 
-                        eventBus.fireEvent(new RefreshBooksEvent());
+                        u.fire(eventBus, new RefreshBooksEvent());
                     }
 
                     @Override

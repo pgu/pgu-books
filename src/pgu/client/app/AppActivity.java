@@ -116,7 +116,15 @@ public class AppActivity implements //
 
         currentSearch = search;
 
-        placeController.goTo(new ListBooksPlace());
+        if (!search2page2cursor.containsKey(search)) {
+            final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
+            page2cursor.put(PAGE_INIT, CURSOR_INIT);
+            search2page2cursor.put(search.copy(), page2cursor);
+        }
+
+        page = PAGE_INIT;
+
+        placeController.goTo(new ListBooksPlace(search.hashCode(), PAGE_INIT));
     }
 
     public void onStop() {
@@ -227,7 +235,7 @@ public class AppActivity implements //
                     currentSearch = askedSearch;
                     page = eventPage;
 
-                    eventBus.fireEvent(new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
+                    u.fire(eventBus, new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
                     return;
                 }
 
@@ -245,31 +253,17 @@ public class AppActivity implements //
 
         page = PAGE_INIT;
 
-        eventBus.fireEvent(new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
+        u.fire(eventBus, new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
     }
 
     @Override
     public void onAskForPreviousSearchBooks(final AskForPreviousPageSearchBooksEvent event) {
-        final BooksSearch search = currentSearch.copy();
-
-        final int previousPage = page - 1;
-        final String previousCursor = search2page2cursor.get(currentSearch).get(previousPage);
-
-        eventBus.fireEvent(new DoSearchBooksEvent(search, previousPage, previousCursor));
-
-        page = previousPage;
+        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), page - 1));
     }
 
     @Override
     public void onAskForNextSearchBooks(final AskForNextPageSearchBooksEvent event) {
-        final BooksSearch search = currentSearch.copy();
-
-        final int nextPage = page + 1;
-        final String nextCursor = search2page2cursor.get(currentSearch).get(nextPage);
-
-        eventBus.fireEvent(new DoSearchBooksEvent(search, nextPage, nextCursor));
-
-        page = nextPage;
+        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), page + 1));
     }
 
     @Override
@@ -290,7 +284,7 @@ public class AppActivity implements //
         currentSearch.setSortField(event.getSortField());
         currentSearch.setAscending(event.isAscending());
 
-        eventBus.fireEvent(new AskForNewSearchBooksEvent());
+        u.fire(eventBus, new AskForNewSearchBooksEvent());
     }
 
     @Override
@@ -298,7 +292,7 @@ public class AppActivity implements //
 
         currentSearch.setLength(event.getResultsPerPage());
 
-        eventBus.fireEvent(new AskForNewSearchBooksEvent());
+        u.fire(eventBus, new AskForNewSearchBooksEvent());
     }
 
 }
