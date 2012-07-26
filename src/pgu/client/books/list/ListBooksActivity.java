@@ -36,8 +36,8 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     private EventBus                             eventBus;
     private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
-    private final ListBooksPlace                     place;
-    private final ListBooksView                      view;
+    private final ListBooksPlace                 place;
+    private final ListBooksView                  view;
     private final LoginInfo                      loginInfo;
     private boolean                              isEditable  = false;
 
@@ -104,6 +104,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             }
         }));
 
+        // TODO PGU place.getPage()...
         eventBus.fireEvent(new AskForNewSearchBooksEvent());
     }
 
@@ -150,13 +151,12 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 eventBus.fireEvent(new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult
                         .getNextCursor()));
 
-                view.setBooks(booksResult.getBooks(), //
-                        search.getLength(), //
-                        search.getSortField(), //
-                        search.isAscending(), //
-                        page == 0, //
-                        booksResult.getNextCursor() != null, //
-                        isEditable);
+                view.setResultsPerPage(search.getLength());
+                view.setCurrentSort(search.getSortField(), search.isAscending());
+                view.isFirstPage(page == 0);
+                view.hasNextPage(booksResult.getNextCursor() != null);
+                view.isEditable(isEditable);
+                view.setBooks(booksResult.getBooks());
             }
         });
 

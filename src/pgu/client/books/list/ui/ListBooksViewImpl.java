@@ -1,6 +1,7 @@
 package pgu.client.books.list.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -8,7 +9,6 @@ import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.list.ListBooksPresenter;
 import pgu.client.books.list.ListBooksView;
 import pgu.shared.domain.Book;
-import pgu.shared.dto.BooksSearch;
 import pgu.shared.utils.SortField;
 
 import com.github.gwtbootstrap.client.ui.Badge;
@@ -16,7 +16,6 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Column;
 import com.github.gwtbootstrap.client.ui.FluidContainer;
 import com.github.gwtbootstrap.client.ui.FluidRow;
-import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.Pager;
 import com.github.gwtbootstrap.client.ui.base.InlineLabel;
 import com.github.gwtbootstrap.client.ui.constants.BadgeType;
@@ -24,7 +23,6 @@ import com.github.gwtbootstrap.client.ui.constants.ButtonType;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,91 +42,112 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @UiField
-    FluidContainer         booksGrid, toolBar;
+    FluidContainer                        booksGrid, toolBar;
     @UiField
-    Pager                  pager;
+    Pager                                 pager;
     @UiField
-    Button                 addBtn, editBtn, deleteBtn, refreshBtn;
+    Button                                addBtn, editBtn, deleteBtn, refreshBtn;
     @UiField
-    Column                 colBadges;
+    Badge                                 results10, results20, results30, results50;
 
-    private ListBooksPresenter presenter;
+    private ListBooksPresenter            presenter;
+
+    private SortHeader                    titleCol, authorCol, editorCol, categoryCol, yearCol;
+    private boolean                       isFirstPage, hasNextPage, isEditable;
+
+    private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
+    private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
 
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
-        pager.setVisible(false);
-        toolBar.setVisible(false);
 
+        pager.setVisible(false);
         refreshBtn.setVisible(false); // TBD
+
+        initBadges();
+        initHeadersRow();
     }
 
-    private void setHeaders(final SortField sortField, final boolean isAscending) {
+    private void initHeadersRow() {
 
-        final Column titleCol = new Column(2);
-        final Column authorCol = new Column(2);
-        final Column editorCol = new Column(2);
-        final Column categoryCol = new Column(2);
-        final Column yearCol = new Column(2);
+        titleCol = new SortHeader("Título", SortField.TITLE);
+        authorCol = new SortHeader("Autor", SortField.AUTHOR);
+        editorCol = new SortHeader("Editor", SortField.EDITOR);
+        categoryCol = new SortHeader("Categoría", SortField.CATEGORY);
+        yearCol = new SortHeader("Año", SortField.YEAR);
+
         final Column commentCol = new Column(2);
-
-        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending);
-        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending);
-        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending);
-        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending);
-        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending);
         commentCol.add(getColumnLabel("Comentario"));
 
-        final FluidRow row = new FluidRow();
-        row.addStyleName("my-show-grid-header");
-        row.addStyleName("row-header");
-        row.add(titleCol);
-        row.add(authorCol);
-        row.add(editorCol);
-        row.add(categoryCol);
-        row.add(yearCol);
-        row.add(commentCol);
-
-        booksGrid.add(row);
+        final FluidRow headersRow = new FluidRow();
+        headersRow.addStyleName("my-show-grid-header");
+        headersRow.addStyleName("row-header");
+        headersRow.add(titleCol);
+        headersRow.add(authorCol);
+        headersRow.add(editorCol);
+        headersRow.add(categoryCol);
+        headersRow.add(yearCol);
+        headersRow.add(commentCol);
+        booksGrid.add(headersRow);
     }
 
-    private void addHeaderWithSort(final Column col, final String text, //
-            final SortField sortField, //
-            final SortField selectedSortField, //
-            final boolean isAscending) {
+    private void initBadges() {
+        for (final Badge b : Arrays.asList( //
+                results10, //
+                results20, //
+                results30, //
+                results50 //
+                )) {
 
-        final boolean isSelected = sortField == selectedSortField;
+            b.addClickHandler(new ClickHandler() {
 
-        final Button upBtn = new Button();
-        upBtn.setSize(ButtonSize.MINI);
-        upBtn.setIcon(IconType.SORT_UP);
+                @Override
+                public void onClick(final ClickEvent event) {
+                    presenter.updateResultsPerPage(Integer.valueOf(b.getText()));
+                }
+            });
+        }
+    }
 
-        final Button downBtn = new Button();
-        downBtn.setSize(ButtonSize.MINI);
-        downBtn.setIcon(IconType.SORT_DOWN);
+    private class SortHeader extends Column {
+        private final Button    upBtn;
+        private final Button    downBtn;
+        private final SortField sortField;
 
-        col.add(getColumnLabel(text));
-        col.add(upBtn);
-        col.add(downBtn);
+        public SortHeader(final String text, final SortField sortField) {
+            super(2);
 
-        if (isSelected) {
-            upBtn.setType(isAscending ? ButtonType.INVERSE : ButtonType.DEFAULT);
-            downBtn.setType(isAscending ? ButtonType.DEFAULT : ButtonType.INVERSE);
+            this.sortField = sortField;
+
+            upBtn = new Button();
+            upBtn.setSize(ButtonSize.MINI);
+            upBtn.setIcon(IconType.SORT_UP);
+
+            downBtn = new Button();
+            downBtn.setSize(ButtonSize.MINI);
+            downBtn.setIcon(IconType.SORT_DOWN);
+
+            add(getColumnLabel(text));
+            add(upBtn);
+            add(downBtn);
+
+            upBtn.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(final ClickEvent event) {
+                    presenter.updateSort(sortField, true);
+                }
+            });
+            downBtn.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(final ClickEvent event) {
+                    presenter.updateSort(sortField, false);
+                }
+            });
+
         }
 
-        upBtn.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(final ClickEvent event) {
-                presenter.updateSort(sortField, true);
-            }
-        });
-        downBtn.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(final ClickEvent event) {
-                presenter.updateSort(sortField, false);
-            }
-        });
     }
 
     private InlineLabel getColumnLabel(final String text) {
@@ -143,19 +162,14 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @Override
-    public void setBooks(final ArrayList<Book> books, final int resultsPerPage, final SortField sortField,
-            final boolean isAscending, final boolean isFirstPage, final boolean hasNextPage, final boolean isEditable) {
+    public void setBooks(final ArrayList<Book> books) {
 
-        colBadges.clear();
-        booksGrid.clear();
+        // do not remove the header's row
+        for (int i = 1; i < booksGrid.getWidgetCount(); i++) {
+            booksGrid.getWidget(i).removeFromParent();
+        }
+
         selectedRows.clear();
-
-        // booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
-        setBadgesForResultsPerPage(resultsPerPage);
-
-        toolBar.setVisible(true);
-
-        setHeaders(sortField, isAscending);
 
         int count = 0;
         for (final Book book : books) {
@@ -206,162 +220,15 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             count++;
         }
 
-        // setAdvancedPager(booksResult);
-        updatePager(isFirstPage, hasNextPage, books.size());
+        updatePager(books.size());
     }
 
-    private void updatePager(final boolean isFirstPage, final boolean hasNextPage, final int nbBooks) {
+    private void updatePager(final int nbBooks) {
 
         pager.getLeft().setVisible(!isFirstPage);
         pager.getRight().setVisible(hasNextPage);
 
         pager.setVisible(nbBooks > 0);
-    }
-
-    private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
-    private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
-
-    public void setAdvancedPager(final BooksSearch booksSearch) {
-
-        final int start = 0;
-        final long nbFoundTotal = 0;
-        // final int start = booksResult.getBooksSearch().getStart();
-        final int lengthPerPage = booksSearch.getLength();
-        // final long nbFoundTotal = booksResult.getNbFound();
-
-        // pagination.clear();
-
-        if (nbFoundTotal == 0) {
-            // pagination.setVisible(false);
-            return;
-        }
-
-        if (nbFoundTotal <= lengthPerPage) {
-            // pagination.setVisible(false);
-            return;
-        }
-
-        final long blockIdx = start / lengthPerPage;
-
-        long nbBlock = nbFoundTotal / lengthPerPage;
-        if (nbFoundTotal % lengthPerPage > 0) {
-            nbBlock++;
-        }
-
-        if (nbBlock <= 10) {
-
-            addPreviousLinkToPager(booksSearch, blockIdx);
-            for (int i = 0; i < nbBlock; i++) {
-                addLinkToPager(booksSearch, blockIdx, i);
-            }
-            addNextLinkToPager(booksSearch, blockIdx, nbBlock);
-            // pagination.setVisible(true);
-            return;
-
-        } else {
-
-            final long startBlockIdx = blockIdx - 5;
-            int startIdx = startBlockIdx > 0 ? (int) startBlockIdx : 0;
-            if (blockIdx + 4 > nbBlock - 1) {
-                startIdx = (int) (blockIdx - (10 - (nbBlock - blockIdx)));
-            }
-
-            final long lastBlockIdx = nbBlock - 1;
-            final long endBlockIdx = blockIdx + 4;
-            int endIdx = endBlockIdx < lastBlockIdx ? (int) endBlockIdx : (int) lastBlockIdx;
-            if (blockIdx < 5) {
-                endIdx = 9;
-            }
-
-            addPreviousLinkToPager(booksSearch, blockIdx);
-            for (int i = startIdx; i < endIdx + 1; i++) {
-                addLinkToPager(booksSearch, blockIdx, i);
-            }
-            addNextLinkToPager(booksSearch, blockIdx, nbBlock);
-            // pagination.setVisible(true);
-            return;
-
-        }
-    }
-
-    private void addLinkToPager(final BooksSearch booksResult, final long blockIdx, final int i) {
-        final int numBlock = i + 1;
-        final NavLink navLink = new NavLink("" + numBlock);
-        // pagination.add(navLink);
-        if (blockIdx == i) {
-            navLink.setActive(true);
-        } else {
-            navLink.addClickHandler(new PagerClickHandler(i, booksResult));
-        }
-    }
-
-    private void addNextLinkToPager(final BooksSearch booksResult, final long blockIdx, final long nbBlock) {
-        final NavLink nextLink = new NavLink("Siguiente");
-        // pagination.add(nextLink);
-        if (blockIdx == nbBlock - 1) {
-            nextLink.setActive(true);
-        } else {
-            nextLink.addClickHandler(new PagerClickHandler((int) blockIdx + 1, booksResult));
-        }
-    }
-
-    private void addPreviousLinkToPager(final BooksSearch booksResult, final long blockIdx) {
-        final NavLink previousLink = new NavLink("Anterior");
-        // pagination.add(previousLink);
-        if (blockIdx == 0L) {
-            previousLink.setActive(true);
-        } else {
-            previousLink.addClickHandler(new PagerClickHandler((int) blockIdx - 1, booksResult));
-        }
-    }
-
-    private void setBadgesForResultsPerPage(final int resultsPerPage) {
-
-        final int[] bValues = new int[] { 10, 20, 30, 50 };
-        for (final int bValue : bValues) {
-            final Badge badge = new Badge();
-            badge.setText("" + bValue);
-            if (bValue == resultsPerPage) {
-                badge.setType(BadgeType.INVERSE);
-
-            } else {
-                badge.setType(BadgeType.DEFAULT);
-                badge.getElement().getStyle().setCursor(Cursor.POINTER);
-                badge.addClickHandler(new ClickHandler() {
-
-                    @Override
-                    public void onClick(final ClickEvent event) {
-                        presenter.updateResultsPerPage(bValue);
-                    }
-                });
-            }
-            colBadges.add(badge);
-        }
-    }
-
-    private class PagerClickHandler implements ClickHandler {
-        private int               i = 0;
-        private final BooksSearch booksSearch;
-
-        public PagerClickHandler(final int i, final BooksSearch booksSearch) {
-            this.i = i;
-            this.booksSearch = booksSearch;
-        }
-
-        @Override
-        public void onClick(final ClickEvent event) {
-
-            // booksSearch.setStart(i * booksSearch.getLength());
-            // presenter.goToSearchBooks(booksSearch);
-        }
-    }
-
-    @Override
-    public void clear() {
-        booksGrid.clear();
-        // pagination.setVisible(false);
-        toolBar.setVisible(false);
-        pager.setVisible(false);
     }
 
     @Override
@@ -471,6 +338,56 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @Override
     public HasClickHandlers getNextPageWidget() {
         return pager.getRight();
+    }
+
+    @Override
+    public void setResultsPerPage(final int length) {
+        for (final Badge b : Arrays.asList( //
+                results10, //
+                results20, //
+                results30, //
+                results50 //
+                )) {
+
+            b.setType(length == Integer.valueOf(b.getText()) ? BadgeType.INVERSE : BadgeType.DEFAULT);
+        }
+    }
+
+    @Override
+    public void setCurrentSort(final SortField sortField, final boolean isAscending) {
+        for (final SortHeader h : Arrays.asList( //
+                titleCol, //
+                authorCol, //
+                editorCol, //
+                categoryCol, //
+                yearCol //
+                )) {
+
+            if (h.sortField == sortField) {
+                h.upBtn.setType(isAscending ? ButtonType.INVERSE : ButtonType.DEFAULT);
+                h.downBtn.setType(isAscending ? ButtonType.DEFAULT : ButtonType.INVERSE);
+
+            } else {
+                h.upBtn.setType(ButtonType.DEFAULT);
+                h.downBtn.setType(ButtonType.DEFAULT);
+            }
+
+        }
+    }
+
+    @Override
+    public void isFirstPage(final boolean isFirstPage) {
+        this.isFirstPage = isFirstPage;
+    }
+
+    @Override
+    public void hasNextPage(final boolean hasNextPage) {
+        this.hasNextPage = hasNextPage;
+    }
+
+    @Override
+    public void isEditable(final boolean isEditable) {
+        this.isEditable = isEditable;
     }
 
 }

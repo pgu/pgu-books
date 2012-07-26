@@ -14,8 +14,6 @@ public interface ListBooksView extends IsWidget {
 
     void setPresenter(ListBooksPresenter presenter);
 
-    void clear();
-
     HasClickAndVisibility getDeleteBooksWidget();
 
     HasClickAndVisibility getEditBookWidget();
@@ -26,10 +24,19 @@ public interface ListBooksView extends IsWidget {
 
     HashSet<Book> getSelectedBooks();
 
-    void setBooks(ArrayList<Book> books, int resultsPerPage, SortField sortField, boolean isAscending,
-            boolean isFirstPage, boolean hasNextPage, boolean isEditable);
-
     HasClickHandlers getPreviousPageWidget();
 
     HasClickHandlers getNextPageWidget();
+
+    void setResultsPerPage(int length);
+
+    void setCurrentSort(SortField sortField, boolean isAscending);
+
+    void isFirstPage(boolean b);
+
+    void hasNextPage(boolean b);
+
+    void isEditable(boolean isEditable);
+
+    void setBooks(ArrayList<Book> books);
 }
