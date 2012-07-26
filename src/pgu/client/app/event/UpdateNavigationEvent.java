@@ -17,6 +17,14 @@ public class UpdateNavigationEvent extends GwtEvent<UpdateNavigationEvent.Handle
 
     public static final Type<Handler> TYPE = new Type<Handler>();
 
+    private final int                 nextPage;
+    private final String              nextCursor;
+
+    public UpdateNavigationEvent(final int nextPage, final String nextCursor) {
+        this.nextPage = nextPage;
+        this.nextCursor = nextCursor;
+    }
+
     @Override
     public Type<Handler> getAssociatedType() {
         return TYPE;
@@ -27,12 +35,12 @@ public class UpdateNavigationEvent extends GwtEvent<UpdateNavigationEvent.Handle
         handler.onUpdateNavigation(this);
     }
 
-    public void setNextPage(final int nextPage) {
-        // TODO PGU
+    public int getNextPage() {
+        return nextPage;
     }
 
-    public void setNextCursor(final String nextCursor) {
-        // TODO PGU
+    public String getNextCursor() {
+        return nextCursor;
     }
 
 }

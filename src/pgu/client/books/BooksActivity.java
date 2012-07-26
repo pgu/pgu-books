@@ -1,7 +1,6 @@
 package pgu.client.books;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
@@ -14,7 +13,6 @@ import pgu.client.app.event.ShowWaitingIndicatorEvent;
 import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
-import pgu.client.app.utils.SearchNavigation;
 import pgu.client.service.BooksServiceAsync;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
@@ -135,11 +133,13 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
 
     @Override
     public void updateResultsPerPage(final int resultsPerPage) {
+        // TODO PGU Jul 26, 2012
         appSetup.setResultsPerPage(resultsPerPage);
     }
 
     @Override
     public void updateSort(final SortField sortField, final boolean isAscending) {
+        // TODO PGU Jul 26, 2012
         appSetup.setSortField(sortField);
         appSetup.setAscending(isAscending);
     }
@@ -153,41 +153,20 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     public void onSearchBooks(final SearchBooksEvent event) {
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
-        booksService.fetchBooks(event.getBooksSearch(), new AsyncCallbackApp<BooksResult>(eventBus) {
+        booksService.fetchBooks(event.getBooksSearch(), event.getPage(), event.getCursor(),
+                new AsyncCallbackApp<BooksResult>(eventBus) {
 
-            @Override
-            public void onSuccess(final BooksResult booksResult) {
-                eventBus.fireEvent(new HideWaitingIndicatorEvent());
+                    @Override
+                    public void onSuccess(final BooksResult booksResult) {
+                        eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                final UpdateNavigationEvent updateNavigationEvent = new UpdateNavigationEvent();
-                updateNavigationEvent.setNextPage(booksResult.getNextPage());
-                updateNavigationEvent.setNextCursor(booksResult.getNextCursor());
-                eventBus.fireEvent(updateNavigationEvent);
+                        eventBus.fireEvent(new UpdateNavigationEvent(booksResult.getNextPage(), booksResult
+                                .getNextCursor()));
 
-                // TODO PGU
-                if (nextCursor != null) {
-                    if (search2navigation.containsKey(currentSearch)) {
-
-                        final SearchNavigation navigation = new SearchNavigation();
-                        navigation.cursor = nextCursor;
-                        navigation.pageNb = nextDestinationPage;
-                        search2navigation.get(currentSearch).add(navigation);
-
-                    } else {
-                        final SearchNavigation navigation = new SearchNavigation();
-                        navigation.cursor = nextCursor;
-                        navigation.pageNb = nextDestinationPage;
-
-                        final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
-                        navigations.add(navigation);
-
-                        search2navigation.put(currentSearch.copy(), navigations);
+                        // TODO PGU Jul 26, 2012 review booksSearch here...
+                        view.setBooks(booksResult.getBooks(), booksSearch, isEditable);
                     }
-                }
-
-                view.setBooks(books, booksSearch, isEditable);
-            }
-        });
+                });
 
     }
 

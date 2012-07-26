@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface BooksServiceAsync {
 
-    void fetchBooks(BooksSearch booksSearch, AsyncCallback<BooksResult> callback);
+    void fetchBooks(BooksSearch booksSearch, int page, String cursor, AsyncCallback<BooksResult> callback);
 
     void searchSuggestions(String text, AsyncCallback<SuggestionsResult> asyncCallbackApp);
 

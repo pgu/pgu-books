@@ -27,8 +27,6 @@ public class Pgu_books implements EntryPoint {
         final EventBus eventBus = clientFactory.getEventBus();
         final PlaceController placeController = clientFactory.getPlaceController();
 
-        BooksPlace.clientFactory = clientFactory;
-
         clientFactory.getLoginService().getLoginInfo(GWT.getHostPageBaseURL(),
                 new AsyncCallbackApp<LoginInfo>(eventBus) {
 

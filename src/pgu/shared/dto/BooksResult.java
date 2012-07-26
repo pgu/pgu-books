@@ -20,7 +20,7 @@ public class BooksResult implements IsSerializable {
         this.books = books;
     }
 
-    public void setNextPageDestination(final int i) {
+    public void setNextPage(final int i) {
         nextPageDestination = i;
     }
 

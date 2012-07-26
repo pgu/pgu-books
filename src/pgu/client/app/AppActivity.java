@@ -13,9 +13,11 @@ import pgu.client.app.event.NotificationEvent;
 import pgu.client.app.event.SearchBooksEvent;
 import pgu.client.app.event.SetupEvent;
 import pgu.client.app.event.TechnicalErrorEvent;
+import pgu.client.app.event.UpdateNavigationEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
+import pgu.client.app.utils.SearchNavigation;
 import pgu.client.book.BookActivity;
 import pgu.client.books.BooksPlace;
 import pgu.client.deleteBooks.DeleteBooksActivity;
@@ -38,6 +40,7 @@ public class AppActivity implements GoToBooksEvent.Handler //
         , BookEditEvent.Handler //
         , DeleteBooksEvent.Handler //
         , GetConfigAndSearchEvent.Handler //
+        , UpdateNavigationEvent.Handler //
 {
 
     private final ClientFactory                  clientFactory;
@@ -183,7 +186,39 @@ public class AppActivity implements GoToBooksEvent.Handler //
 
     @Override
     public void onGetConfigAndSearch(final GetConfigAndSearchEvent event) {
-        eventBus.fireEvent(new SearchBooksEvent(currentSearch.copy()));
+        // TODO PGU Jul 26, 2012
+        final int page = 0;
+        final String cursor = "cursor";
+        eventBus.fireEvent(new SearchBooksEvent(currentSearch.copy(), page, cursor));
+    }
+
+    @Override
+    public void onUpdateNavigation(final UpdateNavigationEvent event) {
+        // TODO PGU Jul 26, 2012
+        final String nextCursor = event.getNextCursor();
+        final int nextPage = event.getNextPage();
+
+        // TODO PGU
+        if (nextCursor != null) {
+            if (search2navigation.containsKey(currentSearch)) {
+
+                final SearchNavigation navigation = new SearchNavigation();
+                navigation.cursor = nextCursor;
+                navigation.pageNb = nextDestinationPage;
+                search2navigation.get(currentSearch).add(navigation);
+
+            } else {
+                final SearchNavigation navigation = new SearchNavigation();
+                navigation.cursor = nextCursor;
+                navigation.pageNb = nextDestinationPage;
+
+                final HashSet<SearchNavigation> navigations = new HashSet<SearchNavigation>();
+                navigations.add(navigation);
+
+                search2navigation.put(currentSearch.copy(), navigations);
+            }
+        }
+
     }
 
 }

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("books")
 public interface BooksService extends RemoteService {
 
-    BooksResult fetchBooks(BooksSearch booksSearch);
+    BooksResult fetchBooks(BooksSearch booksSearch, int page, String cursor);
 
     SuggestionsResult searchSuggestions(String text);
 }

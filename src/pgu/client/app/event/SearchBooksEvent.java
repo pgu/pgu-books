@@ -20,9 +20,13 @@ public class SearchBooksEvent extends GwtEvent<SearchBooksEvent.Handler> {
     public static final Type<Handler> TYPE = new Type<Handler>();
 
     private final BooksSearch         booksSearch;
+    private final int                 page;
+    private final String              cursor;
 
-    public SearchBooksEvent(final BooksSearch booksSearch) {
+    public SearchBooksEvent(final BooksSearch booksSearch, final int page, final String cursor) {
         this.booksSearch = booksSearch;
+        this.page = page;
+        this.cursor = cursor;
     }
 
     @Override
@@ -37,6 +41,14 @@ public class SearchBooksEvent extends GwtEvent<SearchBooksEvent.Handler> {
 
     public BooksSearch getBooksSearch() {
         return booksSearch;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public String getCursor() {
+        return cursor;
     }
 
 }

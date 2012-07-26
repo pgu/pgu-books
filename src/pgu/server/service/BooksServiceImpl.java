@@ -44,7 +44,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
      * https://developers.google.com/appengine/docs/java/datastore/queries#Query_Cursors
      */
     @Override
-    public BooksResult fetchBooks(final BooksSearch booksSearch) {
+    public BooksResult fetchBooks(final BooksSearch booksSearch, final int page, final String cursor) {
 
         final Query<Book> booksQuery = dao.ofy().query(Book.class);
 
@@ -55,8 +55,6 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         booksQuery.order(order);
 
         // cursor
-        final Integer pageDestination = booksSearch.getPageDestination();
-        final String cursor = booksSearch.getPageNb2cursor().get(pageDestination);
         if (!u.isVoid(cursor)) {
             booksQuery.startCursor(Cursor.fromWebSafeString(cursor));
         }
@@ -90,7 +88,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         booksResult.setBooks(books);
 
         if (newCursor != null) {
-            booksResult.setNextPageDestination(pageDestination + 1);
+            booksResult.setNextPage(page + 1);
             booksResult.setNextCursor(newCursor.toWebSafeString());
         }
 
