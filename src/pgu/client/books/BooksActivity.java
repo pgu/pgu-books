@@ -3,10 +3,11 @@ package pgu.client.books;
 import java.util.ArrayList;
 
 import pgu.client.app.event.AskForNewSearchBooksEvent;
+import pgu.client.app.event.AskForNextPageSearchBooksEvent;
+import pgu.client.app.event.AskForPreviousPageSearchBooksEvent;
 import pgu.client.app.event.BookEditEvent;
 import pgu.client.app.event.DeleteBooksEvent;
 import pgu.client.app.event.DoSearchBooksEvent;
-import pgu.client.app.event.GoToBooksEvent;
 import pgu.client.app.event.HideWaitingIndicatorEvent;
 import pgu.client.app.event.RefreshBooksEvent;
 import pgu.client.app.event.ShowWaitingIndicatorEvent;
@@ -40,9 +41,6 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
     private final LoginInfo                      loginInfo;
     private boolean                              isEditable  = false;
 
-    private BooksSearch                          booksSearch;
-    private int                                  destinationPage;
-
     private final BooksServiceAsync              booksService;
     private final ClientFactory                  clientFactory;
 
@@ -64,11 +62,11 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         view.getCreateBookWidget().setVisible(isEditable);
         view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
-        view.getRefreshBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
         handlerRegs.add(eventBus.addHandler(RefreshBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(DoSearchBooksEvent.TYPE, this));
 
         handlerRegs.add(view.getCreateBookWidget().addClickHandler(new ClickHandler() {
 
@@ -91,34 +89,27 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
                 eventBus.fireEvent(new DeleteBooksEvent(view.getSelectedBooks()));
             }
         }));
-        handlerRegs.add(view.getRefreshBooksWidget().addClickHandler(new ClickHandler() {
+        handlerRegs.add(view.getPreviousPageWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                eventBus.fireEvent(new RefreshBooksEvent());
+                eventBus.fireEvent(new AskForPreviousPageSearchBooksEvent());
             }
         }));
-        // handlerRegs.add(view.getPreviousPageWidget().addClickHandler(new ClickHandler() {
-        //
-        // @Override
-        // public void onClick(final ClickEvent event) {
-        // // TODO PGU Jul 25, 2012
-        // searchBooks();
-        // }
-        //
-        // }));
+        handlerRegs.add(view.getNextPageWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                eventBus.fireEvent(new AskForNextPageSearchBooksEvent());
+            }
+        }));
 
         eventBus.fireEvent(new AskForNewSearchBooksEvent());
     }
 
     @Override
-    public void goToSearchBooks(final BooksSearch booksSearch) {
-        eventBus.fireEvent(new GoToBooksEvent());
-    }
-
-    @Override
     public void onStop() {
-        view.clearHandlers();
+
         for (HandlerRegistration handlerReg : handlerRegs) {
             handlerReg.removeHandler();
             handlerReg = null;
@@ -148,21 +139,26 @@ public class BooksActivity extends AbstractActivity implements BooksPresenter //
         eventBus.fireEvent(new ShowWaitingIndicatorEvent());
 
         final BooksSearch search = event.getBooksSearch();
+        final int page = event.getPage();
 
-        booksService.fetchBooks(search, event.getPage(), event.getCursor(),
-                new AsyncCallbackApp<BooksResult>(eventBus) {
+        booksService.fetchBooks(search, page, event.getCursor(), new AsyncCallbackApp<BooksResult>(eventBus) {
 
-                    @Override
-                    public void onSuccess(final BooksResult booksResult) {
-                        eventBus.fireEvent(new HideWaitingIndicatorEvent());
+            @Override
+            public void onSuccess(final BooksResult booksResult) {
+                eventBus.fireEvent(new HideWaitingIndicatorEvent());
 
-                        eventBus.fireEvent(new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult
-                                .getNextCursor()));
+                eventBus.fireEvent(new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult
+                        .getNextCursor()));
 
-                        // TODO PGU Jul 26, 2012 review booksSearch here...
-                        view.setBooks(booksResult.getBooks(), booksSearch, isEditable);
-                    }
-                });
+                view.setBooks(booksResult.getBooks(), //
+                        search.getLength(), //
+                        search.getSortField(), //
+                        search.isAscending(), //
+                        page == 0, //
+                        booksResult.getNextCursor() != null, //
+                        isEditable);
+            }
+        });
 
     }
 

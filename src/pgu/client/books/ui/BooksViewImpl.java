@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -42,12 +43,8 @@ public class BooksViewImpl extends Composite implements BooksView {
     interface BooksViewImplUiBinder extends UiBinder<Widget, BooksViewImpl> {
     }
 
-    // @UiField
-    // Label booksFound;
     @UiField
     FluidContainer         booksGrid, toolBar;
-    // @UiField
-    // Pagination pagination;
     @UiField
     Pager                  pager;
     @UiField
@@ -59,16 +56,13 @@ public class BooksViewImpl extends Composite implements BooksView {
 
     public BooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
-        // pagination.setVisible(false);
         pager.setVisible(false);
         toolBar.setVisible(false);
-        refreshBtn.setVisible(false);
+
+        refreshBtn.setVisible(false); // TBD
     }
 
-    private void setHeaders(final BooksSearch booksSearch) {
-
-        final SortField sortField = booksSearch.getSortField();
-        final boolean isAscending = booksSearch.isAscending();
+    private void setHeaders(final SortField sortField, final boolean isAscending) {
 
         final Column titleCol = new Column(2);
         final Column authorCol = new Column(2);
@@ -77,11 +71,11 @@ public class BooksViewImpl extends Composite implements BooksView {
         final Column yearCol = new Column(2);
         final Column commentCol = new Column(2);
 
-        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending, booksSearch);
-        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending, booksSearch);
-        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending, booksSearch);
-        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending, booksSearch);
-        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending, booksSearch);
+        addHeaderWithSort(titleCol, "Título", SortField.TITLE, sortField, isAscending);
+        addHeaderWithSort(authorCol, "Autor", SortField.AUTHOR, sortField, isAscending);
+        addHeaderWithSort(editorCol, "Editor", SortField.EDITOR, sortField, isAscending);
+        addHeaderWithSort(categoryCol, "Categoría", SortField.CATEGORY, sortField, isAscending);
+        addHeaderWithSort(yearCol, "Año", SortField.YEAR, sortField, isAscending);
         commentCol.add(getColumnLabel("Comentario"));
 
         final FluidRow row = new FluidRow();
@@ -100,8 +94,7 @@ public class BooksViewImpl extends Composite implements BooksView {
     private void addHeaderWithSort(final Column col, final String text, //
             final SortField sortField, //
             final SortField selectedSortField, //
-            final boolean isAscending, //
-            final BooksSearch booksSearch) {
+            final boolean isAscending) {
 
         final boolean isSelected = sortField == selectedSortField;
 
@@ -150,17 +143,19 @@ public class BooksViewImpl extends Composite implements BooksView {
     }
 
     @Override
-    public void setBooks(final ArrayList<Book> books, final BooksSearch booksSearch, final boolean isEditable) {
+    public void setBooks(final ArrayList<Book> books, final int resultsPerPage, final SortField sortField,
+            final boolean isAscending, final boolean isFirstPage, final boolean hasNextPage, final boolean isEditable) {
+
         colBadges.clear();
         booksGrid.clear();
         selectedRows.clear();
 
         // booksFound.setText("Libros encontrados: " + (int) booksResult.getNbFound());
-        setBadgesForResultsPerPage(booksSearch);
+        setBadgesForResultsPerPage(resultsPerPage);
 
         toolBar.setVisible(true);
 
-        setHeaders(booksSearch);
+        setHeaders(sortField, isAscending);
 
         int count = 0;
         for (final Book book : books) {
@@ -192,7 +187,7 @@ public class BooksViewImpl extends Composite implements BooksView {
             if (isEditable) {
                 row.addStyleName("row-editable");
                 row2book.put(row, book);
-                handlerRegs.add(row.addDomHandler(new ClickHandler() {
+                row.addDomHandler(new ClickHandler() {
 
                     @Override
                     public void onClick(final ClickEvent event) {
@@ -204,49 +199,23 @@ public class BooksViewImpl extends Composite implements BooksView {
                             row.addStyleName("row-selected");
                         }
                     }
-                }, ClickEvent.getType()));
+                }, ClickEvent.getType());
             }
 
             booksGrid.add(row);
             count++;
         }
+
         // setAdvancedPager(booksResult);
-        setPager(booksSearch);
+        updatePager(isFirstPage, hasNextPage, books.size());
     }
 
-    private void setPager(final BooksSearch booksSearch) {
+    private void updatePager(final boolean isFirstPage, final boolean hasNextPage, final int nbBooks) {
 
-        if (booksSearch.getPageDestination() == 0) {
-            pager.getLeft().setVisible(false);
-        }
+        pager.getLeft().setVisible(!isFirstPage);
+        pager.getRight().setVisible(hasNextPage);
 
-        if (!booksSearch.getPageNb2cursor().containsKey(booksSearch.getPageDestination() + 1)) {
-            pager.getRight().setVisible(false);
-        }
-
-        if (pager.getLeft().isVisible()) {
-            handlerRegs.add(pager.getLeft().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(final ClickEvent event) {
-                    booksSearch.setPageDestination(booksSearch.getPageDestination() - 1);
-                    presenter.goToSearchBooks(booksSearch);
-                }
-            }));
-        }
-
-        if (pager.getRight().isVisible()) {
-            handlerRegs.add(pager.getRight().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(final ClickEvent event) {
-                    booksSearch.setPageDestination(booksSearch.getPageDestination() + 1);
-                    presenter.goToSearchBooks(booksSearch);
-                }
-            }));
-        }
-
-        pager.setVisible(true);
+        pager.setVisible(nbBooks > 0);
     }
 
     private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
@@ -346,14 +315,13 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
     }
 
-    private void setBadgesForResultsPerPage(final BooksSearch booksSearch) {
-        final int booksPerPage = booksSearch.getLength();
+    private void setBadgesForResultsPerPage(final int resultsPerPage) {
 
         final int[] bValues = new int[] { 10, 20, 30, 50 };
         for (final int bValue : bValues) {
             final Badge badge = new Badge();
             badge.setText("" + bValue);
-            if (bValue == booksPerPage) {
+            if (bValue == resultsPerPage) {
                 badge.setType(BadgeType.INVERSE);
 
             } else {
@@ -384,7 +352,7 @@ public class BooksViewImpl extends Composite implements BooksView {
         public void onClick(final ClickEvent event) {
 
             // booksSearch.setStart(i * booksSearch.getLength());
-            presenter.goToSearchBooks(booksSearch);
+            // presenter.goToSearchBooks(booksSearch);
         }
     }
 
@@ -394,33 +362,6 @@ public class BooksViewImpl extends Composite implements BooksView {
         // pagination.setVisible(false);
         toolBar.setVisible(false);
         pager.setVisible(false);
-    }
-
-    @Override
-    public HasClickAndVisibility getRefreshBooksWidget() {
-        return new HasClickAndVisibility() {
-
-            @Override
-            public boolean isVisible() {
-                return refreshBtn.isVisible();
-            }
-
-            @Override
-            public void setVisible(final boolean visible) {
-                refreshBtn.setVisible(visible);
-            }
-
-            @Override
-            public HandlerRegistration addClickHandler(final ClickHandler handler) {
-                return refreshBtn.addClickHandler(handler);
-            }
-
-            @Override
-            public void fireEvent(final GwtEvent<?> event) {
-                refreshBtn.fireEvent(event);
-            }
-
-        };
     }
 
     @Override
@@ -512,17 +453,6 @@ public class BooksViewImpl extends Composite implements BooksView {
         return row2book.get(selectedRows.iterator().next());
     }
 
-    private final ArrayList<HandlerRegistration> handlerRegs = new ArrayList<HandlerRegistration>();
-
-    @Override
-    public void clearHandlers() {
-        for (HandlerRegistration handlerReg : handlerRegs) {
-            handlerReg.removeHandler();
-            handlerReg = null;
-        }
-        handlerRegs.clear();
-    }
-
     @Override
     public HashSet<Book> getSelectedBooks() {
         final HashSet<Book> books = new HashSet<Book>();
@@ -531,6 +461,16 @@ public class BooksViewImpl extends Composite implements BooksView {
         }
 
         return books;
+    }
+
+    @Override
+    public HasClickHandlers getPreviousPageWidget() {
+        return pager.getLeft();
+    }
+
+    @Override
+    public HasClickHandlers getNextPageWidget() {
+        return pager.getRight();
     }
 
 }

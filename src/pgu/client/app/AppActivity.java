@@ -34,7 +34,8 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class AppActivity implements GoToBooksEvent.Handler //
+public class AppActivity implements //
+        GoToBooksEvent.Handler //
         , TechnicalErrorEvent.Handler //
         , ImportBooksEvent.Handler //
         , SetupEvent.Handler //
@@ -73,10 +74,18 @@ public class AppActivity implements GoToBooksEvent.Handler //
         handlerRegs.add(eventBus.addHandler(GoToBooksEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(TechnicalErrorEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(ImportBooksEvent.TYPE, this));
-        handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(SetupEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(NotificationEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(BookEditEvent.TYPE, this));
         handlerRegs.add(eventBus.addHandler(DeleteBooksEvent.TYPE, this));
+
+        handlerRegs.add(eventBus.addHandler(AskForNewSearchBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(AskForNextPageSearchBooksEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(AskForPreviousPageSearchBooksEvent.TYPE, this));
+
+        handlerRegs.add(eventBus.addHandler(UpdateNavigationEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(UpdateResultsPerPageEvent.TYPE, this));
+        handlerRegs.add(eventBus.addHandler(UpdateSortEvent.TYPE, this));
 
         final MenuActivity menuActivity = new MenuActivity(clientFactory);
         menuActivity.start(eventBus);
