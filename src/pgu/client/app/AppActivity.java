@@ -20,10 +20,10 @@ import pgu.client.app.event.UpdateSortEvent;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.Level;
 import pgu.client.app.utils.Notification;
-import pgu.client.book.BookActivity;
-import pgu.client.books.BooksPlace;
-import pgu.client.deleteBooks.DeleteBooksActivity;
-import pgu.client.importBooks.ImportBooksPlace;
+import pgu.client.books.delete.DeleteBooksActivity;
+import pgu.client.books.edit.EditBookActivity;
+import pgu.client.books.list.ListBooksPlace;
+import pgu.client.books.upload.ImportBooksPlace;
 import pgu.client.menu.MenuActivity;
 import pgu.client.menu.MenuView;
 import pgu.client.setup.SetupPlace;
@@ -114,7 +114,7 @@ public class AppActivity implements //
 
         currentSearch = search;
 
-        placeController.goTo(new BooksPlace());
+        placeController.goTo(new ListBooksPlace());
     }
 
     public void onStop() {
@@ -186,7 +186,7 @@ public class AppActivity implements //
 
     @Override
     public void onBookEdit(final BookEditEvent event) {
-        final BookActivity bookActivity = new BookActivity(clientFactory);
+        final EditBookActivity bookActivity = new EditBookActivity(clientFactory);
         bookActivity.start(event.getBook());
     }
 

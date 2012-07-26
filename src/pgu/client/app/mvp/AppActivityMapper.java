@@ -1,9 +1,9 @@
 package pgu.client.app.mvp;
 
-import pgu.client.books.BooksActivity;
-import pgu.client.books.BooksPlace;
-import pgu.client.importBooks.ImportBooksActivity;
-import pgu.client.importBooks.ImportBooksPlace;
+import pgu.client.books.list.ListBooksActivity;
+import pgu.client.books.list.ListBooksPlace;
+import pgu.client.books.upload.ImportBooksActivity;
+import pgu.client.books.upload.ImportBooksPlace;
 import pgu.client.setup.SetupActivity;
 import pgu.client.setup.SetupPlace;
 
@@ -21,8 +21,8 @@ public class AppActivityMapper implements ActivityMapper {
 
     @Override
     public Activity getActivity(final Place place) {
-        if (place instanceof BooksPlace) {
-            return new BooksActivity((BooksPlace) place, clientFactory);
+        if (place instanceof ListBooksPlace) {
+            return new ListBooksActivity((ListBooksPlace) place, clientFactory);
 
         } else if (place instanceof ImportBooksPlace) {
             return new ImportBooksActivity((ImportBooksPlace) place, clientFactory);

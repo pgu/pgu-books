@@ -3,14 +3,14 @@ package pgu.client.app.mvp;
 import pgu.client.app.AppState;
 import pgu.client.app.AppView;
 import pgu.client.app.ui.AppViewImpl;
-import pgu.client.book.ui.BookViewImpl;
-import pgu.client.books.BookView;
-import pgu.client.books.BooksView;
-import pgu.client.books.ui.BooksViewImpl;
-import pgu.client.deleteBooks.DeleteBooksView;
-import pgu.client.deleteBooks.ui.DeleteBooksViewImpl;
-import pgu.client.importBooks.ImportBooksView;
-import pgu.client.importBooks.ui.ImportBooksViewImpl;
+import pgu.client.books.delete.DeleteBooksView;
+import pgu.client.books.delete.ui.DeleteBooksViewImpl;
+import pgu.client.books.edit.EditBookView;
+import pgu.client.books.edit.ui.EditBookViewImpl;
+import pgu.client.books.list.ListBooksView;
+import pgu.client.books.list.ui.ListBooksViewImpl;
+import pgu.client.books.upload.ImportBooksView;
+import pgu.client.books.upload.ui.ImportBooksViewImpl;
 import pgu.client.menu.MenuView;
 import pgu.client.menu.ui.MenuViewImpl;
 import pgu.client.service.AdminBooksService;
@@ -34,8 +34,8 @@ public class ClientFactoryImpl implements ClientFactory {
     private static PlaceController        placeController   = new PlaceController(eventBus);
     private static AppView                appView           = new AppViewImpl();
     private static MenuView               menuView          = new MenuViewImpl();
-    private static BooksView              booksView         = new BooksViewImpl();
-    private static BookView               bookView          = new BookViewImpl();
+    private static ListBooksView              booksView         = new ListBooksViewImpl();
+    private static EditBookView               bookView          = new EditBookViewImpl();
     private static DeleteBooksView        deleteBooksView   = new DeleteBooksViewImpl();
     private static ImportBooksView        importBooksView   = new ImportBooksViewImpl();
     private static SetupView              setupView         = new SetupViewImpl();
@@ -59,7 +59,7 @@ public class ClientFactoryImpl implements ClientFactory {
     }
 
     @Override
-    public BooksView getBooksView() {
+    public ListBooksView getBooksView() {
         return booksView;
     }
 
@@ -114,7 +114,7 @@ public class ClientFactoryImpl implements ClientFactory {
     }
 
     @Override
-    public BookView getBookView() {
+    public EditBookView getBookView() {
         return bookView;
     }
 

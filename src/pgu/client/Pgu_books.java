@@ -6,7 +6,7 @@ import pgu.client.app.mvp.AppActivityMapper;
 import pgu.client.app.mvp.AppPlaceHistoryMapper;
 import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
-import pgu.client.books.BooksPlace;
+import pgu.client.books.list.ListBooksPlace;
 import pgu.shared.dto.LoginInfo;
 
 import com.google.gwt.activity.shared.ActivityManager;
@@ -38,7 +38,7 @@ public class Pgu_books implements EntryPoint {
                         final AppActivity appActivity = new AppActivity(placeController, clientFactory);
                         appActivity.start(eventBus);
 
-                        final Place defaultPlace = new BooksPlace();
+                        final Place defaultPlace = new ListBooksPlace();
 
                         final ActivityMapper activityMapper = new AppActivityMapper(clientFactory);
                         final ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);

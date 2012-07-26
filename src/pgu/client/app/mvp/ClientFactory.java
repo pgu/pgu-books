@@ -2,10 +2,10 @@ package pgu.client.app.mvp;
 
 import pgu.client.app.AppState;
 import pgu.client.app.AppView;
-import pgu.client.books.BookView;
-import pgu.client.books.BooksView;
-import pgu.client.deleteBooks.DeleteBooksView;
-import pgu.client.importBooks.ImportBooksView;
+import pgu.client.books.delete.DeleteBooksView;
+import pgu.client.books.edit.EditBookView;
+import pgu.client.books.list.ListBooksView;
+import pgu.client.books.upload.ImportBooksView;
 import pgu.client.menu.MenuView;
 import pgu.client.service.AdminBooksServiceAsync;
 import pgu.client.service.BooksServiceAsync;
@@ -26,7 +26,7 @@ public interface ClientFactory {
 
     void setLoginInfo(LoginInfo loginInfo);
 
-    BooksView getBooksView();
+    ListBooksView getBooksView();
 
     AppView getAppView();
 
@@ -42,7 +42,7 @@ public interface ClientFactory {
 
     SetupView getSetupView();
 
-    BookView getBookView();
+    EditBookView getBookView();
 
     DeleteBooksView getDeleteBooksView();
 
