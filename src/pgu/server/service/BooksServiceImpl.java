@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import pgu.client.service.BooksService;
 import pgu.server.access.nosql.DocUtils;
-import pgu.server.access.nosql.Search;
+import pgu.server.access.nosql.FieldValueIndex;
 import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
@@ -29,11 +29,11 @@ import com.googlecode.objectify.Query;
 @SuppressWarnings("serial")
 public class BooksServiceImpl extends RemoteServiceServlet implements BooksService {
 
-    private final DAO      dao  = new DAO();
-    private final AppLog   log  = new AppLog();
-    private final Search   s    = new Search();
-    private final DocUtils docU = new DocUtils();
-    private final AppUtils u    = new AppUtils();
+    private final DAO             dao   = new DAO();
+    private final AppLog          log   = new AppLog();
+    private final FieldValueIndex fvIdx = new FieldValueIndex();
+    private final DocUtils        docU  = new DocUtils();
+    private final AppUtils        u     = new AppUtils();
 
     /**
      * http://code.google.com/p/google-app-engine-samples/source/browse/trunk/search/java/src/com/google/appengine/
@@ -247,7 +247,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder()
                 .setOptions(mainQueryOptions).build(BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._());
 
-        final Results<ScoredDocument> results = s.idx().search(mainQuery);
+        final Results<ScoredDocument> results = fvIdx.idx().search(mainQuery);
         log.info(this, "nb found: %s", results.getNumberFound());
 
         final ArrayList<Book> books = new ArrayList<Book>();
@@ -297,7 +297,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                 .setOptions(mainQueryOptions) //
                 .build(_query);
 
-        final Results<ScoredDocument> docs = s.idx().search(mainQuery);
+        final Results<ScoredDocument> docs = fvIdx.idx().search(mainQuery);
         final int numberFound = (int) docs.getNumberFound();
 
         log.info(this, "resultsSize [%s] numberFound [%s]", docs.getResults().size(), numberFound);

@@ -4,7 +4,7 @@ import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.SearchServiceFactory;
 
-public class Search {
+public class ObsoleteIndices {
 
     private Index index;
     private Index archive_index;

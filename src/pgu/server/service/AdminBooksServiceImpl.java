@@ -14,7 +14,8 @@ import javax.servlet.ServletContext;
 
 import pgu.client.service.AdminBooksService;
 import pgu.server.access.nosql.AppDoc;
-import pgu.server.access.nosql.Search;
+import pgu.server.access.nosql.FieldValueIndex;
+import pgu.server.access.nosql.ObsoleteIndices;
 import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
@@ -37,12 +38,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class AdminBooksServiceImpl extends RemoteServiceServlet implements AdminBooksService {
 
-    private final AppLog   log = new AppLog();
-    private final Search   s   = new Search();
-    private final DAO      dao = new DAO();
-    private final AppUtils u   = new AppUtils();
+    private final AppLog          log    = new AppLog();
+    private final ObsoleteIndices obsIdx = new ObsoleteIndices();
+    private final FieldValueIndex fvIdx  = new FieldValueIndex();
+    private final DAO             dao    = new DAO();
+    private final AppUtils        u      = new AppUtils();
 
-    private ServletContext externalServletContext;
+    private ServletContext        externalServletContext;
 
     public void setExternalServletContext(final ServletContext servletContext) {
         externalServletContext = servletContext;
@@ -236,12 +238,11 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
             // create a doc fv
             final AppDoc fvDoc = new AppDoc() //
-                    .text(FieldValueDoc.DOC_TYPE._(), DocType.FIELD_VALUE._()) //
                     .text(FieldValueDoc.FIELD._(), field) //
                     .text(FieldValueDoc.VALUE._(), value) //
                     .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
             ;
-            s.idx().add(fvDoc.build());
+            fvIdx.idx().add(fvDoc.build());
 
         } else {
             // update the counter of the sql fv
@@ -251,7 +252,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     }
 
     private ScoredDocument fetchDocByBook(final Book book) {
-        final Results<ScoredDocument> docs = s.idx().search(Query.newBuilder().build("" + //
+        final Results<ScoredDocument> docs = obsIdx.idx().search(Query.newBuilder().build("" + //
                 BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._() + " " + //
                 BookDoc.BOOK_ID._() + ":" + book.getId()) //
                 );
@@ -280,25 +281,22 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             dao.ofy().delete(bookItr.next());
         }
 
-        final String _fvQuery = FieldValueDoc.FV_ID._() + ">0";
-        // final String _fvQuery = FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE.toString();
-
-        final Iterator<ScoredDocument> fvDocItr = getItrForDeletion(_fvQuery, s.idx());
+        final Iterator<ScoredDocument> fvDocItr = getItrForDeletion("", fvIdx.idx());
         while (fvDocItr.hasNext()) {
-            s.idx().remove(fvDocItr.next().getId());
+            fvIdx.idx().remove(fvDocItr.next().getId());
         }
 
         final String _booksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.BOOK.toString();
 
-        final Iterator<ScoredDocument> bookDocItr = getItrForDeletion(_booksQuery, s.idx());
+        final Iterator<ScoredDocument> bookDocItr = getItrForDeletion(_booksQuery, obsIdx.idx());
         while (bookDocItr.hasNext()) {
-            s.idx().remove(bookDocItr.next().getId());
+            obsIdx.idx().remove(bookDocItr.next().getId());
         }
 
         final String _archivedBooksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.ARCHIVE_BOOK.toString();
-        final Iterator<ScoredDocument> archiveDocItr = getItrForDeletion(_archivedBooksQuery, s.archiveIdx());
+        final Iterator<ScoredDocument> archiveDocItr = getItrForDeletion(_archivedBooksQuery, obsIdx.archiveIdx());
         while (archiveDocItr.hasNext()) {
-            s.archiveIdx().remove(archiveDocItr.next().getId());
+            obsIdx.archiveIdx().remove(archiveDocItr.next().getId());
         }
     }
 
@@ -362,9 +360,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         fv.setCounter(fv.getCounter() - 1);
 
         if (fv.getCounter() == 0) {
-            final Results<ScoredDocument> docs = s.idx().search(Query.newBuilder().build("" + //
-                    FieldValueDoc.DOC_TYPE._() + ":" + DocType.FIELD_VALUE._() + " " + //
-                    FieldValueDoc.FV_ID._() + "=" + fv.getId()) //
+            final Results<ScoredDocument> docs = fvIdx.idx().search(Query.newBuilder().build("" + //
+                    FieldValueDoc.FV_ID._() + " = " + fv.getId()) //
                     );
 
             if (docs.getResults().size() != 1) {
@@ -378,12 +375,11 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             }
 
             final ScoredDocument fvDoc = docs.iterator().next();
-            s.idx().remove(fvDoc.getId());
+            fvIdx.idx().remove(fvDoc.getId());
 
             dao.ofy().delete(fv); // delete
         } else {
             dao.ofy().put(fv); // update
         }
     }
-
 }

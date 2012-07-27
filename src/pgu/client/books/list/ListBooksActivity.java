@@ -133,7 +133,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
-        // TODO PGU Jul 26, 2012 TBD
+        u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
     }
 
     @Override
