@@ -15,8 +15,8 @@
         <b:Navbar addStyleNames="{style.firstNavbar}">
             <b:Brand>Biblioteca</b:Brand>
             <b:NavSearch ui:field="sText" size="5" placeholder="Cualquier texto" alignment="LEFT"/>        
-            <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" >Buscar sugerencias</b:Button>
-            <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE">Borrar</b:Button>
+            <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" type="PRIMARY">Buscar sugerencias</b:Button>
+            <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE" size="SMALL" type="PRIMARY"></b:Button>
             <b:Popover ui:field="suggestionsInfo">
                 <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
@@ -60,8 +60,8 @@
                 <b:NavLink icon="COMMENT" iconSize="LARGE" />
                 <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             </b:Nav>        
-            <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" >Buscar libros</b:Button>
-            <b:Button ui:field="clearBooksBtn" icon="REMOVE">Borrar</b:Button>
+            <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" type="SUCCESS">Buscar libros</b:Button>
+            <b:Button ui:field="clearBooksBtn" icon="REMOVE" size="SMALL" type="SUCCESS"></b:Button>
             <b:Popover ui:field="searchInfo">
                 <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
