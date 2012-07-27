@@ -116,7 +116,7 @@ public class AppActivity implements //
 
         currentSearch = search;
 
-        updateSearchAndGoToPlace();
+        storeSearchAndGoToBooksPlace();
     }
 
     public void onStop() {
@@ -208,15 +208,9 @@ public class AppActivity implements //
         if (!u.isVoid(event.getSearchHashcode())) {
 
             final int eventPage = event.getPage();
-            final int searchHashcode = Integer.valueOf(event.getSearchHashcode());
 
-            BooksSearch askedSearch = null;
-            for (final BooksSearch search : search2page2cursor.keySet()) {
-                if (search.hashCode() == searchHashcode) {
-                    askedSearch = search;
-                    break;
-                }
-            }
+            final int searchHashcode = Integer.valueOf(event.getSearchHashcode());
+            final BooksSearch askedSearch = findAskedSearch(searchHashcode);
 
             if (askedSearch != null) {
                 final HashMap<Integer, String> page2cursor = search2page2cursor.get(askedSearch);
@@ -235,17 +229,17 @@ public class AppActivity implements //
         }
         //
         // else
-        final BooksSearch search = currentSearch.copy();
 
-        if (!search2page2cursor.containsKey(search)) {
-            final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
-            page2cursor.put(PAGE_INIT, CURSOR_INIT);
-            search2page2cursor.put(search, page2cursor);
+        storeSearchAndGoToBooksPlace();
+    }
+
+    private BooksSearch findAskedSearch(final int searchHashcode) {
+        for (final BooksSearch search : search2page2cursor.keySet()) {
+            if (search.hashCode() == searchHashcode) {
+                return search;
+            }
         }
-
-        page = PAGE_INIT;
-
-        u.fire(eventBus, new DoSearchBooksEvent(search, PAGE_INIT, CURSOR_INIT));
+        return null;
     }
 
     @Override
@@ -262,7 +256,8 @@ public class AppActivity implements //
     public void onUpdateNavigation(final UpdateNavigationEvent event) {
 
         final String nextCursor = event.getNextCursor();
-        if (nextCursor != null) {
+        if (!u.isVoid(nextCursor)) {
+
             search2page2cursor.get(event.getSearch()).put( //
                     event.getNextPage() //
                     , nextCursor //
@@ -276,7 +271,7 @@ public class AppActivity implements //
         currentSearch.setSortField(event.getSortField());
         currentSearch.setAscending(event.isAscending());
 
-        updateSearchAndGoToPlace();
+        storeSearchAndGoToBooksPlace();
     }
 
     @Override
@@ -284,10 +279,10 @@ public class AppActivity implements //
 
         currentSearch.setLength(event.getResultsPerPage());
 
-        updateSearchAndGoToPlace();
+        storeSearchAndGoToBooksPlace();
     }
 
-    private void updateSearchAndGoToPlace() {
+    private void storeSearchAndGoToBooksPlace() {
 
         if (!search2page2cursor.containsKey(currentSearch)) {
             final HashMap<Integer, String> page2cursor = new HashMap<Integer, String>();
