@@ -1,5 +1,7 @@
 package pgu.client.books.edit;
 
+import java.util.ArrayList;
+
 import pgu.client.app.utils.Notification;
 
 import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
@@ -32,5 +34,7 @@ public interface EditBookView extends com.github.gwtbootstrap.client.ui.base.Has
     HasClickHandlers getCancelWidget();
 
     HasVisibleHandlers getCloseHandler();
+
+    ArrayList<Notification> getNotifications();
 
 }

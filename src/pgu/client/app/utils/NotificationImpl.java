@@ -112,7 +112,9 @@ public class NotificationImpl implements Notification {
 
             @Override
             public void run() {
-                alert.close();
+                if (alert != null) {
+                    alert.close();
+                }
             }
 
         }.schedule(timeInMs);
@@ -126,6 +128,14 @@ public class NotificationImpl implements Notification {
     @Override
     public void setText(final String text) {
         this.text = text;
+    }
+
+    @Override
+    public void removeFromParent() {
+        if (alert != null) {
+            alert.removeFromParent();
+            alert = null;
+        }
     }
 
 }

@@ -2,6 +2,9 @@ package pgu.server.domain.sql;
 
 import javax.persistence.Id;
 
+import com.googlecode.objectify.annotation.Cached;
+
+@Cached
 public class FieldValue {
 
     @Id

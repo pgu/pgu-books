@@ -1,5 +1,6 @@
 package pgu.client.books.delete.ui;
 
+import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.app.utils.Notification;
 import pgu.client.app.utils.NotificationImpl;
 import pgu.client.books.delete.DeleteBooksView;
@@ -10,7 +11,9 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ProgressBar;
 import com.github.gwtbootstrap.client.ui.base.HasVisibleHandlers;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -58,13 +61,57 @@ public class DeleteBooksViewImpl extends Composite implements DeleteBooksView {
     }
 
     @Override
-    public HasClickHandlers getConfirmWidget() {
-        return confirmBtn;
+    public HasClickAndVisibility getConfirmWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return confirmBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                confirmBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return confirmBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                confirmBtn.fireEvent(event);
+            }
+
+        };
     }
 
     @Override
-    public HasClickHandlers getCancelWidget() {
-        return cancelBtn;
+    public HasClickAndVisibility getCancelWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return cancelBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                cancelBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return cancelBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                cancelBtn.fireEvent(event);
+            }
+
+        };
     }
 
     @Override

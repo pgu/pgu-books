@@ -10,4 +10,6 @@ public interface Notification extends //
     void setLevel(Level level);
 
     void setHeading(String heading);
+
+    void removeFromParent();
 }

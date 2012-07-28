@@ -9,11 +9,21 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
+  <filter>
+    <filter-name>AsyncCacheFilter</filter-name> 
+    <filter-class>com.googlecode.objectify.cache.AsyncCacheFilter</filter-class>
+  </filter>
 
+    
   <filter-mapping>
       <filter-name>appstats</filter-name>
       <url-pattern>/*</url-pattern>
   </filter-mapping>
+  <filter-mapping> 
+    <filter-name>AsyncCacheFilter</filter-name> 
+    <url-pattern>/*</url-pattern> 
+  </filter-mapping> 
+
     
   <!-- Servlets -->
   <servlet>

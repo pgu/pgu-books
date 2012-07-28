@@ -3,7 +3,9 @@ package pgu.shared.domain;
 import javax.persistence.Id;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.googlecode.objectify.annotation.Cached;
 
+@Cached
 public class Book implements IsSerializable {
 
     public Book() {

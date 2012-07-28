@@ -262,6 +262,33 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @Override
+    public HasClickAndVisibility getRefreshBooksWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public boolean isVisible() {
+                return refreshBtn.isVisible();
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                refreshBtn.setVisible(visible);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return refreshBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                refreshBtn.fireEvent(event);
+            }
+
+        };
+    }
+
+    @Override
     public HasClickAndVisibility getEditBookWidget() {
         return new HasClickAndVisibility() {
 

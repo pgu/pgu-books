@@ -106,6 +106,8 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             booksResult.setNextCursor(newCursor.toWebSafeString());
         }
 
+        log.info(this, "...fetch " + books.size());
+
         // TODO PGU Jul 25, 2012 nb found?
         return booksResult;
 

@@ -27,6 +27,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -64,6 +65,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
         view.getCreateBookWidget().setVisible(isEditable);
         view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
+        view.getRefreshBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
@@ -82,6 +84,13 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             @Override
             public void onClick(final ClickEvent event) {
                 u.fire(eventBus, new BookEditEvent(view.getSelectedBook()));
+            }
+        }));
+        handlerRegs.add(view.getRefreshBooksWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                u.fire(eventBus, new RefreshBooksEvent());
             }
         }));
         handlerRegs.add(view.getDeleteBooksWidget().addClickHandler(new ClickHandler() {
@@ -133,7 +142,14 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void onRefreshBooks(final RefreshBooksEvent event) {
-        u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
+        new Timer() {
+
+            @Override
+            public void run() {
+                u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
+            }
+
+        }.schedule(1000);
     }
 
     @Override
@@ -152,6 +168,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 u.fire(eventBus,
                         new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult.getNextCursor()));
 
+                // TODO PGU review
                 view.setResultsPerPage(search.getLength());
                 view.setCurrentSort(search.getSortField(), search.isAscending());
                 view.isFirstPage(page == 0);

@@ -59,6 +59,8 @@ public class DeleteBooksActivity {
 
     public void start(final HashSet<Book> books) {
         selectedBooks.clear();
+        view.getConfirmWidget().setVisible(true);
+        view.getCancelWidget().setVisible(true);
 
         if (books.isEmpty()) {
             return;
@@ -93,6 +95,8 @@ public class DeleteBooksActivity {
                     @Override
                     public void onSuccess(final Void result) {
                         view.getWaitingIndicator().setVisible(false);
+                        view.getConfirmWidget().setVisible(false);
+                        view.getCancelWidget().setVisible(false);
 
                         final Notification notification = view.newNotification();
                         notification.setHTML("Los libros han sido borrados con éxito");

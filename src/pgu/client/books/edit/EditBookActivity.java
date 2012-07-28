@@ -41,6 +41,12 @@ public class EditBookActivity {
 
             @Override
             public void onHidden(final HiddenEvent hiddenEvent) {
+                for (final Notification notif : view.getNotifications()) {
+                    if (notif != null) {
+                        notif.removeFromParent();
+                    }
+                }
+
                 for (HandlerRegistration handlerReg : handlerRegs) {
                     handlerReg.removeHandler();
                     handlerReg = null;

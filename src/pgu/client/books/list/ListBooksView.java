@@ -20,6 +20,8 @@ public interface ListBooksView extends IsWidget {
 
     HasClickAndVisibility getCreateBookWidget();
 
+    HasClickAndVisibility getRefreshBooksWidget();
+
     Book getSelectedBook();
 
     HashSet<Book> getSelectedBooks();
@@ -39,4 +41,5 @@ public interface ListBooksView extends IsWidget {
     void isEditable(boolean isEditable);
 
     void setBooks(ArrayList<Book> books);
+
 }

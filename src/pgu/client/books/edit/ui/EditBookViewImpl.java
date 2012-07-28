@@ -1,5 +1,7 @@
 package pgu.client.books.edit.ui;
 
+import java.util.ArrayList;
+
 import pgu.client.app.utils.Notification;
 import pgu.client.app.utils.NotificationImpl;
 import pgu.client.books.edit.EditBookView;
@@ -27,15 +29,17 @@ public class EditBookViewImpl extends Composite implements EditBookView {
     }
 
     @UiField
-    Modal       container;
+    Modal                                 container;
     @UiField
-    TextBox     titleBox, authorBox, editorBox, categoryBox, yearBox, commentBox;
+    TextBox                               titleBox, authorBox, editorBox, categoryBox, yearBox, commentBox;
     @UiField
-    Button      saveBtn, cancelBtn;
+    Button                                saveBtn, cancelBtn;
     @UiField
-    ProgressBar progressBar;
+    ProgressBar                           progressBar;
     @UiField
-    HTMLPanel   notification;
+    HTMLPanel                             notification;
+
+    private final ArrayList<Notification> notifications = new ArrayList<Notification>();
 
     public EditBookViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -105,7 +109,9 @@ public class EditBookViewImpl extends Composite implements EditBookView {
 
     @Override
     public Notification newNotification() {
-        return new NotificationImpl(notification, 3000);
+        final NotificationImpl notif = new NotificationImpl(notification, 3000);
+        notifications.add(notif);
+        return notif;
     }
 
     @Override
@@ -126,5 +132,10 @@ public class EditBookViewImpl extends Composite implements EditBookView {
     @Override
     public HasVisibleHandlers getCloseHandler() {
         return container;
+    }
+
+    @Override
+    public ArrayList<Notification> getNotifications() {
+        return notifications;
     }
 }
