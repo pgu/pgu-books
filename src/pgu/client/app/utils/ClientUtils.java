@@ -5,13 +5,16 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 
 public class ClientUtils {
 
     public void info(final String message) {
-        final Logger logger = Logger.getLogger("pgu");
-        logger.log(Level.INFO, message);
+        if (LogConfiguration.loggingIsEnabled()) {
+            final Logger logger = Logger.getLogger("pgu");
+            logger.log(Level.INFO, message);
+        }
     }
 
     public boolean isVoid(final String str) {

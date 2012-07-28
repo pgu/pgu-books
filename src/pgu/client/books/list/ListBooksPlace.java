@@ -13,10 +13,6 @@ public class ListBooksPlace extends Place {
         page = 0;
     }
 
-    public ListBooksPlace(final int searchHashcode, final int page) {
-        this("" + searchHashcode, page);
-    }
-
     public ListBooksPlace(final String searchHashcode, final int page) {
         this.searchHashcode = searchHashcode;
         this.page = page;

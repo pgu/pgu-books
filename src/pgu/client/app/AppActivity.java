@@ -213,8 +213,7 @@ public class AppActivity implements //
 
             final int eventPage = event.getPage();
 
-            final int searchHashcode = Integer.valueOf(event.getSearchHashcode());
-            final BooksSearch askedSearch = findAskedSearch(searchHashcode);
+            final BooksSearch askedSearch = findAskedSearch(event.getSearchHashcode());
 
             if (askedSearch != null) {
                 final HashMap<Integer, String> page2cursor = search2page2cursor.get(askedSearch);
@@ -238,9 +237,9 @@ public class AppActivity implements //
         storeSearchAndGoToBooksPlace();
     }
 
-    private BooksSearch findAskedSearch(final int searchHashcode) {
+    private BooksSearch findAskedSearch(final String searchHashcode) {
         for (final BooksSearch search : search2page2cursor.keySet()) {
-            if (search.hashCode() == searchHashcode) {
+            if (("" + search.hashCode()).equals(searchHashcode)) {
                 return search;
             }
         }
@@ -249,12 +248,12 @@ public class AppActivity implements //
 
     @Override
     public void onAskForPreviousSearchBooks(final AskForPreviousPageSearchBooksEvent event) {
-        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), page - 1));
+        placeController.goTo(new ListBooksPlace("" + currentSearch.hashCode(), page - 1));
     }
 
     @Override
     public void onAskForNextSearchBooks(final AskForNextPageSearchBooksEvent event) {
-        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), page + 1));
+        placeController.goTo(new ListBooksPlace("" + currentSearch.hashCode(), page + 1));
     }
 
     @Override
@@ -299,7 +298,7 @@ public class AppActivity implements //
 
         u.info("go to list books place " + currentSearch);
 
-        placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), PAGE_INIT));
+        placeController.goTo(new ListBooksPlace("" + currentSearch.hashCode(), PAGE_INIT));
     }
 
 }

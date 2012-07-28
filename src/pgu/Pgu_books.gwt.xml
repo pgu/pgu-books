@@ -13,6 +13,7 @@
   <entry-point class='pgu.client.Pgu_books'/>
   
   <set-property name="bootstrap.responsiveDesign" value="true"/>
+  <set-property name="gwt.logging.enabled" value="FALSE"/> 
   
   <!-- for dev -->
 <!--   <set-property name="user.agent" value="safari"/> -->
