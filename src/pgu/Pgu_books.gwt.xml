@@ -14,8 +14,8 @@
   <set-property name="bootstrap.responsiveDesign" value="true"/>
   
   <!-- for dev -->
-<!--   <set-property name="user.agent" value="safari"/> -->
-<!--   <set-property name="locale" value="default" /> -->
+  <set-property name="user.agent" value="safari"/>
+  <set-property name="locale" value="default" />
   <!--  -->
   
   <source path='client'/>
