@@ -1,10 +1,18 @@
 package pgu.client.app.utils;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Command;
 
 public class ClientUtils {
+
+    public void info(final String message) {
+        final Logger logger = Logger.getLogger("pgu");
+        logger.log(Level.INFO, message);
+    }
 
     public boolean isVoid(final String str) {
         return null == str || str.trim().isEmpty();

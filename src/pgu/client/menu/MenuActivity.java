@@ -65,6 +65,7 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchBooks() {
+        u.info("menu activity#searchBooks");
 
         final HashMap<SearchField, String> filters = new HashMap<SearchField, String>();
         filters.put(SearchField.AUTHOR, view.getFilterAuthor());
@@ -76,6 +77,8 @@ public class MenuActivity implements MenuPresenter //
 
         final GoToBooksEvent event = new GoToBooksEvent();
         event.setFilters(filters);
+
+        u.info("fire goToBooksEvent, filters: " + filters);
         u.fire(eventBus, event);
     }
 

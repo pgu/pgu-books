@@ -100,6 +100,8 @@ public class AppActivity implements //
     @Override
     public void onGoToBooks(final GoToBooksEvent event) {
 
+        u.info("appActivity received go to books event");
+
         final HashMap<SearchField, String> filters = event.getFilters();
 
         final BooksSearch search = new BooksSearch();
@@ -205,6 +207,8 @@ public class AppActivity implements //
     @Override
     public void onAskForNewSearchBooks(final AskForNewSearchBooksEvent event) {
 
+        u.info("app activity#onAskForNewSearchBooks " + event.getSearchHashcode());
+
         if (!u.isVoid(event.getSearchHashcode())) {
 
             final int eventPage = event.getPage();
@@ -221,6 +225,7 @@ public class AppActivity implements //
                     currentSearch = askedSearch;
                     page = eventPage;
 
+                    u.info("fire Do search books event");
                     u.fire(eventBus, new DoSearchBooksEvent(askedSearch.copy(), eventPage, eventCursor));
                     return;
                 }
@@ -229,7 +234,7 @@ public class AppActivity implements //
         }
         //
         // else
-
+        u.info("..storeSearchAndGoToBooksPlace..");
         storeSearchAndGoToBooksPlace();
     }
 
@@ -291,6 +296,8 @@ public class AppActivity implements //
         }
 
         page = PAGE_INIT;
+
+        u.info("go to list books place " + currentSearch);
 
         placeController.goTo(new ListBooksPlace(currentSearch.hashCode(), PAGE_INIT));
     }

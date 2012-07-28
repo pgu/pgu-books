@@ -115,6 +115,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             }
         }));
 
+        u.info("ask for new search books event");
         u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
     }
 
@@ -154,15 +155,20 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void onDoSearchBooks(final DoSearchBooksEvent event) {
+        u.info("onDoSearchBooks received");
+
         u.fire(eventBus, new ShowWaitingIndicatorEvent());
 
         final BooksSearch search = event.getBooksSearch();
         final int page = event.getPage();
 
+        u.info("search " + search);
         booksService.fetchBooks(search, page, event.getCursor(), new AsyncCallbackApp<BooksResult>(eventBus) {
 
             @Override
             public void onSuccess(final BooksResult booksResult) {
+                u.info("success " + booksResult.getBooks().size());
+
                 u.fire(eventBus, new HideWaitingIndicatorEvent());
 
                 u.fire(eventBus,

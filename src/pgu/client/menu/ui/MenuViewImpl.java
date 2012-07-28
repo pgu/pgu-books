@@ -2,6 +2,7 @@ package pgu.client.menu.ui;
 
 import java.util.ArrayList;
 
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.menu.MenuPresenter;
 import pgu.client.menu.MenuView;
 import pgu.shared.dto.Suggestion;
@@ -43,23 +44,24 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     @UiField
-    ProgressBar           progressBar;
+    ProgressBar               progressBar;
     @UiField
-    Button                searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn;
+    Button                    searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn;
     @UiField
-    NavSearch             sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+    NavSearch                 sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink               adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
+    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
     @UiField
-    Popover               searchInfo, suggestionsInfo;
+    Popover                   searchInfo, suggestionsInfo;
     @UiField
-    NavPills              suggestionsContainer;
+    NavPills                  suggestionsContainer;
     @UiField
-    Label                 suggestionsFound;
+    Label                     suggestionsFound;
     @UiField
-    Row                   suggestionsRow;
+    Row                       suggestionsRow;
 
-    private MenuPresenter presenter;
+    private MenuPresenter     presenter;
+    private final ClientUtils u = new ClientUtils();
 
     public MenuViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -130,6 +132,7 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("goToSearchBtn")
     public void clickGoToSearch(final ClickEvent e) {
+        u.info("click on go to search btn");
         searchBooks();
     }
 
@@ -145,8 +148,8 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("searchBooksBtn")
     public void clickSearchOnFields(final ClickEvent e) {
-        searchBooks();
 
+        searchBooks();
     }
 
     @UiHandler("clearBooksBtn")
