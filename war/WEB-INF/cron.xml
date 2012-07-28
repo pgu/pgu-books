@@ -9,4 +9,11 @@
     <!-- 
         <schedule>every 1 minutes</schedule>
     --> 
+    
+     <cron>
+         <url>/cron/jobDeleteBooks</url>
+         <description>Delete books</description>
+         <schedule>every 1 hour</schedule>
+     </cron>
+     
 </cronentries>

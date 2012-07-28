@@ -43,6 +43,10 @@
     <servlet-class>pgu.server.job.JobImportBooks</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>jobDeleteBooks</servlet-name>
+    <servlet-class>pgu.server.job.JobDeleteBooks</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>appstats</servlet-name>
     <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
   </servlet>
@@ -66,6 +70,10 @@
   <servlet-mapping>
     <servlet-name>jobImportBooks</servlet-name>
     <url-pattern>/cron/jobImportBooks</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jobDeleteBooks</servlet-name>
+    <url-pattern>/cron/jobDeleteBooks</url-pattern>
   </servlet-mapping>
   
   

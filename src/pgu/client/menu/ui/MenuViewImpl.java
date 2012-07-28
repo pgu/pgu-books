@@ -104,7 +104,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         searchInfo.setHeading("Búsqueda");
         searchInfo.setText("La búsqueda es sensible al uso de mayúsculas y minúsculas." + //
                 " Para encontrar los valores exactos, se puede usar las sugerencias." + //
-                "" //
+                "<br>También se puede buscar para un campo vacío si se pone \"-\" la casilla." //
         );
     }
 

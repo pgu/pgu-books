@@ -43,6 +43,7 @@ TODOs<br/>
 <ul>
 <li>add more books from .txt</li>
 <li>include books search engines</li>
+<li><a href="https://developers.google.com/appengine/docs/java/datastore/queries#Introduction_to_Indexes">see this</a></li>
 </ul>
 </p>
 </body>
