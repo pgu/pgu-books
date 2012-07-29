@@ -11,14 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import pgu.server.app.AppLog;
 import pgu.server.service.AdminBooksServiceImpl;
-import pgu.server.utils.AppUtils;
+import pgu.server.utils.CronUtils;
 
 @SuppressWarnings("serial")
 public class JobDeleteBooks extends HttpServlet {
 
     private final AppLog                log     = new AppLog();
     private final AdminBooksServiceImpl service = new AdminBooksServiceImpl();
-    private final AppUtils              u       = new AppUtils();
+    private final CronUtils             cronU   = new CronUtils();
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
@@ -31,7 +31,7 @@ public class JobDeleteBooks extends HttpServlet {
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
 
-        if (!u.isJobLauncherAuthorized(req, log)) {
+        if (!cronU.isJobLauncherAuthorized(req, log)) {
             return;
         }
 
