@@ -41,6 +41,13 @@ So, the alternative is to use a <a href="https://developers.google.com/appengine
 <p>
 TODOs<br/>
 <ul>
+<li>add indices</li>
+<li>import menu, only visible for me</li>
+<li>one total count/week</li>
+<li>close tag?</li>
+<li>pagination tag?</li>
+<li>séparer les méthodes delete</li>
+<li>1 page de statistiques by month</li>
 <li>add more books from .txt</li>
 <li>include books search engines</li>
 <li><a href="https://developers.google.com/appengine/docs/java/datastore/queries#Introduction_to_Indexes">see this</a></li>
