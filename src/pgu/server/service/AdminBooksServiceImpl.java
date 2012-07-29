@@ -217,30 +217,30 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
         final QueryResultIterator<FieldValue> fvItr = dao.ofy().query(FieldValue.class).iterator();
         while (fvItr.hasNext()) {
-            dao.ofy().delete(fvItr.next());
+            dao.ofy().async().delete(fvItr.next());
         }
 
         final QueryResultIterator<Book> bookItr = dao.ofy().query(Book.class).iterator();
         while (bookItr.hasNext()) {
-            dao.ofy().delete(bookItr.next());
+            dao.ofy().async().delete(bookItr.next());
         }
 
         final Iterator<ScoredDocument> fvDocItr = getItrForDeletion("", fvIdx.idx());
         while (fvDocItr.hasNext()) {
-            fvIdx.idx().remove(fvDocItr.next().getId());
+            fvIdx.idx().removeAsync(fvDocItr.next().getId());
         }
 
         final String _booksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.BOOK.toString();
 
         final Iterator<ScoredDocument> bookDocItr = getItrForDeletion(_booksQuery, obsIdx.idx());
         while (bookDocItr.hasNext()) {
-            obsIdx.idx().remove(bookDocItr.next().getId());
+            obsIdx.idx().removeAsync(bookDocItr.next().getId());
         }
 
         final String _archivedBooksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.ARCHIVE_BOOK.toString();
         final Iterator<ScoredDocument> archiveDocItr = getItrForDeletion(_archivedBooksQuery, obsIdx.archiveIdx());
         while (archiveDocItr.hasNext()) {
-            obsIdx.archiveIdx().remove(archiveDocItr.next().getId());
+            obsIdx.archiveIdx().removeAsync(archiveDocItr.next().getId());
         }
     }
 
@@ -279,8 +279,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             archivedBooks.add(new ArchivedBook(book, now));
         }
 
-        dao.ofy().put(archivedBooks);
-        dao.ofy().delete(selectedBooks);
+        dao.ofy().async().put(archivedBooks);
+        dao.ofy().async().delete(selectedBooks);
     }
 
     private void updateFieldValue(final String field, final String value) {
@@ -319,11 +319,11 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             }
 
             final ScoredDocument fvDoc = docs.iterator().next();
-            fvIdx.idx().remove(fvDoc.getId());
+            fvIdx.idx().removeAsync(fvDoc.getId());
 
-            dao.ofy().delete(fv); // delete
+            dao.ofy().async().delete(fv); // delete
         } else {
-            dao.ofy().put(fv); // update
+            dao.ofy().async().put(fv); // update
         }
     }
 }
