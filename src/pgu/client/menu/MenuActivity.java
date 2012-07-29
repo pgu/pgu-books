@@ -60,10 +60,11 @@ public class MenuActivity implements MenuPresenter //
         }
 
         if (loginInfo.isLoggedIn() //
-                && "guilcher.pascal.dev@gmail.com".equals(loginInfo.getEmailAddress())) {
-
+                && "guilcher.pascal.dev@gmail.com".equals(loginInfo.getEmailAddress()))
+                {
+            
             view.getImportWidget().show();
-
+            
         } else {
             view.getImportWidget().hide();
         }
