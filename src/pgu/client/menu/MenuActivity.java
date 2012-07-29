@@ -47,7 +47,6 @@ public class MenuActivity implements MenuPresenter //
             view.getLogoutWidget().setHref(loginInfo.getLogoutUrl());
             view.getLogoutWidget().show();
 
-            view.getImportWidget().show();
             view.getSearchWidget().show();
             view.getAppstatsWidget().show();
 
@@ -56,11 +55,18 @@ public class MenuActivity implements MenuPresenter //
             view.getLoginWidget().show();
 
             view.getLogoutWidget().hide();
-            view.getImportWidget().hide();
             view.getSearchWidget().hide();
             view.getAppstatsWidget().hide();
         }
 
+        if (loginInfo.isLoggedIn() //
+                && "guilcher.pascal.dev@gmail.com".equals(loginInfo.getEmailAddress())) {
+
+            view.getImportWidget().show();
+
+        } else {
+            view.getImportWidget().hide();
+        }
     }
 
     @Override
