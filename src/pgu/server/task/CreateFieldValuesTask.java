@@ -15,15 +15,17 @@ import pgu.server.app.AppLog;
 import pgu.server.domain.nosql.BookDoc;
 import pgu.server.utils.AppUtils;
 import pgu.server.utils.FieldValueUtils;
+import pgu.server.utils.QueueUtils;
 import pgu.shared.domain.Book;
 
 @SuppressWarnings("serial")
 public class CreateFieldValuesTask extends HttpServlet {
 
-    private final AppLog          log = new AppLog();
-    private final DAO             dao = new DAO();
-    private final AppUtils        u   = new AppUtils();
-    private final FieldValueUtils fvU = new FieldValueUtils();
+    private final AppLog          log    = new AppLog();
+    private final DAO             dao    = new DAO();
+    private final AppUtils        u      = new AppUtils();
+    private final FieldValueUtils fvU    = new FieldValueUtils();
+    private final QueueUtils      queueU = new QueueUtils();
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
@@ -38,7 +40,12 @@ public class CreateFieldValuesTask extends HttpServlet {
 
         final Enumeration headerNames = req.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            log.info(this, "header: %s", headerNames.nextElement());
+            final String headerName = headerNames.nextElement().toString();
+            log.info(this, "header: %s [%s]", headerName, req.getHeader(headerName));
+        }
+
+        if (!queueU.isTaskLauncherAuthorized(req, log)) {
+            return;
         }
 
         final String bookId = req.getParameter("bookId");
