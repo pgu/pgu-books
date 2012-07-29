@@ -50,8 +50,6 @@
     <property name="title" direction="asc"/>
   </datastore-index>
 
-
-
 <!-- 3 fields -->
 
   <datastore-index kind="Book" ancestor="false" source="manual">
