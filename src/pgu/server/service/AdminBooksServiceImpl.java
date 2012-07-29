@@ -175,6 +175,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public Book saveBook(final Book book) {
 
+        capitalizeBookValues(book);
+
         final Long bookId = book.getId();
         if (null == bookId) { // creation
 
@@ -201,6 +203,22 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         }
 
         return book;
+    }
+
+    private void capitalizeBookValues(final Book book) {
+        book.setAuthor(capitalize(book.getAuthor()));
+        book.setCategory(capitalize(book.getCategory()));
+        book.setComment(capitalize(book.getComment()));
+        book.setEditor(capitalize(book.getEditor()));
+        book.setTitle(capitalize(book.getTitle()));
+    }
+
+    private String capitalize(final String text) {
+        if (u.isVoid(text)) {
+            return text;
+        }
+
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
     }
 
     private void updateBookField(final String field, final String valueDB, final String valueUI) {
