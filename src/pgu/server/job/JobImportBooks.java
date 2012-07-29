@@ -29,7 +29,7 @@ public class JobImportBooks extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
-        log.info(this, "jobImportBooks GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        log.info(this, "GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
         doPost(req, resp);
     }
 
@@ -70,7 +70,7 @@ public class JobImportBooks extends HttpServlet {
                 .listKeys();
 
         if (keyOldImportResults.size() > 48) {
-            dao.ofy().delete(keyOldImportResults);
+            dao.ofy().async().delete(keyOldImportResults);
         }
     }
 

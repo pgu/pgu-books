@@ -23,7 +23,7 @@ public class JobDeleteBooks extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
-        log.info(this, "jobDeleteBooks GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        log.info(this, "GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
         doPost(req, resp);
     }
 

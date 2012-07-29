@@ -13,7 +13,6 @@ import java.util.Iterator;
 import javax.servlet.ServletContext;
 
 import pgu.client.service.AdminBooksService;
-import pgu.server.access.nosql.AppDoc;
 import pgu.server.access.nosql.FieldValueIndex;
 import pgu.server.access.nosql.ObsoleteIndices;
 import pgu.server.access.sql.DAO;
@@ -23,6 +22,8 @@ import pgu.server.domain.nosql.DocType;
 import pgu.server.domain.nosql.FieldValueDoc;
 import pgu.server.domain.sql.FieldValue;
 import pgu.server.utils.AppUtils;
+import pgu.server.utils.FieldValueUtils;
+import pgu.server.utils.QueueUtils;
 import pgu.shared.domain.ArchivedBook;
 import pgu.shared.domain.Book;
 import pgu.shared.domain.ImportResult;
@@ -43,6 +44,8 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     private final FieldValueIndex fvIdx  = new FieldValueIndex();
     private final DAO             dao    = new DAO();
     private final AppUtils        u      = new AppUtils();
+    private final FieldValueUtils fvU    = new FieldValueUtils();
+    private final QueueUtils      queueU = new QueueUtils();
 
     private ServletContext        externalServletContext;
 
@@ -57,7 +60,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
         importResult.setImportDate(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
         importResult.setLength(length);
         importResult.setStart(start);
-        dao.ofy().put(importResult);
+        dao.ofy().async().put(importResult);
 
         final long startTime = System.currentTimeMillis();
         final int stop = start + length;
@@ -129,7 +132,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                         .filter("lastImport", true).get();
                 if (previousImportResult != null) {
                     previousImportResult.setLastImport(false);
-                    dao.ofy().put(previousImportResult);
+                    dao.ofy().async().put(previousImportResult);
                 }
 
                 importResult.setCountImported(countImported);
@@ -138,7 +141,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                 importResult.setMisseds(misseds);
                 importResult.setDone(misseds.isEmpty());
                 importResult.setLastImport(true);
-                dao.ofy().put(importResult);
+                dao.ofy().async().put(importResult);
 
                 return importResult;
 
@@ -150,7 +153,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                 importResult.setMisseds(misseds);
                 importResult.setDone(false);
                 importResult.setLastImport(true);
-                dao.ofy().put(importResult);
+                dao.ofy().async().put(importResult);
 
                 throw new RuntimeException(e);
             }
@@ -162,7 +165,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             importResult.setMisseds(misseds);
             importResult.setDone(false);
             importResult.setLastImport(true);
-            dao.ofy().put(importResult);
+            dao.ofy().async().put(importResult);
 
             throw new RuntimeException(t);
         }
@@ -172,26 +175,14 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public Book saveBook(final Book book) {
 
-        final String author = book.getAuthor();
-        final String category = book.getCategory();
-        final String comment = book.getComment();
-        final String editor = book.getEditor();
-        final String title = book.getTitle();
-        final String str_year = book.getStrYear();
-
         final Long bookId = book.getId();
         if (null == bookId) { // creation
 
-            // for each fields, save a doc
-            saveFieldValue(BookDoc.AUTHOR._(), author);
-            saveFieldValue(BookDoc.CATEGORY._(), category);
-            saveFieldValue(BookDoc.COMMENT._(), comment);
-            saveFieldValue(BookDoc.EDITOR._(), editor);
-            saveFieldValue(BookDoc.TITLE._(), title);
-            saveFieldValue(BookDoc.STR_YEAR._(), str_year);
-
             // generate id for the book
             dao.ofy().put(book);
+
+            // async on creating fieldValues doc
+            queueU.addTaskToCreateFieldValues(Long.toString(book.getId()));
 
         } else { // update
 
@@ -206,7 +197,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             updateBookField(BookDoc.STR_YEAR._(), bookDB.getStrYear(), bookUI.getStrYear());
 
             // update book
-            dao.ofy().put(bookUI);
+            dao.ofy().async().put(bookUI);
         }
 
         return book;
@@ -217,54 +208,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
             updateFieldValue(field, valueDB);
 
-            saveFieldValue(field, valueUI);
-        }
-    }
-
-    private void saveFieldValue(final String field, final String value) {
-
-        final FieldValue fv = dao.ofy().query(FieldValue.class) //
-                .filter(FieldValueDoc.FIELD._(), field) //
-                .filter(FieldValueDoc.VALUE._(), value) //
-                .get();
-
-        if (fv == null) {
-
-            // create a sql fv
-            final FieldValue newFv = new FieldValue();
-            newFv.setField(field);
-            newFv.setValue(value);
-            dao.ofy().put(newFv);
-
-            // create a doc fv
-            final AppDoc fvDoc = new AppDoc() //
-                    .text(FieldValueDoc.FIELD._(), field) //
-                    .text(FieldValueDoc.VALUE._(), value) //
-                    .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
-            ;
-            fvIdx.idx().add(fvDoc.build());
-
-        } else {
-            // update the counter of the sql fv
-            fv.setCounter(fv.getCounter() + 1);
-            dao.ofy().put(fv);
-        }
-    }
-
-    private ScoredDocument fetchDocByBook(final Book book) {
-        final Results<ScoredDocument> docs = obsIdx.idx().search(Query.newBuilder().build("" + //
-                BookDoc.DOC_TYPE._() + ":" + DocType.BOOK._() + " " + //
-                BookDoc.BOOK_ID._() + ":" + book.getId()) //
-                );
-
-        if (docs.getNumberReturned() == 1) {
-            return docs.iterator().next();
-
-        } else {
-            final IllegalArgumentException e = new IllegalArgumentException(String.format(
-                    "%s results have been found for the book id %s", docs.getNumberReturned(), book.getId()));
-            log.error(this, e);
-            throw e;
+            fvU.saveFieldValue(field, valueUI);
         }
     }
 
@@ -312,7 +256,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                 .build(_q);
 
         final Results<ScoredDocument> docs = idx.search(q);
-        log.info(this, "### q[%s] \n    -> %s docs found", q, docs.getResults().size());
+        log.info(this, "## q[%s] \n    -> %s docs found", q, docs.getResults().size());
 
         return docs.iterator();
     }
