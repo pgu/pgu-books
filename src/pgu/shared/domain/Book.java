@@ -18,11 +18,11 @@ public class Book implements IsSerializable {
             final String comment, //
             final String category) {
         this.author = author;
-        this.title = title;
-        this.editor = editor;
-        setYear(year);
-        this.comment = comment;
         this.category = category;
+        this.comment = comment;
+        this.editor = editor;
+        this.title = title;
+        setYear(year);
     }
 
     public Book id(final Long id) {

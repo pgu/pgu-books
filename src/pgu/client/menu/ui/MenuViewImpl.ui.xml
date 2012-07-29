@@ -21,7 +21,7 @@
                 <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
             <b:Nav alignment="RIGHT">
-                <b:NavLink icon="BOOK" ui:field="goToSearchBtn" iconSize="LARGE" >Biblioteca</b:NavLink>
+                <b:NavLink icon="BOOK" ui:field="goToLibraryBtn" iconSize="LARGE" >Biblioteca</b:NavLink>
                 <b:NavLink icon="DASHBOARD" ui:field="goToAppstatsBtn" iconSize="LARGE" >Appstats</b:NavLink>
                 <b:NavLink icon="WRENCH" ui:field="goToSetupBtn" iconSize="LARGE" >Configuración</b:NavLink>
                 <b:NavLink icon="UPLOAD" ui:field="goToImportBtn" iconSize="LARGE" >Import</b:NavLink>

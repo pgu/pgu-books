@@ -47,32 +47,31 @@ public class MenuActivity implements MenuPresenter //
             view.getLogoutWidget().setHref(loginInfo.getLogoutUrl());
             view.getLogoutWidget().show();
 
-            view.getSearchWidget().show();
-            view.getAppstatsWidget().show();
+            view.getLibraryWidget().show();
 
         } else {
             view.getLoginWidget().setHref(loginInfo.getLoginUrl());
             view.getLoginWidget().show();
 
             view.getLogoutWidget().hide();
-            view.getSearchWidget().hide();
-            view.getAppstatsWidget().hide();
+            view.getLibraryWidget().hide();
         }
 
         if (loginInfo.isLoggedIn() //
-                && "guilcher.pascal.dev@gmail.com".equals(loginInfo.getEmailAddress()))
-                {
-            
+                && "guilcher.pascal.dev@gmail.com".equals(loginInfo.getEmailAddress())) {
+
             view.getImportWidget().show();
-            
+            view.getAppstatsWidget().show();
+
         } else {
             view.getImportWidget().hide();
+            view.getAppstatsWidget().hide();
+
         }
     }
 
     @Override
     public void searchBooks() {
-        u.info("menu activity#searchBooks");
 
         final HashMap<SearchField, String> filters = new HashMap<SearchField, String>();
         filters.put(SearchField.AUTHOR, view.getFilterAuthor());
@@ -85,7 +84,6 @@ public class MenuActivity implements MenuPresenter //
         final GoToBooksEvent event = new GoToBooksEvent();
         event.setFilters(filters);
 
-        u.info("fire goToBooksEvent, filters: " + filters);
         u.fire(eventBus, event);
     }
 

@@ -50,7 +50,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     NavSearch                 sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToSearchBtn, goToAppstatsBtn;
+    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn, goToAppstatsBtn;
     @UiField
     Popover                   searchInfo, suggestionsInfo;
     @UiField
@@ -68,7 +68,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         logoutBtn.setVisible(false);
         goToSetupBtn.setVisible(false); // wait for new options to setup
         goToImportBtn.setVisible(false);
-        goToSearchBtn.setVisible(false);
+        goToLibraryBtn.setVisible(false);
         goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
         suggestionsContainer.setVisible(false);
@@ -130,9 +130,8 @@ public class MenuViewImpl extends Composite implements MenuView {
         presenter.goToSetup();
     }
 
-    @UiHandler("goToSearchBtn")
+    @UiHandler("goToLibraryBtn")
     public void clickGoToSearch(final ClickEvent e) {
-        u.info("click on go to search btn");
         searchBooks();
     }
 
@@ -346,7 +345,7 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     @Override
-    public HasVisibility getSearchWidget() {
+    public HasVisibility getLibraryWidget() {
         return new HasVisibility() {
 
             @Override
@@ -356,12 +355,12 @@ public class MenuViewImpl extends Composite implements MenuView {
 
             @Override
             public void show() {
-                goToSearchBtn.setVisible(true);
+                goToLibraryBtn.setVisible(true);
             }
 
             @Override
             public void hide() {
-                goToSearchBtn.setVisible(false);
+                goToLibraryBtn.setVisible(false);
             }
         };
     }

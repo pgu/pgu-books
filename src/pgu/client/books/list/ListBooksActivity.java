@@ -18,6 +18,7 @@ import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.ClientUtils;
 import pgu.client.service.BooksServiceAsync;
+import pgu.shared.domain.Book;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.LoginInfo;
@@ -115,7 +116,6 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             }
         }));
 
-        u.info("ask for new search books event");
         u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
     }
 
@@ -155,8 +155,6 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
     @Override
     public void onDoSearchBooks(final DoSearchBooksEvent event) {
-        u.info("onDoSearchBooks received");
-
         u.fire(eventBus, new ShowWaitingIndicatorEvent());
 
         final BooksSearch search = event.getBooksSearch();
@@ -167,20 +165,18 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onSuccess(final BooksResult booksResult) {
-                u.info("success " + booksResult.getBooks().size());
+                final ArrayList<Book> books = booksResult.getBooks();
+                u.info("success " + books.size());
 
                 u.fire(eventBus, new HideWaitingIndicatorEvent());
 
                 u.fire(eventBus,
                         new UpdateNavigationEvent(search, booksResult.getNextPage(), booksResult.getNextCursor()));
 
-                // TODO PGU review
+                // view.setCurrentSort(search.getSortField(), search.isAscending()); disable it for now
                 view.setResultsPerPage(search.getLength());
-                view.setCurrentSort(search.getSortField(), search.isAscending());
-                view.isFirstPage(page == 0);
-                view.hasNextPage(!u.isVoid(booksResult.getNextCursor()));
-                view.isEditable(isEditable);
-                view.setBooks(booksResult.getBooks());
+                view.updatePager(page == 0, !u.isVoid(booksResult.getNextCursor()), books.size());
+                view.setBooks(books, isEditable);
             }
         });
 

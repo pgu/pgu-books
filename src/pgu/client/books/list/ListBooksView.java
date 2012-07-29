@@ -34,12 +34,8 @@ public interface ListBooksView extends IsWidget {
 
     void setCurrentSort(SortField sortField, boolean isAscending);
 
-    void isFirstPage(boolean b);
+    void setBooks(ArrayList<Book> books, boolean isEditable);
 
-    void hasNextPage(boolean b);
-
-    void isEditable(boolean isEditable);
-
-    void setBooks(ArrayList<Book> books);
+    void updatePager(boolean isFirstPage, boolean hasNextPage, int nbBooks);
 
 }

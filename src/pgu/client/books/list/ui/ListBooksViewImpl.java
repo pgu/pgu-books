@@ -52,7 +52,6 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     private ListBooksPresenter            presenter;
 
     private SortHeader                    titleCol, authorCol, editorCol, categoryCol, yearCol;
-    private boolean                       isFirstPage, hasNextPage, isEditable;
 
     private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
     private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
@@ -109,8 +108,8 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     private class SortHeader extends Column {
-        private final Button    upBtn;
-        private final Button    downBtn;
+        private Button          upBtn;
+        private Button          downBtn;
         private final SortField sortField;
 
         public SortHeader(final String text, final SortField sortField) {
@@ -121,7 +120,12 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             super(size);
 
             this.sortField = sortField;
+            add(getColumnLabel(text));
 
+            // addSortWidgets(sortField); disable it for now
+        }
+
+        private void addSortWidgets(final SortField sortField) {
             upBtn = new Button();
             upBtn.setSize(ButtonSize.MINI);
             upBtn.setIcon(IconType.SORT_UP);
@@ -130,7 +134,6 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             downBtn.setSize(ButtonSize.MINI);
             downBtn.setIcon(IconType.SORT_DOWN);
 
-            add(getColumnLabel(text));
             add(upBtn);
             add(downBtn);
 
@@ -148,7 +151,6 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
                     presenter.updateSort(sortField, false);
                 }
             });
-
         }
 
     }
@@ -165,7 +167,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @Override
-    public void setBooks(final ArrayList<Book> books) {
+    public void setBooks(final ArrayList<Book> books, final boolean isEditable) {
 
         // do not remove the header's row
         for (int i = booksGrid.getWidgetCount() - 1; i > 0; i--) {
@@ -223,15 +225,6 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             count++;
         }
 
-        updatePager(books.size());
-    }
-
-    private void updatePager(final int nbBooks) {
-
-        pager.getLeft().setVisible(!isFirstPage);
-        pager.getRight().setVisible(hasNextPage);
-
-        pager.setVisible(nbBooks > 0);
     }
 
     @Override
@@ -413,18 +406,11 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @Override
-    public void isFirstPage(final boolean isFirstPage) {
-        this.isFirstPage = isFirstPage;
-    }
+    public void updatePager(final boolean isFirstPage, final boolean hasNextPage, final int nbBooks) {
+        pager.getLeft().setVisible(!isFirstPage);
+        pager.getRight().setVisible(hasNextPage);
 
-    @Override
-    public void hasNextPage(final boolean hasNextPage) {
-        this.hasNextPage = hasNextPage;
-    }
-
-    @Override
-    public void isEditable(final boolean isEditable) {
-        this.isEditable = isEditable;
+        pager.setVisible(nbBooks > 0);
     }
 
 }
