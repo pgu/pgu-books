@@ -1,13 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <datastore-indexes autoGenerate="true">
 
+<!-- title is always present as it is always sorted by it -->
+
+<!-- 5 fields -->
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+<!-- 4 fields -->
   <datastore-index kind="Book" ancestor="false" source="manual">
     <property name="author" direction="asc"/>
     <property name="category" direction="asc"/>
     <property name="comment" direction="asc"/>
     <property name="editor" direction="asc"/>
     <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
     <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+
+
+<!-- 3 fields -->
+
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+<!-- 2 fields -->
+
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="category" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="comment" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="comment" direction="asc"/>
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="comment" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="editor" direction="asc"/>
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+
+<!-- 1 field -->
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="author" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="category" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="comment" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="editor" direction="asc"/>
+    <property name="title" direction="asc"/>
+  </datastore-index>
+  <datastore-index kind="Book" ancestor="false" source="manual">
+    <property name="year" direction="asc"/>
+    <property name="title" direction="asc"/>
   </datastore-index>
   
 </datastore-indexes>
