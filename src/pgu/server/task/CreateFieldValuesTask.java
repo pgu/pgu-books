@@ -3,7 +3,6 @@ package pgu.server.task;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,12 +36,6 @@ public class CreateFieldValuesTask extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
-
-        final Enumeration headerNames = req.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            final String headerName = headerNames.nextElement().toString();
-            log.info(this, "header: %s [%s]", headerName, req.getHeader(headerName));
-        }
 
         if (!queueU.isTaskLauncherAuthorized(req, log)) {
             return;
