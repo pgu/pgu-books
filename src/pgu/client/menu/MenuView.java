@@ -1,6 +1,7 @@
 package pgu.client.menu;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import pgu.shared.dto.Suggestion;
 
@@ -45,5 +46,14 @@ public interface MenuView extends IsWidget {
     String getFilterTitle();
 
     String getFilterYear();
+
+    interface BooksCountWidget {
+
+        void hide();
+
+        void setCount(int count, Date lastCountDate);
+    }
+
+    BooksCountWidget getBooksCountWidget();
 
 }

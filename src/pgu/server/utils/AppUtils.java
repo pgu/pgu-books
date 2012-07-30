@@ -3,6 +3,8 @@ package pgu.server.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import pgu.shared.utils.DateUtils;
+
 import com.google.appengine.api.utils.SystemProperty;
 
 public class AppUtils {
@@ -20,7 +22,7 @@ public class AppUtils {
     }
 
     public String now() {
-        return new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        return new SimpleDateFormat(DateUtils.FULL_DOT_FMT).format(new Date());
     }
 
 }

@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
-import pgu.server.domain.sql.BooksCount;
 import pgu.server.utils.AppUtils;
 import pgu.server.utils.CronUtils;
 import pgu.shared.domain.Book;
+import pgu.shared.domain.BooksCount;
 
 @SuppressWarnings("serial")
 public class JobCountBooks extends HttpServlet {

@@ -12,6 +12,7 @@ import pgu.server.domain.nosql.DocType;
 import pgu.server.domain.nosql.FieldValueDoc;
 import pgu.server.utils.AppUtils;
 import pgu.shared.domain.Book;
+import pgu.shared.domain.BooksCount;
 import pgu.shared.dto.BooksResult;
 import pgu.shared.dto.BooksSearch;
 import pgu.shared.dto.Suggestion;
@@ -343,5 +344,10 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         }
 
         throw new IllegalArgumentException("Unknown field name: " + fieldName);
+    }
+
+    @Override
+    public BooksCount getBooksCount() {
+        return dao.ofy().query(BooksCount.class).filter("isLast", true).get();
     }
 }

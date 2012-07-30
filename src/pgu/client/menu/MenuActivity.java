@@ -1,5 +1,6 @@
 package pgu.client.menu;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import pgu.client.app.event.GoToBooksEvent;
@@ -11,10 +12,13 @@ import pgu.client.app.mvp.ClientFactory;
 import pgu.client.app.utils.AsyncCallbackApp;
 import pgu.client.app.utils.ClientUtils;
 import pgu.client.service.BooksServiceAsync;
+import pgu.shared.domain.BooksCount;
 import pgu.shared.dto.LoginInfo;
 import pgu.shared.dto.SuggestionsResult;
+import pgu.shared.utils.DateUtils;
 import pgu.shared.utils.SearchField;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.web.bindery.event.shared.EventBus;
 
 public class MenuActivity implements MenuPresenter //
@@ -37,6 +41,8 @@ public class MenuActivity implements MenuPresenter //
     public void start(final EventBus eventBus) {
         this.eventBus = eventBus;
         view.setPresenter(this);
+        setAppTitle();
+
         eventBus.addHandler(ShowWaitingIndicatorEvent.TYPE, this);
         eventBus.addHandler(HideWaitingIndicatorEvent.TYPE, this);
 
@@ -68,6 +74,34 @@ public class MenuActivity implements MenuPresenter //
             view.getAppstatsWidget().hide();
 
         }
+
+    }
+
+    public void setAppTitle() {
+        booksService.getBooksCount(new AsyncCallbackApp<BooksCount>(eventBus) {
+
+            @Override
+            public void onSuccess(final BooksCount booksCount) {
+                if (booksCount == null) {
+                    view.getBooksCountWidget().hide();
+                    return;
+                }
+
+                final int count = booksCount.getCount();
+
+                final String str_date = booksCount.getCountDate();
+                final Date lastCountDate = DateTimeFormat.getFormat(DateUtils.FULL_DOT_FMT).parseStrict(str_date);
+
+                view.getBooksCountWidget().setCount(count, lastCountDate);
+            }
+
+            @Override
+            public void onFailure(final Throwable caught) {
+                view.getBooksCountWidget().hide();
+                super.onFailure(caught);
+            }
+
+        });
     }
 
     @Override

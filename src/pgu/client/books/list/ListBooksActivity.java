@@ -179,7 +179,6 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 view.setBooks(books, isEditable);
             }
         });
-
     }
 
 }

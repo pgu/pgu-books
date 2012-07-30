@@ -8,6 +8,7 @@ import pgu.client.menu.MenuView;
 import pgu.shared.dto.Suggestion;
 import pgu.shared.utils.SearchField;
 
+import com.github.gwtbootstrap.client.ui.Brand;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.NavLink;
@@ -43,6 +44,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     interface MenuViewImplUiBinder extends UiBinder<Widget, MenuViewImpl> {
     }
 
+    @UiField
+    Brand                     appTitle;
     @UiField
     ProgressBar               progressBar;
     @UiField
@@ -526,6 +529,12 @@ public class MenuViewImpl extends Composite implements MenuView {
     @Override
     public String getFilterYear() {
         return sYear.getTextBox().getText();
+    }
+
+    @Override
+    public BooksCountWidget getBooksCountWidget() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

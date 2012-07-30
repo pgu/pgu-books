@@ -1,9 +1,9 @@
 package pgu.server.access.sql;
 
-import pgu.server.domain.sql.BooksCount;
 import pgu.server.domain.sql.FieldValue;
 import pgu.shared.domain.ArchivedBook;
 import pgu.shared.domain.Book;
+import pgu.shared.domain.BooksCount;
 import pgu.shared.domain.ImportResult;
 
 import com.googlecode.objectify.ObjectifyService;
