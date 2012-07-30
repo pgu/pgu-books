@@ -42,16 +42,7 @@ So, the alternative is to use a <a href="https://developers.google.com/appengine
 TODOs<br/>
 <ul>
 <li>add more books from .txt</li>
-<li>include books search engines</li>
-<li>close tag?</li>
-<li>pagination tag?</li>
-<li>séparer les méthodes delete</li>
-<li>1 page de statistiques by month</li>
-<li>gwt-charts</li>
 </ul>
-</p>
-<p>
-for the map+linkedin project, let's use url fetch , oauth, xmpp, prospective search?, multitenancy?, channel, fusion tables,
 </p>
 </body>
 </html>
