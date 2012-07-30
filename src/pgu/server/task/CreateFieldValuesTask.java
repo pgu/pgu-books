@@ -1,8 +1,6 @@
 package pgu.server.task;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +27,7 @@ public class CreateFieldValuesTask extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
-        log.info(this, "GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        log.info(this, "GET..." + u.now());
         doPost(req, resp);
     }
 

@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import javax.servlet.ServletContext;
@@ -57,7 +55,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     public ImportResult importBooks(final int start, final int length) {
 
         final ImportResult importResult = new ImportResult();
-        importResult.setImportDate(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        importResult.setImportDate(u.now());
         importResult.setLength(length);
         importResult.setStart(start);
         dao.ofy().async().put(importResult);
@@ -282,7 +280,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
     @Override
     public void deleteBooks(final ArrayList<Book> selectedBooks) {
 
-        final String now = new SimpleDateFormat("yyyy/MM/dd HH:mm ss").format(new Date());
+        final String now = u.now();
         final ArrayList<ArchivedBook> archivedBooks = new ArrayList<ArchivedBook>(selectedBooks.size());
 
         for (final Book book : selectedBooks) {

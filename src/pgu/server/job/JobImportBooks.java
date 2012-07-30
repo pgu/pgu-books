@@ -1,8 +1,6 @@
 package pgu.server.job;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import pgu.server.access.sql.DAO;
 import pgu.server.app.AppLog;
 import pgu.server.service.AdminBooksServiceImpl;
+import pgu.server.utils.AppUtils;
 import pgu.server.utils.CronUtils;
 import pgu.server.utils.MailUtils;
 import pgu.shared.domain.ImportResult;
@@ -27,11 +26,12 @@ public class JobImportBooks extends HttpServlet {
     private final AdminBooksServiceImpl service = new AdminBooksServiceImpl();
     private final CronUtils             cronU   = new CronUtils();
     private final MailUtils             mailU   = new MailUtils();
+    private final AppUtils              u       = new AppUtils();
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
             IOException {
-        log.info(this, "GET..." + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        log.info(this, "GET..." + u.now());
         doPost(req, resp);
     }
 

@@ -1,5 +1,6 @@
 package pgu.server.access.sql;
 
+import pgu.server.domain.sql.BooksCount;
 import pgu.server.domain.sql.FieldValue;
 import pgu.shared.domain.ArchivedBook;
 import pgu.shared.domain.Book;
@@ -13,6 +14,7 @@ public class DAO extends DAOBase {
     static {
         ObjectifyService.register(FieldValue.class);
         ObjectifyService.register(ArchivedBook.class);
+        ObjectifyService.register(BooksCount.class);
         ObjectifyService.register(Book.class);
         ObjectifyService.register(ImportResult.class);
     }

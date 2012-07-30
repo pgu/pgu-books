@@ -1,5 +1,8 @@
 package pgu.server.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.google.appengine.api.utils.SystemProperty;
 
 public class AppUtils {
@@ -14,6 +17,10 @@ public class AppUtils {
 
     public boolean isEnvProd() {
         return SystemProperty.environment.value() == SystemProperty.Environment.Value.Production;
+    }
+
+    public String now() {
+        return new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
     }
 
 }
