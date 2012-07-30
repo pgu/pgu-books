@@ -210,12 +210,29 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
                     @Override
                     public void onClick(final ClickEvent event) {
-                        if (selectedRows.contains(row)) {
-                            selectedRows.remove(row);
-                            row.removeStyleName("row-selected");
-                        } else {
-                            selectedRows.add(row);
-                            row.addStyleName("row-selected");
+
+                        if (event.isControlKeyDown()) { // multi selection
+
+                            if (selectedRows.contains(row)) {
+                                selectedRows.remove(row);
+                                row.removeStyleName("row-selected");
+                            } else {
+                                selectedRows.add(row);
+                                row.addStyleName("row-selected");
+                            }
+
+                        } else { // single selection
+                            final boolean wasSelected = selectedRows.contains(row);
+
+                            for (final FluidRow selectedRow : selectedRows) {
+                                selectedRow.removeStyleName("row-selected");
+                            }
+                            selectedRows.clear();
+
+                            if (!wasSelected) {
+                                selectedRows.add(row);
+                                row.addStyleName("row-selected");
+                            }
                         }
                     }
                 }, ClickEvent.getType());
