@@ -8,7 +8,7 @@ Built with
 <li><a href="http://gwtbootstrap.github.com/">GWTBootstrap</a>, </li>
 <li><a href="https://developers.google.com/appengine/docs/java/search/overview">App Engine Search API</a>, </li>
 <li><a href="http://code.google.com/p/objectify-appengine/">Objectify</a></li>
-<li>and other App Engine features such as CRON, Mail, Authentication, ...</li>
+<li>and other App Engine features such as Cron, Task Queues, Mail, Authentication, Datastore-indexes and Memcache<li>
 </ul>
 <br/>
 </p>
@@ -41,8 +41,6 @@ So, the alternative is to use a <a href="https://developers.google.com/appengine
 <p>
 TODOs<br/>
 <ul>
-<li>add indices</li>
-<li>import menu, only visible for me</li>
 <li>one total count/week</li>
 <li>close tag?</li>
 <li>pagination tag?</li>
@@ -50,8 +48,14 @@ TODOs<br/>
 <li>1 page de statistiques by month</li>
 <li>add more books from .txt</li>
 <li>include books search engines</li>
-<li><a href="https://developers.google.com/appengine/docs/java/datastore/queries#Introduction_to_Indexes">see this</a></li>
+<li>gwt-charts</li>
+<li>logservice</li>
+<li>conversion</li>
+<li>images</li>
 </ul>
+</p>
+<p>
+for the map+linkedin project, let's use url fetch , oauth, xmpp, prospective search?, multitenancy?, channel, fusion tables,
 </p>
 </body>
 </html>
