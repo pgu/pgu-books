@@ -26,7 +26,7 @@ So, it can NOT be used to make a proper search directly on 10000 books... Let's 
 <p>
 Then, Objectify is used to query the books. <br/>
 But, for an advanced pagination such as with the google search pages ([1..10]), we would use limit+offset.<br/>
-However, this is far too much <a href="https://developers.google.com/appengine/articles/paging">resource-consuming</a> when you look for thousands of records (also with 2000 books, I could see how the quota "datastore small operations" reached its maximum after only some browsing).<br/>
+However, this is far too much <a href="https://developers.google.com/appengine/articles/paging">resource-consuming</a> when you look for thousands of records (with 2000 books, I could see how the quota "datastore small operations" reached its maximum after only some browsing).<br/>
 So, the alternative is to use a <a href="https://developers.google.com/appengine/docs/java/datastore/queries#Query_Cursors">cursor</a>. But, it gives you only the next or previous link (so, you can not jump from page 1 to page 10).
 <br/>Also, the cursor has the limitation of not being possible with "IN" queries, cf "Limitations of Cursors". It means that the feature of queries like "author A <i>OR</i> author B" can not be used anymore.
 </p>
