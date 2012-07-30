@@ -41,17 +41,13 @@ So, the alternative is to use a <a href="https://developers.google.com/appengine
 <p>
 TODOs<br/>
 <ul>
-<li>one total count/week</li>
+<li>add more books from .txt</li>
+<li>include books search engines</li>
 <li>close tag?</li>
 <li>pagination tag?</li>
 <li>séparer les méthodes delete</li>
 <li>1 page de statistiques by month</li>
-<li>add more books from .txt</li>
-<li>include books search engines</li>
 <li>gwt-charts</li>
-<li>logservice</li>
-<li>conversion</li>
-<li>images</li>
 </ul>
 </p>
 <p>
