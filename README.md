@@ -8,7 +8,7 @@ Built with
 <li><a href="http://gwtbootstrap.github.com/">GWTBootstrap</a>, </li>
 <li><a href="https://developers.google.com/appengine/docs/java/search/overview">App Engine Search API</a>, </li>
 <li><a href="http://code.google.com/p/objectify-appengine/">Objectify</a></li>
-<li>and other App Engine features such as Cron, Task Queues, Mail, Authentication, Datastore-indexes and Memcache<li>
+<li>and other App Engine features such as Cron, Task Queues, Mail, Authentication, Datastore-indexes and Memcache</li>
 </ul>
 <br/>
 </p>
