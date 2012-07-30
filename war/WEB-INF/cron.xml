@@ -3,15 +3,15 @@
     <cron>
         <url>/cron/jobImportBooks</url>
         <description>Import books</description>
-        <schedule>every 60 minutes</schedule>
+        <schedule>every 1 hours synchronized</schedule>
     </cron>
     <cron>
         <url>/cron/jobCountBooks</url>
         <description>Count books</description>
-        <schedule>every monday 09:00</schedule>
+        <schedule>every monday 09:00 synchronized</schedule>
     </cron>
 <!--         <schedule>every 11 hours</schedule> -->
-<!--         <schedule>every 120 minutes</schedule> -->
+<!--         <schedule>every 2 hours</schedule> -->
     <!-- 
         <schedule>every 1 minutes</schedule>
     --> 

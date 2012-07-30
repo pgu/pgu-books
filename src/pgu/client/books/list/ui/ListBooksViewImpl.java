@@ -2,8 +2,8 @@ package pgu.client.books.list.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.list.ListBooksPresenter;
@@ -22,6 +22,7 @@ import com.github.gwtbootstrap.client.ui.constants.ButtonType;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -41,20 +42,20 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @UiField
-    FluidContainer                        booksGrid, toolBar;
+    FluidContainer                              booksGrid, toolBar;
     @UiField
-    Pager                                 pager;
+    Pager                                       pager;
     @UiField
-    Button                                addBtn, editBtn, deleteBtn, refreshBtn, priceBtn;
+    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn;
     @UiField
-    Badge                                 results10, results20, results30, results50;
+    Badge                                       results10, results20, results30, results50;
 
-    private ListBooksPresenter            presenter;
+    private ListBooksPresenter                  presenter;
 
-    private SortHeader                    titleCol, authorCol, editorCol, categoryCol, yearCol;
+    private SortHeader                          titleCol, authorCol, editorCol, categoryCol, yearCol;
 
-    private final HashSet<FluidRow>       selectedRows = new HashSet<FluidRow>();
-    private final HashMap<FluidRow, Book> row2book     = new HashMap<FluidRow, Book>();
+    private final HashSet<FluidRow>             selectedRows = new HashSet<FluidRow>();
+    private final LinkedHashMap<FluidRow, Book> row2book     = new LinkedHashMap<FluidRow, Book>();
 
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -212,17 +213,21 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
                     public void onClick(final ClickEvent event) {
 
                         if (event.isControlKeyDown()) { // multi selection
+                            selectWithControlKey(row);
 
-                            if (selectedRows.contains(row)) {
-                                selectedRows.remove(row);
-                                row.removeStyleName("row-selected");
-                            } else {
-                                selectedRows.add(row);
-                                row.addStyleName("row-selected");
+                        } else if (event.isShiftKeyDown()) { // multi selection
+
+                            if (selectedRows.size() != 1 //
+                                    || selectedRows.contains(row)) {
+                                return;
                             }
 
+                            selectWithShiftKey(row);
+
                         } else { // single selection
-                            final boolean wasSelected = selectedRows.contains(row);
+
+                            final boolean wasSelected = selectedRows.contains(row) //
+                                    && selectedRows.size() == 1;
 
                             for (final FluidRow selectedRow : selectedRows) {
                                 selectedRow.removeStyleName("row-selected");
@@ -230,11 +235,64 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
                             selectedRows.clear();
 
                             if (!wasSelected) {
-                                selectedRows.add(row);
-                                row.addStyleName("row-selected");
+                                selectRow(row);
                             }
                         }
                     }
+
+                    private void selectWithControlKey(final FluidRow row) {
+                        if (selectedRows.contains(row)) {
+                            deselectRow(row);
+                        } else {
+                            selectRow(row);
+                        }
+                    }
+
+                    private void selectWithShiftKey(final FluidRow row) {
+
+                        final FluidRow borderRowA = selectedRows.iterator().next();
+                        final FluidRow borderRowB = row;
+                        final ArrayList<FluidRow> borderRows = new ArrayList<FluidRow>();
+                        borderRows.add(borderRowA);
+                        borderRows.add(borderRowB);
+
+                        boolean isIn = false;
+                        for (final FluidRow _row : row2book.keySet()) {
+                            if (borderRows.contains(_row) //
+                                    && !isIn) {
+
+                                isIn = true;
+
+                                if (!selectedRows.contains(_row)) {
+                                    selectRow(_row);
+                                }
+
+                            } else if (borderRows.contains(_row) //
+                                    && isIn) {
+
+                                if (!selectedRows.contains(_row)) {
+                                    selectRow(_row);
+                                }
+                                break;
+
+                            } else {
+                                if (isIn) {
+                                    selectRow(_row);
+                                }
+                            }
+                        }
+                    }
+
+                    private void deselectRow(final FluidRow row) {
+                        selectedRows.remove(row);
+                        row.removeStyleName("row-selected");
+                    }
+
+                    private void selectRow(final FluidRow _row) {
+                        selectedRows.add(_row);
+                        _row.addStyleName("row-selected");
+                    }
+
                 }, ClickEvent.getType());
             }
 
@@ -455,5 +513,31 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             }
         };
     }
+
+    /**
+     * no success with this one :-/
+     */
+    private native static void disableNativeSelectionTextWithShift(Element e, boolean disable)/*-{
+		if (disable) {
+			e.ondrag = function() {
+				return false;
+			};
+			e.onselectstart = function() {
+				return false;
+			};
+
+			e.style.KhtmlUserSelect = "none";
+			e.style.MozUserSelect = "none";
+			e.style.UserSelect = "none";
+
+		} else {
+			e.ondrag = null;
+			e.onselectstart = null;
+
+			e.style.KhtmlUserSelect = "text";
+			e.style.MozUserSelect = "text";
+			e.style.UserSelect = "text";
+		}
+    }-*/;
 
 }
