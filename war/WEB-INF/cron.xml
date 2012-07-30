@@ -8,14 +8,8 @@
     <cron>
         <url>/cron/jobCountBooks</url>
         <description>Count books</description>
-        <schedule>every monday 09:00 synchronized</schedule>
+        <schedule>every monday 09:00</schedule>
     </cron>
-<!--         <schedule>every 11 hours</schedule> -->
-<!--         <schedule>every 2 hours</schedule> -->
-    <!-- 
-        <schedule>every 1 minutes</schedule>
-    --> 
-    
 <!--      <cron> -->
 <!--          <url>/cron/jobDeleteBooks</url> -->
 <!--          <description>Delete books</description> -->
