@@ -45,7 +45,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @UiField
     Pager                                 pager;
     @UiField
-    Button                                addBtn, editBtn, deleteBtn, refreshBtn;
+    Button                                addBtn, editBtn, deleteBtn, refreshBtn, priceBtn;
     @UiField
     Badge                                 results10, results20, results30, results50;
 
@@ -411,6 +411,32 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
         pager.getRight().setVisible(hasNextPage);
 
         pager.setVisible(nbBooks > 0);
+    }
+
+    @Override
+    public HasClickAndVisibility getSearchPriceBooksWidget() {
+        return new HasClickAndVisibility() {
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                priceBtn.fireEvent(event);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return priceBtn.addClickHandler(handler);
+            }
+
+            @Override
+            public void setVisible(final boolean visible) {
+                priceBtn.setVisible(visible);
+            }
+
+            @Override
+            public boolean isVisible() {
+                return priceBtn.isVisible();
+            }
+        };
     }
 
 }

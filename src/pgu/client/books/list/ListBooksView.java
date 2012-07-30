@@ -22,6 +22,8 @@ public interface ListBooksView extends IsWidget {
 
     HasClickAndVisibility getRefreshBooksWidget();
 
+    HasClickAndVisibility getSearchPriceBooksWidget();
+
     Book getSelectedBook();
 
     HashSet<Book> getSelectedBooks();

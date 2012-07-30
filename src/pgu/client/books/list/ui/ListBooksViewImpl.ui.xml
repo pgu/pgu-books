@@ -27,11 +27,12 @@
 <!--                 <b:Column size="3"> -->
 <!--                     <b:Label ui:field="booksFound" type="INFO" addStyleNames="{style.booksFound}" /> -->
 <!--                 </b:Column> -->
-                <b:Column size="6">
+                <b:Column size="9">
                     <b:Button ui:field="addBtn" icon="PLUS" iconSize="LARGE" type="SUCCESS" addStyleNames="{style.actionBtn}">Añadir</b:Button>
                     <b:Button ui:field="editBtn" icon="PENCIL" iconSize="LARGE" type="PRIMARY" addStyleNames="{style.actionBtn}">Editar</b:Button>
                     <b:Button ui:field="deleteBtn" icon="TRASH" iconSize="LARGE" type="DANGER" addStyleNames="{style.actionBtn}">Borrar</b:Button>
                     <b:Button ui:field="refreshBtn" icon="REFRESH" iconSize="LARGE" type="DEFAULT" addStyleNames="{style.actionBtn}">Refrescar</b:Button>
+                    <b:Button ui:field="priceBtn" icon="MONEY" iconSize="LARGE" type="DEFAULT" addStyleNames="{style.actionBtn}">Precio</b:Button>
                 </b:Column>
                 <b:Column size="3">
                     <b:Badge ui:field="results10" addStyleNames="{style.badge}">10</b:Badge>

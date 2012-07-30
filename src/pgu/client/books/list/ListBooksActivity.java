@@ -28,7 +28,9 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -67,6 +69,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
         view.getEditBookWidget().setVisible(isEditable);
         view.getDeleteBooksWidget().setVisible(isEditable);
         view.getRefreshBooksWidget().setVisible(isEditable);
+        view.getSearchPriceBooksWidget().setVisible(isEditable);
 
         panel.setWidget(view.asWidget());
 
@@ -113,6 +116,58 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             @Override
             public void onClick(final ClickEvent event) {
                 u.fire(eventBus, new AskForNextPageSearchBooksEvent());
+            }
+        }));
+        handlerRegs.add(view.getSearchPriceBooksWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+
+                final Book book = view.getSelectedBook();
+
+                if (book == null //
+                        || u.isVoid(book.getAuthor()) //
+                        && u.isVoid(book.getTitle()) //
+                ) {
+                    return;
+                }
+
+                final String bookFinderUrl = getBookFinderUrl(book.getAuthor(), book.getTitle());
+                final String iberLibroUrl = getBookIberLibro(book.getAuthor(), book.getTitle());
+
+                Window.open(iberLibroUrl, "iberLibro", "");
+                Window.open(bookFinderUrl, "bookFinder", "");
+            }
+
+            private String getBookIberLibro(final String author, final String title) {
+                final StringBuilder url = new StringBuilder();
+                url.append("http://www.iberlibro.com/servlet/SearchResults");
+                url.append("?an=");
+                url.append(URL.encodeQueryString(author));
+                url.append("&tn=");
+                url.append(URL.encodeQueryString(title));
+                return url.toString();
+            }
+
+            private String getBookFinderUrl(final String author, final String title) {
+
+                final StringBuilder url = new StringBuilder();
+                url.append("http://www.bookfinder.com/search/");
+                url.append("?author=");
+                url.append(URL.encodeQueryString(author));
+                url.append("&title=");
+                url.append(URL.encodeQueryString(title));
+                url.append("&lang=es");
+                url.append("&isbn=");
+                url.append("&submit=Search");
+                url.append("&new_used=*");
+                url.append("&destination=es");
+                url.append("&currency=EUR");
+                url.append("&mode=basic");
+                url.append("&st=sr");
+                url.append("&ac=qr");
+
+                return url.toString();
             }
         }));
 
