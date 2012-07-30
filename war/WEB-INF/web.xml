@@ -48,6 +48,10 @@
     <servlet-class>pgu.server.job.JobDeleteBooks</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>jobCountBooks</servlet-name>
+    <servlet-class>pgu.server.job.JobCountBooks</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>createFieldValues</servlet-name>
     <servlet-class>pgu.server.task.CreateFieldValuesTask</servlet-class>
   </servlet>
@@ -79,6 +83,10 @@
   <servlet-mapping>
     <servlet-name>jobDeleteBooks</servlet-name>
     <url-pattern>/cron/jobDeleteBooks</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jobCountBooks</servlet-name>
+    <url-pattern>/cron/jobCountBooks</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>createFieldValues</servlet-name>

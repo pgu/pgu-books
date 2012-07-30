@@ -5,6 +5,11 @@
         <description>Import books</description>
         <schedule>every 60 minutes</schedule>
     </cron>
+    <cron>
+        <url>/cron/jobCountBooks</url>
+        <description>Count books</description>
+        <schedule>every monday 09:00</schedule>
+    </cron>
 <!--         <schedule>every 11 hours</schedule> -->
 <!--         <schedule>every 120 minutes</schedule> -->
     <!-- 

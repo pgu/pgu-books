@@ -1,6 +1,7 @@
 package pgu.client.menu.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import pgu.client.app.utils.ClientUtils;
 import pgu.client.menu.MenuPresenter;
@@ -30,6 +31,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -533,8 +535,20 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @Override
     public BooksCountWidget getBooksCountWidget() {
-        // TODO Auto-generated method stub
-        return null;
+        return new BooksCountWidget() {
+
+            @Override
+            public void setCount(final int count, final Date lastCountDate) {
+                final String date = DateTimeFormat.getFormat("dd/MM/yyyy").format(lastCountDate);
+                appTitle.setHTML("Biblioteca de " + count + " libros <span style=\"font-size:x-small\">(" + date
+                        + ")</span>");
+            }
+
+            @Override
+            public void hide() {
+                appTitle.setText("Biblioteca");
+            }
+        };
     }
 
 }
