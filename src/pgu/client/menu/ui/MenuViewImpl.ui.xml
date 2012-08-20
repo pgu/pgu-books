@@ -43,27 +43,27 @@
         </b:Row>
         <b:Navbar>
             <b:Nav>
-                <b:NavLink icon="BOOK" iconSize="LARGE" />
+                <b:NavLink ui:field="sTitleIcon" icon="BOOK" iconSize="LARGE" />
                 <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"/>
             </b:Nav>        
             <b:Nav>
-                <b:NavLink icon="USER" iconSize="LARGE" />
+                <b:NavLink ui:field="sAuthorIcon" icon="USER" iconSize="LARGE" />
                 <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"/>        
             </b:Nav>        
             <b:Nav>
-                <b:NavLink icon="PRINT" iconSize="LARGE" />
+                <b:NavLink ui:field="sEditorIcon" icon="PRINT" iconSize="LARGE" />
                 <b:NavSearch ui:field="sEditor" size="2" placeholder="Editor" alignment="LEFT"/>        
             </b:Nav>        
             <b:Nav>
-                <b:NavLink icon="TAG" iconSize="LARGE" />
+                <b:NavLink ui:field="sCategoryIcon" icon="TAG" iconSize="LARGE" />
                 <b:NavSearch ui:field="sCategory" size="2" placeholder="Categoría" alignment="LEFT"/>        
             </b:Nav>        
             <b:Nav>
-                <b:NavLink icon="CALENDAR" iconSize="LARGE" />
+                <b:NavLink ui:field="sYearIcon" icon="CALENDAR" iconSize="LARGE" />
                 <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"/>        
             </b:Nav>        
             <b:Nav>
-                <b:NavLink icon="COMMENT" iconSize="LARGE" />
+                <b:NavLink ui:field="sCommentIcon" icon="COMMENT" iconSize="LARGE" />
                 <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             </b:Nav>        
             <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" type="SUCCESS">Buscar libros</b:Button>

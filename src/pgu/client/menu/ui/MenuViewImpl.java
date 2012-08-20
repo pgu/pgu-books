@@ -56,7 +56,9 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     NavSearch                 sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn, goToAppstatsBtn;
+    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn, goToAppstatsBtn, //
+            sTitleIcon, sAuthorIcon, sEditorIcon, sCategoryIcon, sYearIcon, sCommentIcon;
+
     @UiField
     Popover                   searchInfo, suggestionsInfo;
     @UiField
@@ -165,6 +167,13 @@ public class MenuViewImpl extends Composite implements MenuView {
         sCategory.getTextBox().setText("");
         sYear.getTextBox().setText("");
         sComment.getTextBox().setText("");
+
+        sTitleIcon.setActive(false);
+        sAuthorIcon.setActive(false);
+        sEditorIcon.setActive(false);
+        sCategoryIcon.setActive(false);
+        sYearIcon.setActive(false);
+        sCommentIcon.setActive(false);
     }
 
     @UiHandler("clearSuggestionsBtn")
@@ -454,30 +463,43 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void onClick(final ClickEvent event) {
                     setActive(!isActive());
-                    getSearchBox(icon).setText(isActive() ? getText() : "");
+                    setSearchBoxText(icon);
                 }
 
-                private TextBox getSearchBox(final IconType icon) {
+                private void setSearchBoxText(final IconType icon) {
+                    NavLink searchIcon;
+                    NavSearch searchBox;
+
                     if (IconType.USER == icon) {
-                        return sAuthor.getTextBox();
+                        searchIcon = sAuthorIcon;
+                        searchBox = sAuthor;
 
                     } else if (IconType.TAG == icon) {
-                        return sCategory.getTextBox();
+                        searchIcon = sCategoryIcon;
+                        searchBox = sCategory;
 
                     } else if (IconType.COMMENT == icon) {
-                        return sComment.getTextBox();
+                        searchIcon = sCommentIcon;
+                        searchBox = sComment;
 
                     } else if (IconType.PRINT == icon) {
-                        return sEditor.getTextBox();
+                        searchIcon = sEditorIcon;
+                        searchBox = sEditor;
 
                     } else if (IconType.CALENDAR == icon) {
-                        return sYear.getTextBox();
+                        searchIcon = sYearIcon;
+                        searchBox = sYear;
 
                     } else if (IconType.BOOK == icon) {
-                        return sTitle.getTextBox();
+                        searchIcon = sTitleIcon;
+                        searchBox = sTitle;
 
+                    } else {
+                        throw new IllegalArgumentException("Unknown icon: " + icon);
                     }
-                    throw new IllegalArgumentException("Unknown icon: " + icon);
+
+                    searchIcon.setActive(isActive());
+                    searchBox.getTextBox().setText(isActive() ? getText() : "");
                 }
             });
         }
