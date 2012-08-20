@@ -28,6 +28,10 @@
     
   <!-- Servlets -->
   <servlet>
+    <servlet-name>iberLibro</servlet-name>
+    <servlet-class>pgu.server.ext.BooksEngineServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>books</servlet-name>
     <servlet-class>pgu.server.service.BooksServiceImpl</servlet-class>
   </servlet>
@@ -64,6 +68,10 @@
 <!--       <servlet-name>appstats</servlet-name> -->
 <!--       <url-pattern>/appstats/*</url-pattern> -->
 <!--   </servlet-mapping>   -->
+  <servlet-mapping>
+    <servlet-name>iberLibro</servlet-name>
+    <url-pattern>/pgu_books/iberLibro</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>books</servlet-name>
     <url-pattern>/pgu_books/books</url-pattern>

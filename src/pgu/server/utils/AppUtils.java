@@ -9,6 +9,8 @@ import com.google.appengine.api.utils.SystemProperty;
 
 public class AppUtils {
 
+    public static final String UTF8 = "UTF-8";
+
     public boolean eq(final Object a, final Object b) {
         return a == b || a != null && a.equals(b);
     }

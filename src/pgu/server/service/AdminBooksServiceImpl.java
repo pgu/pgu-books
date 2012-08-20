@@ -82,7 +82,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             }
 
             final InputStream is = servletContext.getResourceAsStream("/WEB-INF/books/import/books.txt");
-            final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName(AppUtils.UTF8)));
             try {
                 while ((line = br.readLine()) != null) {
 

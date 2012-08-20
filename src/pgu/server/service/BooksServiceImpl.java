@@ -350,4 +350,5 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     public BooksCount getBooksCount() {
         return dao.ofy().query(BooksCount.class).filter("isLast", true).get();
     }
+
 }

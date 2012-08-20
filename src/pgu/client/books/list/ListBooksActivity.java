@@ -25,6 +25,7 @@ import pgu.shared.dto.LoginInfo;
 import pgu.shared.utils.SortField;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
@@ -132,19 +133,30 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                     return;
                 }
 
-                final String iberLibroUrl = getBookIberLibro(book.getAuthor(), book.getTitle());
+                final String rawUrlQuery = getBookIberLibro(book.getAuthor(), book.getTitle(), book.getEditor(),
+                        book.getYear());
 
-                Window.open(iberLibroUrl, "iberLibro", "");
+                Window.open(GWT.getModuleBaseURL() + "iberLibro?urlQuery=" + rawUrlQuery, "iberLibro", "");
+
             }
 
-            private String getBookIberLibro(final String author, final String title) {
+            private String getBookIberLibro(final String author, final String title, final String editor,
+                    final Integer year) {
                 final StringBuilder url = new StringBuilder();
-                url.append("http://www.iberlibro.com/servlet/SearchResults");
+
                 url.append("?an=");
-                url.append(URL.encodeQueryString(author));
+                url.append(author);
+
                 url.append("&tn=");
-                url.append(URL.encodeQueryString(title));
-                return url.toString();
+                url.append(title);
+
+                url.append("&pn=");
+                url.append(editor);
+
+                url.append("&yrl=");
+                url.append(year + "");
+
+                return URL.encodeQueryString(url.toString());
             }
 
         }));
