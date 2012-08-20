@@ -132,11 +132,9 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                     return;
                 }
 
-                final String bookFinderUrl = getBookFinderUrl(book.getAuthor(), book.getTitle());
                 final String iberLibroUrl = getBookIberLibro(book.getAuthor(), book.getTitle());
 
                 Window.open(iberLibroUrl, "iberLibro", "");
-                Window.open(bookFinderUrl, "bookFinder", "");
             }
 
             private String getBookIberLibro(final String author, final String title) {
@@ -149,26 +147,6 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 return url.toString();
             }
 
-            private String getBookFinderUrl(final String author, final String title) {
-
-                final StringBuilder url = new StringBuilder();
-                url.append("http://www.bookfinder.com/search/");
-                url.append("?author=");
-                url.append(URL.encodeQueryString(author));
-                url.append("&title=");
-                url.append(URL.encodeQueryString(title));
-                url.append("&lang=es");
-                url.append("&isbn=");
-                url.append("&submit=Search");
-                url.append("&new_used=*");
-                url.append("&destination=es");
-                url.append("&currency=EUR");
-                url.append("&mode=basic");
-                url.append("&st=sr");
-                url.append("&ac=qr");
-
-                return url.toString();
-            }
         }));
 
         u.fire(eventBus, new AskForNewSearchBooksEvent(place.getPage(), place.getSearchHashcode()));
