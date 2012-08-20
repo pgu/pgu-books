@@ -160,4 +160,17 @@ public class MenuActivity implements MenuPresenter //
 
     }
 
+    @Override
+    public void searchTagSuggestions() {
+        booksService.searchTagSuggestions(new AsyncCallbackApp<SuggestionsResult>(eventBus) {
+
+            @Override
+            public void onSuccess(final SuggestionsResult result) {
+                view.getSuggestionsWidget().setSuggestions(result.getSuggestions());
+                view.getSuggestionsWidget().show();
+            }
+
+        });
+    }
+
 }

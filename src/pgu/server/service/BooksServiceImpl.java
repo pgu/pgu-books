@@ -285,16 +285,29 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     }
 
     @Override
+    public SuggestionsResult searchTagSuggestions() {
+
+        final String _query = FieldValueDoc.FIELD._() + ":" + BookDoc.CATEGORY._();
+
+        return searchSuggestionsInternal(_query);
+    }
+
+    @Override
     public SuggestionsResult searchSuggestions(final String text) {
+
+        final String _query = "~\"" + text + "\"";
+
+        return searchSuggestionsInternal(_query);
+    }
+
+    private SuggestionsResult searchSuggestionsInternal(final String _query) {
+        log.info(this, "query [%s]", _query);
 
         final QueryOptions mainQueryOptions = QueryOptions.newBuilder() //
                 .setLimit(1000) //
                 .setNumberFoundAccuracy(1001) //
                 .setFieldsToReturn(FieldValueDoc.FIELD._(), FieldValueDoc.VALUE._()) //
                 .build();
-
-        final String _query = "~\"" + text + "\"";
-        log.info(this, "query [%s]", _query);
 
         final com.google.appengine.api.search.Query mainQuery = com.google.appengine.api.search.Query.newBuilder() //
                 .setOptions(mainQueryOptions) //

@@ -51,7 +51,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     @UiField
     ProgressBar               progressBar;
     @UiField
-    Button                    searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn;
+    Button                    searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn,
+            tagSuggestionsBtn;
     @UiField
     NavSearch                 sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
@@ -202,6 +203,11 @@ public class MenuViewImpl extends Composite implements MenuView {
                 }
             });
         }
+    }
+
+    @UiHandler("tagSuggestionsBtn")
+    public void clickSearchTagSuggestions(final ClickEvent e) {
+        presenter.searchTagSuggestions();
     }
 
     @UiHandler("searchSuggestionsBtn")
