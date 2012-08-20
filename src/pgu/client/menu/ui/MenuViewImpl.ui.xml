@@ -3,6 +3,11 @@
             xmlns:g="urn:import:com.google.gwt.user.client.ui"
             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
     <ui:style>
+        .progressBar {
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
         .suggestionsFound {
             margin-left: 18px;
         }
@@ -66,6 +71,8 @@
                 <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
         </b:Navbar>
-        <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
+        <g:HTMLPanel addStyleNames="{style.progressBar}">
+            <b:ProgressBar ui:field="progressBar" type="ANIMATED" percent="100"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 
