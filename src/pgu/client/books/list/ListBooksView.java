@@ -3,11 +3,11 @@ package pgu.client.books.list;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import pgu.client.app.utils.HasClickAndEnable;
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.shared.domain.Book;
 import pgu.shared.utils.SortField;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface ListBooksView extends IsWidget {
@@ -28,9 +28,9 @@ public interface ListBooksView extends IsWidget {
 
     HashSet<Book> getSelectedBooks();
 
-    HasClickHandlers getPreviousPageWidget();
+    HasClickAndEnable getPreviousPageWidget();
 
-    HasClickHandlers getNextPageWidget();
+    HasClickAndEnable getNextPageWidget();
 
     void setResultsPerPage(int length);
 

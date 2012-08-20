@@ -109,14 +109,14 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onClick(final ClickEvent event) {
-                u.fire(eventBus, new AskForPreviousPageSearchBooksEvent());
+                u.fire(eventBus, new AskForPreviousPageSearchBooksEvent(view.getPreviousPageWidget()));
             }
         }));
         handlerRegs.add(view.getNextPageWidget().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(final ClickEvent event) {
-                u.fire(eventBus, new AskForNextPageSearchBooksEvent());
+                u.fire(eventBus, new AskForNextPageSearchBooksEvent(view.getNextPageWidget()));
             }
         }));
         handlerRegs.add(view.getSearchPriceBooksWidget().addClickHandler(new ClickHandler() {

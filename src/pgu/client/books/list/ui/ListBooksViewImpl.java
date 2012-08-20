@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import pgu.client.app.utils.HasClickAndEnable;
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.list.ListBooksPresenter;
 import pgu.client.books.list.ListBooksView;
@@ -26,7 +27,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -429,13 +429,57 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     @Override
-    public HasClickHandlers getPreviousPageWidget() {
-        return pager.getLeft();
+    public HasClickAndEnable getPreviousPageWidget() {
+        return new HasClickAndEnable() {
+
+            @Override
+            public boolean isEnabled() {
+                return !pager.getLeft().isDisabled();
+            }
+
+            @Override
+            public void setEnabled(final boolean enabled) {
+                pager.getLeft().setDisabled(!enabled);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return pager.getLeft().addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                pager.getLeft().fireEvent(event);
+            }
+
+        };
     }
 
     @Override
-    public HasClickHandlers getNextPageWidget() {
-        return pager.getRight();
+    public HasClickAndEnable getNextPageWidget() {
+        return new HasClickAndEnable() {
+
+            @Override
+            public boolean isEnabled() {
+                return !pager.getRight().isDisabled();
+            }
+
+            @Override
+            public void setEnabled(final boolean enabled) {
+                pager.getRight().setDisabled(!enabled);
+            }
+
+            @Override
+            public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                return pager.getRight().addClickHandler(handler);
+            }
+
+            @Override
+            public void fireEvent(final GwtEvent<?> event) {
+                pager.getRight().fireEvent(event);
+            }
+
+        };
     }
 
     @Override
