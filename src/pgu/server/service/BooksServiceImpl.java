@@ -33,12 +33,12 @@ import com.googlecode.objectify.Query;
 @SuppressWarnings("serial")
 public class BooksServiceImpl extends RemoteServiceServlet implements BooksService {
 
-    private static final String SEARCH_ON_EMPTY_FIELD = "-";
-    private final DAO             dao   = new DAO();
-    private final AppLog          log   = new AppLog();
-    private final FieldValueIndex fvIdx = new FieldValueIndex();
-    private final DocUtils        docU  = new DocUtils();
-    private final AppUtils        u     = new AppUtils();
+    private static final String   SEARCH_ON_EMPTY_FIELD = "-";
+    private final DAO             dao                   = new DAO();
+    private final AppLog          log                   = new AppLog();
+    private final FieldValueIndex fvIdx                 = new FieldValueIndex();
+    private final DocUtils        docU                  = new DocUtils();
+    private final AppUtils        u                     = new AppUtils();
 
     /**
      * http://code.google.com/p/google-app-engine-samples/source/browse/trunk/search/java/src/com/google/appengine/
@@ -54,7 +54,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final Query<Book> booksQuery = dao.ofy().query(Book.class);
 
         // order
-        final String sortDirection = booksSearch.isAscending() ? "" : SEARCH_ON_EMPTY_FIELD;
+        final String sortDirection = booksSearch.isAscending() ? "" : "-";
         final String sortField = booksSearch.getSortField().toString().toLowerCase();
         final String order = sortDirection + sortField;
         booksQuery.order(order);
