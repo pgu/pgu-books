@@ -150,11 +150,16 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 url.append("&tn=");
                 url.append(title);
 
-                url.append("&pn=");
-                url.append(editor);
+                if (!u.isVoid(editor)) {
+                    url.append("&pn=");
+                    url.append(editor);
+                }
 
-                url.append("&yrl=");
-                url.append(year + "");
+                final String _year = year == 0 ? "" : year + "";
+                if (!u.isVoid(_year)) {
+                    url.append("&yrl=");
+                    url.append(_year);
+                }
 
                 return URL.encodeQueryString(url.toString());
             }
