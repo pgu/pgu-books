@@ -17,5 +17,5 @@ public interface BooksService extends RemoteService {
 
     BooksCount getBooksCount();
 
-    SuggestionsResult searchTagSuggestions();
+    SuggestionsResult searchCategorySuggestions();
 }

@@ -25,7 +25,7 @@
             <b:Popover ui:field="suggestionsInfo">
                 <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
-            <b:Button ui:field="tagSuggestionsBtn" icon="TAGS" type="SUCCESS" iconSize="LARGE" ></b:Button>
+            <b:Button ui:field="categorySuggestionsBtn" icon="TAGS" type="SUCCESS" iconSize="LARGE" ></b:Button>
             <b:Nav alignment="RIGHT">
                 <b:NavLink icon="BOOK" ui:field="goToLibraryBtn" iconSize="LARGE" >Biblioteca</b:NavLink>
                 <b:NavLink icon="DASHBOARD" ui:field="goToAppstatsBtn" iconSize="LARGE" >Appstats</b:NavLink>

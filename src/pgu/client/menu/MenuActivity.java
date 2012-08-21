@@ -161,8 +161,8 @@ public class MenuActivity implements MenuPresenter //
     }
 
     @Override
-    public void searchTagSuggestions() {
-        booksService.searchTagSuggestions(new AsyncCallbackApp<SuggestionsResult>(eventBus) {
+    public void searchCategorySuggestions() {
+        booksService.searchCategorySuggestions(new AsyncCallbackApp<SuggestionsResult>(eventBus) {
 
             @Override
             public void onSuccess(final SuggestionsResult result) {

@@ -1,6 +1,8 @@
 package pgu.server.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import pgu.client.service.BooksService;
 import pgu.server.access.nosql.DocUtils;
@@ -285,7 +287,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     }
 
     @Override
-    public SuggestionsResult searchTagSuggestions() {
+    public SuggestionsResult searchCategorySuggestions() {
 
         final String _query = FieldValueDoc.FIELD._() + ":" + BookDoc.CATEGORY._();
 
@@ -327,10 +329,29 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
             suggestions.add(suggestion);
         }
 
+        Collections.sort(suggestions, getSuggestionsComparator());
+
         // TODO PGU Jul 23, 2012 specify if more than 1000 suggestions
         final SuggestionsResult suggestionsResult = new SuggestionsResult();
         suggestionsResult.setSuggestions(suggestions);
         return suggestionsResult;
+    }
+
+    private Comparator<Suggestion> getSuggestionsComparator() {
+        return new Comparator<Suggestion>() {
+
+            @Override
+            public int compare(final Suggestion s1, final Suggestion s2) {
+
+                final int r1 = s1.getField().compareTo(s2.getField());
+                if (r1 != 0) {
+                    return r1;
+                }
+
+                return s1.getValue().toLowerCase().compareTo(s2.getValue().toLowerCase());
+            }
+        };
+
     }
 
     private String getFieldNameUI(final ScoredDocument doc) {

@@ -15,6 +15,6 @@ public interface BooksServiceAsync {
 
     void getBooksCount(AsyncCallback<BooksCount> asyncCallbackApp);
 
-    void searchTagSuggestions(AsyncCallback<SuggestionsResult> asyncCallbackApp);
+    void searchCategorySuggestions(AsyncCallback<SuggestionsResult> asyncCallbackApp);
 
 }
