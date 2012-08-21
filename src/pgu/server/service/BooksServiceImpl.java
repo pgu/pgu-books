@@ -3,6 +3,7 @@ package pgu.server.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import pgu.client.service.BooksService;
 import pgu.server.access.nosql.DocUtils;
@@ -337,13 +338,24 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         return suggestionsResult;
     }
 
+    private final HashMap<String, Integer> field2rank = new HashMap<String, Integer>();
+
+    {
+        field2rank.put(SearchField.TITLE.toString(), 1);
+        field2rank.put(SearchField.AUTHOR.toString(), 2);
+        field2rank.put(SearchField.EDITOR.toString(), 3);
+        field2rank.put(SearchField.YEAR.toString(), 4);
+        field2rank.put(SearchField.CATEGORY.toString(), 5);
+        field2rank.put(SearchField.COMMENT.toString(), 6);
+    }
+
     private Comparator<Suggestion> getSuggestionsComparator() {
         return new Comparator<Suggestion>() {
 
             @Override
             public int compare(final Suggestion s1, final Suggestion s2) {
 
-                final int r1 = s1.getField().compareTo(s2.getField());
+                final int r1 = field2rank.get(s1.getField()).compareTo(field2rank.get(s2.getField()));
                 if (r1 != 0) {
                     return r1;
                 }
