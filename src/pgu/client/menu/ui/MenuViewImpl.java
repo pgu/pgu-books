@@ -37,6 +37,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -129,17 +130,15 @@ public class MenuViewImpl extends Composite implements MenuView {
         suggestionsInfo.setAnimation(true);
         suggestionsInfo.setPlacement(Placement.BOTTOM);
         suggestionsInfo.setHeading("Sugerencias");
-        suggestionsInfo.setText("Se puede utilizar palabras o frases" + //
-                " para recuperar los valores que se puede utilizar" + //
-                " en las casillas de búsqueda<br>" + //
+        suggestionsInfo.setText("Se pueden utilizar palabras o frases" + //
+                " para recuperar los valores correctos" + //
+                " en las casillas de búsqueda.<br>" + //
                 "<br>" + //
                 "Por ejemplo: \"john\"<br>" + //
                 "puede dar como sugerencias<br>" + //
-                "\"Saint John Perse\"<br>" + //
+                "\"Saint John Perse\".<br>" + //
                 "<br>" + //
-                "Al pinchar una sugerencia, la casilla de búsqueda correspondente se rellena automáticamente" + //
-                "" //
-        );
+                "Al pinchar una sugerencia, la casilla de búsqueda correspondente se rellena automáticamente.");
     }
 
     private void initSearchInfo() {
@@ -148,7 +147,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         searchInfo.setHeading("Búsqueda");
         searchInfo.setText("La búsqueda es sensible al uso de mayúsculas y minúsculas." + //
                 " Para encontrar los valores exactos, se puede usar las sugerencias." + //
-                "<br>También se puede buscar para un campo vacío si se pone \"-\" la casilla." //
+                "<br><br>También se puede buscar para un campo vacío si se pone \"-\" en la casilla." //
         );
     }
 
@@ -194,6 +193,10 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("clearBooksBtn")
     public void clickClearFields(final ClickEvent e) {
+        clearSearchFields();
+    }
+
+    private void clearSearchFields() {
         sTitle.getTextBox().setText("");
         sAuthor.getTextBox().setText("");
         sEditor.getTextBox().setText("");
@@ -514,16 +517,32 @@ public class MenuViewImpl extends Composite implements MenuView {
 
                 @Override
                 public void onClick(final ClickEvent event) {
+
                     setActive(!isActive());
-                    setSearchBoxText(icon);
-                }
 
-                private void setSearchBoxText(final IconType icon) {
+                    if (!isActive()) {
+                        return;
+                    }
+
+                    // when active
+                    new Timer() {
+
+                        @Override
+                        public void run() {
+                            setActive(false);
+                        }
+
+                    }.schedule(300);
+
+                    if (!event.isControlKeyDown()) {
+                        clearSearchFields();
+                    }
+
                     final NavSearch navSearch = icon2field.get(icon);
-
-                    navSearch.getTextBox().setText(isActive() ? getText() : "");
-                    field2link.get(navSearch).setActive(isActive());
+                    navSearch.getTextBox().setText(getText());
+                    field2link.get(navSearch).setActive(true);
                 }
+
             });
         }
 
