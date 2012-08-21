@@ -14,6 +14,9 @@
         .firstNavbar {
             margin-bottom: 0px;
         }
+        .suggestionsRow {
+            margin-bottom: 5px;
+        }
     </ui:style>
     <g:HTMLPanel>
 <!--         position="TOP"  -->
@@ -35,12 +38,14 @@
                 <b:NavLink icon="USER" ui:field="adminBtn" iconSize="LARGE" >Admin</b:NavLink>
             </b:Nav>
         </b:Navbar>
-        <b:NavPills ui:field="suggestionsContainer" />
-        <b:Row ui:field="suggestionsRow">
-            <b:Column size="3">
-                <b:Label ui:field="suggestionsFound" type="INFO" addStyleNames="{style.suggestionsFound}" />
-            </b:Column>
-        </b:Row>
+        <div id="suggestions_area" class="collapse">
+            <b:NavPills ui:field="suggestionsContainer" />
+            <b:Row ui:field="suggestionsRow" addStyleNames="{style.suggestionsRow}">
+                <b:Column size="3">
+                    <b:Label ui:field="suggestionsFound" type="INFO" addStyleNames="{style.suggestionsFound}" />
+                </b:Column>
+            </b:Row>
+        </div>
         <b:Navbar>
             <b:Nav>
                 <b:NavLink ui:field="sTitleIcon" icon="BOOK" iconSize="LARGE" />

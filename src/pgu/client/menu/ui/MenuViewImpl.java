@@ -86,8 +86,6 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToLibraryBtn.setVisible(false);
         goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
-        suggestionsContainer.setVisible(false);
-        suggestionsFound.setVisible(false);
 
         field2box.put(sTitle, sTitle.getTextBox());
         field2box.put(sAuthor, sAuthor.getTextBox());
@@ -453,17 +451,12 @@ public class MenuViewImpl extends Composite implements MenuView {
 
                 @Override
                 public void show() {
-                    suggestionsRow.addStyleName("suggestionsRow");
-                    suggestionsContainer.setVisible(true);
-                    suggestionsFound.setVisible(true);
+                    showSuggestionsArea();
                 }
 
                 @Override
                 public void hide() {
-                    suggestionsRow.removeStyleName("suggestionsRow");
-                    suggestionsContainer.clear();
-                    suggestionsContainer.setVisible(false);
-                    suggestionsFound.setVisible(false);
+                    hideSuggestionsArea();
                 }
 
                 @Override
@@ -482,6 +475,14 @@ public class MenuViewImpl extends Composite implements MenuView {
         }
         return suggestionsWidget;
     }
+
+    private static native void showSuggestionsArea() /*-{
+		$wnd.$('#suggestions_area').collapse('show');
+    }-*/;
+
+    private static native void hideSuggestionsArea() /*-{
+		$wnd.$('#suggestions_area').collapse('hide');
+    }-*/;
 
     private class SuggestionNavLink extends NavLink {
 
