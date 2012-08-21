@@ -26,7 +26,7 @@
             <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" type="PRIMARY">Buscar sugerencias</b:Button>
             <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE" size="SMALL" type="PRIMARY"></b:Button>
             <b:Popover ui:field="suggestionsInfo">
-                <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
+                <b:Button ui:field="suggestionsInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
             <b:Button ui:field="categorySuggestionsBtn" icon="TAGS" type="SUCCESS" iconSize="LARGE" ></b:Button>
             <b:Nav alignment="RIGHT">
@@ -74,7 +74,7 @@
             <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" type="SUCCESS">Buscar libros</b:Button>
             <b:Button ui:field="clearBooksBtn" icon="REMOVE" size="SMALL" type="SUCCESS"></b:Button>
             <b:Popover ui:field="searchInfo">
-                <b:Button icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
+                <b:Button ui:field="searchInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
         </b:Navbar>
         <g:HTMLPanel addStyleNames="{style.progressBar}">
