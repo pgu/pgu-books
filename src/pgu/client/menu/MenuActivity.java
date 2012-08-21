@@ -107,6 +107,10 @@ public class MenuActivity implements MenuPresenter //
     @Override
     public void searchBooks() {
 
+        if (view.getWaitingIndicator().isVisible()) {
+            return;
+        }
+
         final HashMap<SearchField, String> filters = new HashMap<SearchField, String>();
         filters.put(SearchField.AUTHOR, view.getFilterAuthor());
         filters.put(SearchField.CATEGORY, view.getFilterCategory());
@@ -143,6 +147,11 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchSuggestions(final String text) {
+
+        if (view.getWaitingIndicator().isVisible()) {
+            return;
+        }
+
         if (text.trim().isEmpty()) {
             return;
         }
@@ -164,6 +173,11 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchCategorySuggestions() {
+
+        if (view.getWaitingIndicator().isVisible()) {
+            return;
+        }
+
         u.fire(eventBus, new ShowWaitingIndicatorEvent());
         booksService.searchCategorySuggestions(new AsyncCallbackApp<SuggestionsResult>(eventBus) {
 

@@ -283,8 +283,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     @Override
-    public HasVisibility getWaitingIndicator() {
-        return new HasVisibility() {
+    public WaitingWidget getWaitingIndicator() {
+        return new WaitingWidget() {
 
             @Override
             public void toggle() {
@@ -299,6 +299,11 @@ public class MenuViewImpl extends Composite implements MenuView {
             @Override
             public void hide() {
                 progressBar.setVisible(false);
+            }
+
+            @Override
+            public boolean isVisible() {
+                return progressBar.isVisible();
             }
         };
     }

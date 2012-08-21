@@ -19,9 +19,15 @@ public interface MenuView extends IsWidget {
         void setSuggestions(ArrayList<Suggestion> suggestions);
     }
 
+    interface WaitingWidget extends HasVisibility {
+
+        boolean isVisible();
+
+    }
+
     void setPresenter(MenuPresenter presenter);
 
-    HasVisibility getWaitingIndicator();
+    WaitingWidget getWaitingIndicator();
 
     LogWidget getLoginWidget();
 
