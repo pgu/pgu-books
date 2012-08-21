@@ -360,7 +360,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
                     return r1;
                 }
 
-                return s1.getValue().toLowerCase().compareTo(s2.getValue().toLowerCase());
+                return s1.getValue().compareTo(s2.getValue());
             }
         };
 
