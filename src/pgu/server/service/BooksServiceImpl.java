@@ -33,6 +33,7 @@ import com.googlecode.objectify.Query;
 @SuppressWarnings("serial")
 public class BooksServiceImpl extends RemoteServiceServlet implements BooksService {
 
+    private static final String SEARCH_ON_EMPTY_FIELD = "-";
     private final DAO             dao   = new DAO();
     private final AppLog          log   = new AppLog();
     private final FieldValueIndex fvIdx = new FieldValueIndex();
@@ -53,7 +54,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final Query<Book> booksQuery = dao.ofy().query(Book.class);
 
         // order
-        final String sortDirection = booksSearch.isAscending() ? "" : "-";
+        final String sortDirection = booksSearch.isAscending() ? "" : SEARCH_ON_EMPTY_FIELD;
         final String sortField = booksSearch.getSortField().toString().toLowerCase();
         final String order = sortDirection + sortField;
         booksQuery.order(order);
@@ -119,13 +120,13 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
     private void addFilterNum(final BookDoc field, final String value, final Query<Book> q) {
         if (!u.isVoid(value)) {
-            q.filter(field._(), "-".equals(value) ? 0 : Integer.valueOf(value));
+            q.filter(field._(), SEARCH_ON_EMPTY_FIELD.equals(value) ? 0 : Integer.valueOf(value));
         }
     }
 
     private void addFilterText(final BookDoc field, final String value, final Query<Book> q) {
         if (!u.isVoid(value)) {
-            q.filter(field._(), "-".equals(value) ? "" : value);
+            q.filter(field._(), SEARCH_ON_EMPTY_FIELD.equals(value) ? "" : value);
         }
     }
 
