@@ -499,6 +499,8 @@ public class MenuViewImpl extends Composite implements MenuView {
 
         public SuggestionNavLink(final Suggestion suggestion) {
 
+            getElement().setTabIndex(-1);
+
             final IconType icon = getSuggestionIcon(suggestion);
             setIcon(icon);
             setIconSize(IconSize.LARGE);

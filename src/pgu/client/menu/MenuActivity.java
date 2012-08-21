@@ -147,10 +147,12 @@ public class MenuActivity implements MenuPresenter //
             return;
         }
 
+        u.fire(eventBus, new ShowWaitingIndicatorEvent());
         booksService.searchSuggestions(text, new AsyncCallbackApp<SuggestionsResult>(eventBus) {
 
             @Override
             public void onSuccess(final SuggestionsResult result) {
+                u.fire(eventBus, new HideWaitingIndicatorEvent());
 
                 view.getSuggestionsWidget().setSuggestions(result.getSuggestions());
                 view.getSuggestionsWidget().show();
@@ -162,10 +164,13 @@ public class MenuActivity implements MenuPresenter //
 
     @Override
     public void searchCategorySuggestions() {
+        u.fire(eventBus, new ShowWaitingIndicatorEvent());
         booksService.searchCategorySuggestions(new AsyncCallbackApp<SuggestionsResult>(eventBus) {
 
             @Override
             public void onSuccess(final SuggestionsResult result) {
+                u.fire(eventBus, new HideWaitingIndicatorEvent());
+
                 view.getSuggestionsWidget().setSuggestions(result.getSuggestions());
                 view.getSuggestionsWidget().show();
             }
