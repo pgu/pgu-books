@@ -2,6 +2,8 @@ package pgu.client.menu.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import pgu.client.app.utils.ClientUtils;
 import pgu.client.menu.MenuPresenter;
@@ -47,29 +49,34 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     @UiField
-    Brand                     appTitle;
+    Brand                                      appTitle;
     @UiField
-    ProgressBar               progressBar;
+    ProgressBar                                progressBar;
     @UiField
-    Button                    searchSuggestionsBtn, searchBooksBtn, clearBooksBtn, clearSuggestionsBtn,
-            tagSuggestionsBtn;
+    Button                                     searchSuggestionsBtn, searchBooksBtn, clearBooksBtn,
+            clearSuggestionsBtn, tagSuggestionsBtn;
     @UiField
-    NavSearch                 sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
+    NavSearch                                  sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
-    NavLink                   adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn, goToAppstatsBtn, //
+    NavLink                                    adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn,
+            goToAppstatsBtn, //
             sTitleIcon, sAuthorIcon, sEditorIcon, sCategoryIcon, sYearIcon, sCommentIcon;
 
     @UiField
-    Popover                   searchInfo, suggestionsInfo;
+    Popover                                    searchInfo, suggestionsInfo;
     @UiField
-    NavPills                  suggestionsContainer;
+    NavPills                                   suggestionsContainer;
     @UiField
-    Label                     suggestionsFound;
+    Label                                      suggestionsFound;
     @UiField
-    Row                       suggestionsRow;
+    Row                                        suggestionsRow;
 
-    private MenuPresenter     presenter;
-    private final ClientUtils u = new ClientUtils();
+    private MenuPresenter                      presenter;
+    private final ClientUtils                  u                = new ClientUtils();
+    private final HashMap<NavSearch, NavLink>  field2link       = new HashMap<NavSearch, NavLink>();
+    private final HashMap<NavSearch, TextBox>  field2box        = new HashMap<NavSearch, TextBox>();
+    private final HashMap<IconType, NavSearch> icon2field       = new HashMap<IconType, NavSearch>();
+    private final HashMap<String, IconType>    searchField2icon = new HashMap<String, IconType>();
 
     public MenuViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -81,6 +88,34 @@ public class MenuViewImpl extends Composite implements MenuView {
         progressBar.setVisible(false);
         suggestionsContainer.setVisible(false);
         suggestionsFound.setVisible(false);
+
+        field2box.put(sTitle, sTitle.getTextBox());
+        field2box.put(sAuthor, sAuthor.getTextBox());
+        field2box.put(sEditor, sEditor.getTextBox());
+        field2box.put(sCategory, sCategory.getTextBox());
+        field2box.put(sYear, sYear.getTextBox());
+        field2box.put(sComment, sComment.getTextBox());
+
+        field2link.put(sTitle, sTitleIcon);
+        field2link.put(sAuthor, sAuthorIcon);
+        field2link.put(sEditor, sEditorIcon);
+        field2link.put(sCategory, sCategoryIcon);
+        field2link.put(sYear, sYearIcon);
+        field2link.put(sComment, sCommentIcon);
+
+        icon2field.put(IconType.USER, sAuthor);
+        icon2field.put(IconType.TAG, sCategory);
+        icon2field.put(IconType.COMMENT, sComment);
+        icon2field.put(IconType.PRINT, sEditor);
+        icon2field.put(IconType.CALENDAR, sYear);
+        icon2field.put(IconType.BOOK, sTitle);
+
+        searchField2icon.put(SearchField.AUTHOR.toString(), IconType.USER);
+        searchField2icon.put(SearchField.CATEGORY.toString(), IconType.TAG);
+        searchField2icon.put(SearchField.COMMENT.toString(), IconType.COMMENT);
+        searchField2icon.put(SearchField.EDITOR.toString(), IconType.PRINT);
+        searchField2icon.put(SearchField.YEAR.toString(), IconType.CALENDAR);
+        searchField2icon.put(SearchField.TITLE.toString(), IconType.BOOK);
 
         onFieldsKeyPress();
         onSearchTextKeyPress();
@@ -155,7 +190,6 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("searchBooksBtn")
     public void clickSearchOnFields(final ClickEvent e) {
-
         searchBooks();
     }
 
@@ -187,14 +221,12 @@ public class MenuViewImpl extends Composite implements MenuView {
     }
 
     private void onFieldsKeyPress() {
-        final ArrayList<TextBox> boxes = new ArrayList<TextBox>();
-        boxes.add(sTitle.getTextBox());
-        boxes.add(sAuthor.getTextBox());
-        boxes.add(sEditor.getTextBox());
-        boxes.add(sCategory.getTextBox());
-        boxes.add(sYear.getTextBox());
-        boxes.add(sComment.getTextBox());
-        for (final TextBox box : boxes) {
+
+        for (final Entry<NavSearch, TextBox> e : field2box.entrySet()) {
+            final NavSearch field = e.getKey();
+            final TextBox box = e.getValue();
+            final NavLink link = field2link.get(field);
+
             box.addKeyPressHandler(new KeyPressHandler() {
 
                 @Override
@@ -209,6 +241,7 @@ public class MenuViewImpl extends Composite implements MenuView {
                 @Override
                 public void onKeyUp(final KeyUpEvent event) {
                     box.setTitle(box.getText());
+                    link.setActive(!box.getText().isEmpty());
                 }
             });
         }
@@ -467,66 +500,17 @@ public class MenuViewImpl extends Composite implements MenuView {
                 }
 
                 private void setSearchBoxText(final IconType icon) {
-                    NavLink searchIcon;
-                    NavSearch searchBox;
+                    final NavSearch navSearch = icon2field.get(icon);
 
-                    if (IconType.USER == icon) {
-                        searchIcon = sAuthorIcon;
-                        searchBox = sAuthor;
-
-                    } else if (IconType.TAG == icon) {
-                        searchIcon = sCategoryIcon;
-                        searchBox = sCategory;
-
-                    } else if (IconType.COMMENT == icon) {
-                        searchIcon = sCommentIcon;
-                        searchBox = sComment;
-
-                    } else if (IconType.PRINT == icon) {
-                        searchIcon = sEditorIcon;
-                        searchBox = sEditor;
-
-                    } else if (IconType.CALENDAR == icon) {
-                        searchIcon = sYearIcon;
-                        searchBox = sYear;
-
-                    } else if (IconType.BOOK == icon) {
-                        searchIcon = sTitleIcon;
-                        searchBox = sTitle;
-
-                    } else {
-                        throw new IllegalArgumentException("Unknown icon: " + icon);
-                    }
-
-                    searchIcon.setActive(isActive());
-                    searchBox.getTextBox().setText(isActive() ? getText() : "");
+                    navSearch.getTextBox().setText(isActive() ? getText() : "");
+                    field2link.get(navSearch).setActive(isActive());
                 }
             });
         }
 
         private IconType getSuggestionIcon(final Suggestion suggestion) {
             final String fieldName = suggestion.getField();
-
-            if (SearchField.AUTHOR.toString().equals(fieldName)) {
-                return IconType.USER;
-
-            } else if (SearchField.CATEGORY.toString().equals(fieldName)) {
-                return IconType.TAG;
-
-            } else if (SearchField.COMMENT.toString().equals(fieldName)) {
-                return IconType.COMMENT;
-
-            } else if (SearchField.EDITOR.toString().equals(fieldName)) {
-                return IconType.PRINT;
-
-            } else if (SearchField.YEAR.toString().equals(fieldName)) {
-                return IconType.CALENDAR;
-
-            } else if (SearchField.TITLE.toString().equals(fieldName)) {
-                return IconType.BOOK;
-
-            }
-            throw new IllegalArgumentException("Unknow search field: " + fieldName);
+            return searchField2icon.get(fieldName);
         }
 
     }
