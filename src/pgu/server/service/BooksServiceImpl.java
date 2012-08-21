@@ -119,7 +119,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
 
     private void addFilterNum(final BookDoc field, final String value, final Query<Book> q) {
         if (!u.isVoid(value)) {
-            q.filter(field._(), Integer.valueOf(value));
+            q.filter(field._(), "-".equals(value) ? 0 : Integer.valueOf(value));
         }
     }
 
