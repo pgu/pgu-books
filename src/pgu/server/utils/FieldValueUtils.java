@@ -28,11 +28,11 @@ public class FieldValueUtils {
 
             // create a doc fv
             final AppDoc fvDoc = new AppDoc() //
-                    .text(FieldValueDoc.FIELD._(), field) //
-                    .text(FieldValueDoc.VALUE._(), value) //
-                    .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
+            .text(FieldValueDoc.FIELD._(), field) //
+            .text(FieldValueDoc.VALUE._(), value) //
+            .num(FieldValueDoc.FV_ID._(), newFv.getId()) //
             ;
-            fvIdx.idx().addAsync(fvDoc.build());
+            fvIdx.idx().putAsync(fvDoc.build());
 
         } else {
             // update the counter of the sql fv
