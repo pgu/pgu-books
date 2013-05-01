@@ -45,7 +45,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @UiField
     FluidContainer                              booksGrid, toolBar;
     @UiField
-    Pager                                       pager;
+    Pager                                       pager, pagerTop;
     @UiField
     Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn, removeDocBtn;
     @UiField
@@ -58,16 +58,44 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     private final HashSet<FluidRow>             selectedRows = new HashSet<FluidRow>();
     private final LinkedHashMap<FluidRow, Book> row2book     = new LinkedHashMap<FluidRow, Book>();
 
+    private ClickHandler leftClick = null;
+    private ClickHandler rightClick = null;
+
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
 
         removeDocBtn.setVisible(false); // just a hack for me
 
         pager.setVisible(false);
+        pagerTop.setVisible(false);
+
         refreshBtn.setVisible(false); // TBD
 
         initBadges();
         initHeadersRow();
+
+        pagerTop.getLeft().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                if (leftClick == null) {
+                    return;
+                }
+
+                leftClick.onClick(event);
+            }
+        });
+        pagerTop.getRight().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                if (rightClick == null) {
+                    return;
+                }
+
+                rightClick.onClick(event);
+            }
+        });
     }
 
     //    private final BooksServiceAsync      booksService      = GWT.create(BooksService.class);
@@ -322,7 +350,12 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             count++;
         }
 
+        scrollToTop();
     }
+
+    private native void scrollToTop() /*-{
+        $wnd.scrollTo(0, 0);
+    }-*/;
 
     @Override
     public HasClickAndVisibility getDeleteBooksWidget() {
@@ -461,11 +494,13 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
             @Override
             public void setEnabled(final boolean enabled) {
+                pagerTop.getLeft().setDisabled(!enabled);
                 pager.getLeft().setDisabled(!enabled);
             }
 
             @Override
             public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                leftClick = handler;
                 return pager.getLeft().addClickHandler(handler);
             }
 
@@ -488,11 +523,13 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
             @Override
             public void setEnabled(final boolean enabled) {
+                pagerTop.getRight().setDisabled(!enabled);
                 pager.getRight().setDisabled(!enabled);
             }
 
             @Override
             public HandlerRegistration addClickHandler(final ClickHandler handler) {
+                rightClick = handler;
                 return pager.getRight().addClickHandler(handler);
             }
 
@@ -552,6 +589,11 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
         pager.getRight().setVisible(hasNextPage);
 
         pager.setVisible(nbBooks > 0);
+
+        pagerTop.getLeft().setVisible(!isFirstPage);
+        pagerTop.getRight().setVisible(hasNextPage);
+
+        pagerTop.setVisible(nbBooks > 0);
     }
 
     @Override

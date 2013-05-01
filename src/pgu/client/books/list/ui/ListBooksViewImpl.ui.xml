@@ -22,6 +22,11 @@
         }
     </ui:style>
     <g:HTMLPanel>
+        <b:FluidContainer addStyleNames="{style.grid}" >
+            <b:Row>
+                <b:Pager ui:field="pagerTop" aligned="true" left="&larr; Anterior" right="Siguiente &rarr;" addStyleNames="{style.pager}"/>
+            </b:Row>
+        </b:FluidContainer>
         <b:FluidContainer ui:field="toolBar" addStyleNames="{style.grid}" >
             <b:Row>
 <!--                 <b:Column size="3"> -->
