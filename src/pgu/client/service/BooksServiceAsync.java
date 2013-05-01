@@ -17,4 +17,6 @@ public interface BooksServiceAsync {
 
     void searchCategorySuggestions(AsyncCallback<SuggestionsResult> asyncCallbackApp);
 
+    void removeDocFromIdx(AsyncCallback<Void> asyncCallback);
+
 }

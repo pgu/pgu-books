@@ -260,13 +260,13 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         final ArrayList<Book> books = new ArrayList<Book>();
         for (final ScoredDocument doc : results) {
             final Book book = new Book() //
-                    .id(docU.numLong(BookDoc.BOOK_ID._(), doc)) //
-                    .author(docU.text(BookDoc.AUTHOR._(), doc)) //
-                    .title(docU.text(BookDoc.TITLE._(), doc)) //
-                    .editor(docU.text(BookDoc.EDITOR._(), doc)) //
-                    .year(docU.numInt(BookDoc.YEAR._(), doc)) //
-                    .comment(docU.text(BookDoc.COMMENT._(), doc)) //
-                    .category(docU.text(BookDoc.CATEGORY._(), doc)) //
+            .id(docU.numLong(BookDoc.BOOK_ID._(), doc)) //
+            .author(docU.text(BookDoc.AUTHOR._(), doc)) //
+            .title(docU.text(BookDoc.TITLE._(), doc)) //
+            .editor(docU.text(BookDoc.EDITOR._(), doc)) //
+            .year(docU.numInt(BookDoc.YEAR._(), doc)) //
+            .comment(docU.text(BookDoc.COMMENT._(), doc)) //
+            .category(docU.text(BookDoc.CATEGORY._(), doc)) //
             ;
             books.add(book);
         }
@@ -396,6 +396,11 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     @Override
     public BooksCount getBooksCount() {
         return dao.ofy().query(BooksCount.class).filter("isLast", true).get();
+    }
+
+    @Override
+    public void removeDocFromIdx() {
+        fvIdx.idx().delete("-8425776515516283130");
     }
 
 }

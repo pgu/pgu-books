@@ -31,6 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -46,7 +47,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @UiField
     Pager                                       pager;
     @UiField
-    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn;
+    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn, removeDocBtn;
     @UiField
     Badge                                       results10, results20, results30, results50;
 
@@ -60,11 +61,32 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
 
+        removeDocBtn.setVisible(false); // just a hack for me
+
         pager.setVisible(false);
         refreshBtn.setVisible(false); // TBD
 
         initBadges();
         initHeadersRow();
+    }
+
+    //    private final BooksServiceAsync      booksService      = GWT.create(BooksService.class);
+
+    @UiHandler("removeDocBtn")
+    public void clickRemove(final ClickEvent e) {
+        //        booksService.removeDocFromIdx(new AsyncCallback<Void>() {
+        //
+        //            @Override
+        //            public void onFailure(final Throwable caught) {
+        //                Window.alert("Fail");
+        //            }
+        //
+        //            @Override
+        //            public void onSuccess(final Void result) {
+        //                Window.alert("Success");
+        //            }
+        //
+        //        });
     }
 
     private void initHeadersRow() {

@@ -243,20 +243,20 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
 
         final Iterator<ScoredDocument> fvDocItr = getItrForDeletion("", fvIdx.idx());
         while (fvDocItr.hasNext()) {
-            fvIdx.idx().removeAsync(fvDocItr.next().getId());
+            fvIdx.idx().deleteAsync(fvDocItr.next().getId());
         }
 
         final String _booksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.BOOK.toString();
 
         final Iterator<ScoredDocument> bookDocItr = getItrForDeletion(_booksQuery, obsIdx.idx());
         while (bookDocItr.hasNext()) {
-            obsIdx.idx().removeAsync(bookDocItr.next().getId());
+            obsIdx.idx().deleteAsync(bookDocItr.next().getId());
         }
 
         final String _archivedBooksQuery = BookDoc.DOC_TYPE.toString() + ":" + DocType.ARCHIVE_BOOK.toString();
         final Iterator<ScoredDocument> archiveDocItr = getItrForDeletion(_archivedBooksQuery, obsIdx.archiveIdx());
         while (archiveDocItr.hasNext()) {
-            obsIdx.archiveIdx().removeAsync(archiveDocItr.next().getId());
+            obsIdx.archiveIdx().deleteAsync(archiveDocItr.next().getId());
         }
     }
 
@@ -312,7 +312,7 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                             "We should have one entity for the field [%s] and the value [%s]" //
                             , field //
                             , value //
-                    ));
+                            ));
             log.error(this, e);
             throw e;
         }
@@ -329,13 +329,13 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
                         String.format( //
                                 "We should have one doc for the fieldValue [%s]" //
                                 , fv.getId() //
-                        ));
+                                ));
                 log.error(this, e);
                 throw e;
             }
 
             final ScoredDocument fvDoc = docs.iterator().next();
-            fvIdx.idx().removeAsync(fvDoc.getId());
+            fvIdx.idx().deleteAsync(fvDoc.getId());
 
             dao.ofy().async().delete(fv); // delete
         } else {
