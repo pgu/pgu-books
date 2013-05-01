@@ -354,7 +354,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     private native void scrollToTop() /*-{
-        $wnd.scrollTo(0, 0);
+        $wnd.$("html, body").animate({ scrollTop: 0 }, 600);
     }-*/;
 
     @Override
