@@ -10,6 +10,10 @@ import com.google.gwt.user.client.Command;
 
 public class ClientUtils {
 
+    public native void console(String msg) /*-{
+        $wnd.console.log(msg);
+    }-*/;
+
     public void info(final String message) {
         if (LogConfiguration.loggingIsEnabled()) {
             final Logger logger = Logger.getLogger("pgu");

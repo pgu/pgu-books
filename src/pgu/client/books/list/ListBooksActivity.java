@@ -36,8 +36,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class ListBooksActivity extends AbstractActivity implements ListBooksPresenter //
-        , RefreshBooksEvent.Handler //
-        , DoSearchBooksEvent.Handler //
+, RefreshBooksEvent.Handler //
+, DoSearchBooksEvent.Handler //
 {
 
     private EventBus                             eventBus;
@@ -109,6 +109,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onClick(final ClickEvent event) {
+                u.console("previous event");
                 u.fire(eventBus, new AskForPreviousPageSearchBooksEvent(view.getPreviousPageWidget()));
             }
         }));
@@ -116,6 +117,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
 
             @Override
             public void onClick(final ClickEvent event) {
+                u.console("next event");
                 u.fire(eventBus, new AskForNextPageSearchBooksEvent(view.getNextPageWidget()));
             }
         }));
@@ -129,7 +131,7 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 if (book == null //
                         || u.isVoid(book.getAuthor()) //
                         && u.isVoid(book.getTitle()) //
-                ) {
+                        ) {
                     return;
                 }
 
@@ -216,6 +218,8 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
             @Override
             public void onSuccess(final BooksResult booksResult) {
                 final ArrayList<Book> books = booksResult.getBooks();
+
+                u.console("success " + books.size());
                 u.info("success " + books.size());
 
                 u.fire(eventBus, new HideWaitingIndicatorEvent());
