@@ -19,4 +19,6 @@ public interface AdminBooksService extends RemoteService {
 
     void deleteAll();
 
+    void updateDocFromIdx();
+
 }

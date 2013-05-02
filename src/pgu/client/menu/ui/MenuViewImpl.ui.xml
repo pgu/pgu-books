@@ -15,7 +15,7 @@
             margin-bottom: 0px;
         }
         .suggestionsRow {
-            margin-bottom: 5px;
+            padding-top: 20px;
         }
     </ui:style>
     <g:HTMLPanel>
@@ -24,7 +24,7 @@
             <b:Brand ui:field="appTitle">Biblioteca</b:Brand>
             <b:NavSearch ui:field="sText" size="5" placeholder="Cualquier texto" alignment="LEFT"/>        
             <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" type="PRIMARY">Buscar sugerencias</b:Button>
-            <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE" size="SMALL" type="PRIMARY"></b:Button>
+            <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE" size="SMALL" type="WARNING"></b:Button>
             <b:Popover ui:field="suggestionsInfo">
                 <b:Button ui:field="suggestionsInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>
@@ -39,12 +39,15 @@
             </b:Nav>
         </b:Navbar>
         <div id="suggestions_area" class="collapse">
-            <b:NavPills ui:field="suggestionsContainer" />
             <b:Row ui:field="suggestionsRow" addStyleNames="{style.suggestionsRow}">
                 <b:Column size="3">
                     <b:Label ui:field="suggestionsFound" type="INFO" addStyleNames="{style.suggestionsFound}" />
                 </b:Column>
+                <b:Column size="3">
+                    <b:Alert ui:field="alertMoreThanOneThousand" type="WARNING" close="false" animation="true" addStyleNames="{style.suggestionsFound}" >Existe más de mil sugerencias!</b:Alert>
+                </b:Column>
             </b:Row>
+            <b:NavPills ui:field="suggestionsContainer" />
         </div>
         <b:Navbar>
             <b:Nav>
@@ -72,7 +75,7 @@
                 <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
             </b:Nav>        
             <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" type="SUCCESS">Buscar libros</b:Button>
-            <b:Button ui:field="clearBooksBtn" icon="REMOVE" size="SMALL" type="SUCCESS"></b:Button>
+            <b:Button ui:field="clearBooksBtn" icon="REMOVE" size="SMALL" type="WARNING"></b:Button>
             <b:Popover ui:field="searchInfo">
                 <b:Button ui:field="searchInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
             </b:Popover>

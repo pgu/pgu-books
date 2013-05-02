@@ -11,6 +11,7 @@ import pgu.client.menu.MenuView;
 import pgu.shared.dto.Suggestion;
 import pgu.shared.utils.SearchField;
 
+import com.github.gwtbootstrap.client.ui.Alert;
 import com.github.gwtbootstrap.client.ui.Brand;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Label;
@@ -55,14 +56,14 @@ public class MenuViewImpl extends Composite implements MenuView {
     ProgressBar                                progressBar;
     @UiField
     Button                                     searchSuggestionsBtn, searchBooksBtn, clearBooksBtn,
-            clearSuggestionsBtn, categorySuggestionsBtn //
-            , suggestionsInfoBtn, searchInfoBtn;
+    clearSuggestionsBtn, categorySuggestionsBtn //
+    , suggestionsInfoBtn, searchInfoBtn;
     @UiField
     NavSearch                                  sText, sTitle, sAuthor, sEditor, sCategory, sYear, sComment;
     @UiField
     NavLink                                    adminBtn, logoutBtn, goToImportBtn, goToSetupBtn, goToLibraryBtn,
-            goToAppstatsBtn, //
-            sTitleIcon, sAuthorIcon, sEditorIcon, sCategoryIcon, sYearIcon, sCommentIcon;
+    goToAppstatsBtn, //
+    sTitleIcon, sAuthorIcon, sEditorIcon, sCategoryIcon, sYearIcon, sCommentIcon;
 
     @UiField
     Popover                                    searchInfo, suggestionsInfo;
@@ -72,6 +73,8 @@ public class MenuViewImpl extends Composite implements MenuView {
     Label                                      suggestionsFound;
     @UiField
     Row                                        suggestionsRow;
+    @UiField
+    Alert                                      alertMoreThanOneThousand;
 
     private MenuPresenter                      presenter;
     private final ClientUtils                  u                = new ClientUtils();
@@ -88,6 +91,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         goToLibraryBtn.setVisible(false);
         goToAppstatsBtn.setVisible(false);
         progressBar.setVisible(false);
+        alertMoreThanOneThousand.setVisible(false);
 
         field2box.put(sTitle, sTitle.getTextBox());
         field2box.put(sAuthor, sAuthor.getTextBox());
@@ -148,7 +152,7 @@ public class MenuViewImpl extends Composite implements MenuView {
         searchInfo.setText("La búsqueda es sensible al uso de mayúsculas y minúsculas." + //
                 " Para encontrar los valores exactos, se puede usar las sugerencias." + //
                 "<br><br>También se puede buscar para un campo vacío si se pone \"-\" en la casilla." //
-        );
+                );
     }
 
     private void onSearchTextKeyUp() {
@@ -599,6 +603,11 @@ public class MenuViewImpl extends Composite implements MenuView {
                 appTitle.setText("Biblioteca");
             }
         };
+    }
+
+    @Override
+    public void showMessageMoreThanOneThousand(final boolean shouldShowMessage) {
+        alertMoreThanOneThousand.setVisible(shouldShowMessage);
     }
 
 }

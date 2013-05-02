@@ -336,6 +336,7 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
         // TODO PGU Jul 23, 2012 specify if more than 1000 suggestions
         final SuggestionsResult suggestionsResult = new SuggestionsResult();
         suggestionsResult.setSuggestions(suggestions);
+        suggestionsResult.setHasMoreThanOneThousandSuggestions(numberFound > 1000);
         return suggestionsResult;
     }
 
@@ -396,11 +397,6 @@ public class BooksServiceImpl extends RemoteServiceServlet implements BooksServi
     @Override
     public BooksCount getBooksCount() {
         return dao.ofy().query(BooksCount.class).filter("isLast", true).get();
-    }
-
-    @Override
-    public void removeDocFromIdx() {
-        fvIdx.idx().delete("-8425776515516283130");
     }
 
 }

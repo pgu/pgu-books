@@ -9,6 +9,8 @@ import pgu.client.app.utils.HasClickAndEnable;
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.list.ListBooksPresenter;
 import pgu.client.books.list.ListBooksView;
+import pgu.client.service.AdminBooksService;
+import pgu.client.service.AdminBooksServiceAsync;
 import pgu.shared.domain.Book;
 import pgu.shared.utils.SortField;
 
@@ -32,6 +34,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,7 +51,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @UiField
     Pager                                       pager, pagerTop;
     @UiField
-    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn, removeDocBtn;
+    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn, updateDocBtn;
     @UiField
     Badge                                       results10, results20, results30, results50;
 
@@ -64,7 +68,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
 
-        removeDocBtn.setVisible(false); // just a hack for me
+        updateDocBtn.setVisible(false); // hack for me
 
         pager.setVisible(false);
         pagerTop.setVisible(false);
@@ -98,23 +102,23 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
         });
     }
 
-    //    private final BooksServiceAsync      booksService      = GWT.create(BooksService.class);
+    private final AdminBooksServiceAsync      adminService      = GWT.create(AdminBooksService.class);
 
-    @UiHandler("removeDocBtn")
+    @UiHandler("updateDocBtn")
     public void clickRemove(final ClickEvent e) {
-        //        booksService.removeDocFromIdx(new AsyncCallback<Void>() {
-        //
-        //            @Override
-        //            public void onFailure(final Throwable caught) {
-        //                Window.alert("Fail");
-        //            }
-        //
-        //            @Override
-        //            public void onSuccess(final Void result) {
-        //                Window.alert("Success");
-        //            }
-        //
-        //        });
+        adminService.updateDocFromIdx(new AsyncCallback<Void>() {
+
+            @Override
+            public void onFailure(final Throwable caught) {
+                Window.alert("Fail");
+            }
+
+            @Override
+            public void onSuccess(final Void result) {
+                Window.alert("Success");
+            }
+
+        });
     }
 
     private void initHeadersRow() {
@@ -368,6 +372,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
 
             @Override
             public void setVisible(final boolean visible) {
+                //                updateDocBtn.setVisible(visible); // hack for me
                 deleteBtn.setVisible(visible);
             }
 

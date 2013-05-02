@@ -62,4 +62,6 @@ public interface MenuView extends IsWidget {
 
     BooksCountWidget getBooksCountWidget();
 
+    void showMessageMoreThanOneThousand(boolean shouldShowMessage);
+
 }

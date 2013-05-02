@@ -17,4 +17,6 @@ public interface AdminBooksServiceAsync {
 
     void deleteAll(AsyncCallback<Void> callback);
 
+    void updateDocFromIdx(AsyncCallback<Void> asyncCallback);
+
 }

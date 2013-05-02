@@ -11,6 +11,7 @@ import java.util.Iterator;
 import javax.servlet.ServletContext;
 
 import pgu.client.service.AdminBooksService;
+import pgu.server.access.nosql.AppDoc;
 import pgu.server.access.nosql.FieldValueIndex;
 import pgu.server.access.nosql.ObsoleteIndices;
 import pgu.server.access.sql.DAO;
@@ -342,4 +343,18 @@ public class AdminBooksServiceImpl extends RemoteServiceServlet implements Admin
             dao.ofy().async().put(fv); // update
         }
     }
+
+    @Override
+    public void updateDocFromIdx() {
+        //        fvIdx.idx().delete("-8425776515516283130");
+
+        final AppDoc fvDoc = new AppDoc() //
+        .text(FieldValueDoc.FIELD._(), BookDoc.CATEGORY._()) //
+        .text(FieldValueDoc.VALUE._(), "Galicia ling miscelanea") //
+        .num(FieldValueDoc.FV_ID._(), 829003) //
+        ;
+        fvIdx.idx().putAsync(fvDoc.build());
+
+    }
+
 }

@@ -18,6 +18,4 @@ public interface BooksService extends RemoteService {
     BooksCount getBooksCount();
 
     SuggestionsResult searchCategorySuggestions();
-
-    void removeDocFromIdx();
 }

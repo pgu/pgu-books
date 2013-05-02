@@ -22,8 +22,8 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.web.bindery.event.shared.EventBus;
 
 public class MenuActivity implements MenuPresenter //
-        , ShowWaitingIndicatorEvent.Handler //
-        , HideWaitingIndicatorEvent.Handler //
+, ShowWaitingIndicatorEvent.Handler //
+, HideWaitingIndicatorEvent.Handler //
 {
 
     private final MenuView          view;
@@ -165,6 +165,8 @@ public class MenuActivity implements MenuPresenter //
 
                 view.getSuggestionsWidget().setSuggestions(result.getSuggestions());
                 view.getSuggestionsWidget().show();
+
+                view.showMessageMoreThanOneThousand(result.hasMoreThanOneThousandSuggestions());
             }
 
         });
