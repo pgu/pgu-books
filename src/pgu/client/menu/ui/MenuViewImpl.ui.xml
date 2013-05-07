@@ -17,13 +17,21 @@
         .suggestionsRow {
             padding-top: 20px;
         }
+        .input_font_bigger input[type=text] {
+            font-size: 19px;
+            line-height: 1.3;
+        }
+        .btn_label_bigger span {
+            font-weight: bold;        
+            font-size: 16px;
+        }
     </ui:style>
     <g:HTMLPanel>
 <!--         position="TOP"  -->
         <b:Navbar addStyleNames="{style.firstNavbar}">
             <b:Brand ui:field="appTitle">Biblioteca</b:Brand>
-            <b:NavSearch ui:field="sText" size="5" placeholder="Cualquier texto" alignment="LEFT"/>        
-            <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" type="PRIMARY">Buscar sugerencias</b:Button>
+            <b:NavSearch ui:field="sText" size="5" placeholder="Don Quixote" alignment="LEFT" addStyleNames="{style.input_font_bigger}"/>        
+            <b:Button ui:field="searchSuggestionsBtn" icon="SEARCH" iconSize="LARGE" addStyleNames="{style.btn_label_bigger}">Buscar sugerencias</b:Button>
             <b:Button ui:field="clearSuggestionsBtn" icon="REMOVE" size="SMALL" type="WARNING"></b:Button>
             <b:Popover ui:field="suggestionsInfo">
                 <b:Button ui:field="suggestionsInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
@@ -52,29 +60,29 @@
         <b:Navbar>
             <b:Nav>
                 <b:NavLink ui:field="sTitleIcon" icon="BOOK" iconSize="LARGE" />
-                <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"/>
+                <b:NavSearch ui:field="sTitle" size="3" placeholder="Título" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>
             </b:Nav>        
             <b:Nav>
                 <b:NavLink ui:field="sAuthorIcon" icon="USER" iconSize="LARGE" />
-                <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"/>        
+                <b:NavSearch ui:field="sAuthor" size="2" placeholder="Autor" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>        
             </b:Nav>        
             <b:Nav>
                 <b:NavLink ui:field="sEditorIcon" icon="PRINT" iconSize="LARGE" />
-                <b:NavSearch ui:field="sEditor" size="2" placeholder="Editor" alignment="LEFT"/>        
+                <b:NavSearch ui:field="sEditor" size="2" placeholder="Editor" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>        
             </b:Nav>        
             <b:Nav>
                 <b:NavLink ui:field="sCategoryIcon" icon="TAG" iconSize="LARGE" />
-                <b:NavSearch ui:field="sCategory" size="2" placeholder="Categoría" alignment="LEFT"/>        
+                <b:NavSearch ui:field="sCategory" size="2" placeholder="Categoría" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>        
             </b:Nav>        
             <b:Nav>
                 <b:NavLink ui:field="sYearIcon" icon="CALENDAR" iconSize="LARGE" />
-                <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"/>        
+                <b:NavSearch ui:field="sYear" size="2" placeholder="Año" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>        
             </b:Nav>        
             <b:Nav>
                 <b:NavLink ui:field="sCommentIcon" icon="COMMENT" iconSize="LARGE" />
-                <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"/>        
+                <b:NavSearch ui:field="sComment" size="2" placeholder="Comentario" alignment="LEFT"  addStyleNames="{style.input_font_bigger}"/>        
             </b:Nav>        
-            <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" type="SUCCESS">Buscar libros</b:Button>
+            <b:Button ui:field="searchBooksBtn" icon="SEARCH" iconSize="LARGE" addStyleNames="{style.btn_label_bigger}">Buscar libros</b:Button>
             <b:Button ui:field="clearBooksBtn" icon="REMOVE" size="SMALL" type="WARNING"></b:Button>
             <b:Popover ui:field="searchInfo">
                 <b:Button ui:field="searchInfoBtn" icon="INFO_SIGN" type="INFO" iconSize="LARGE" ></b:Button>
