@@ -218,11 +218,16 @@ public class MenuViewImpl extends Composite implements MenuView {
 
     @UiHandler("clearSuggestionsBtn")
     public void clickClearSuggestions(final ClickEvent e) {
+        clearSuggestions();
+    }
+
+    private void clearSuggestions() {
         sText.getTextBox().setText("");
         getSuggestionsWidget().hide();
     }
 
     private void searchBooks() {
+        clearSuggestions();
         presenter.searchBooks();
     }
 
