@@ -1,6 +1,6 @@
 Website
 ---
-[**&#8594; Go to the website**] [pgu_books]
+[**&#8594; Biblioteca**] [pgu_books]
 
 Library of 8000 books
 ---
