@@ -2,9 +2,11 @@ package pgu.client.books.list.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import pgu.client.app.utils.ClientUtils;
 import pgu.client.app.utils.HasClickAndEnable;
 import pgu.client.app.utils.HasClickAndVisibility;
 import pgu.client.books.list.ListBooksPresenter;
@@ -51,7 +53,9 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     @UiField
     Pager                                       pager, pagerTop;
     @UiField
-    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn, updateDocBtn;
+    Button                                      addBtn, editBtn, deleteBtn, refreshBtn, priceBtn;
+    @UiField
+    Button                                      updateDocBtn, deleteDuplicatesBtn;
     @UiField
     Badge                                       results10, results20, results30, results50;
 
@@ -68,6 +72,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     public ListBooksViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
 
+        deleteDuplicatesBtn.setVisible(true); // hack for me
         updateDocBtn.setVisible(false); // hack for me
 
         pager.setVisible(false);
@@ -103,6 +108,50 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
     }
 
     private final AdminBooksServiceAsync      adminService      = GWT.create(AdminBooksService.class);
+
+    @UiHandler("deleteDuplicatesBtn")
+    public void clickDeleteDulicates(final ClickEvent e) {
+
+        final HashSet<Book> duplicates = new HashSet<Book>();
+
+        final Collection<Book> books = row2book.values();
+
+        for (final Book book1 : books) {
+
+            if (duplicates.contains(book1)) { // already tagged as a duplicate
+                continue;
+            }
+
+            for (final Book book2 : books) {
+
+                if (book2.equals(book1)) { // by id
+                    continue;
+                }
+
+                if ( //
+                        equal(book1.getAuthor(), book2.getAuthor()) //
+                        &&  equal(book1.getCategory(), book2.getCategory()) //
+                        &&  equal(book1.getComment(), book2.getComment()) //
+                        &&  equal(book1.getEditor(), book2.getEditor()) //
+                        &&  equal(book1.getTitle(), book2.getTitle()) //
+                        &&  equal(book1.getYear(), book2.getYear()) //
+                        //
+                        ) { // is duplicate
+                    duplicates.add(book2);
+                    break;
+                }
+
+            }
+        }
+
+        presenter.deleteDuplicates(duplicates);
+    }
+
+    private final ClientUtils                    u           = new ClientUtils();
+
+    private boolean equal(final Object a, final Object b) {
+        return a == b || a != null && a.equals(b);
+    }
 
     @UiHandler("updateDocBtn")
     public void clickRemove(final ClickEvent e) {
@@ -229,6 +278,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             booksGrid.remove(i);
         }
 
+        row2book.clear();
         selectedRows.clear();
 
         int count = 0;
@@ -373,6 +423,7 @@ public class ListBooksViewImpl extends Composite implements ListBooksView {
             @Override
             public void setVisible(final boolean visible) {
                 //                updateDocBtn.setVisible(visible); // hack for me
+                deleteDuplicatesBtn.setVisible(visible); // hack for me
                 deleteBtn.setVisible(visible);
             }
 

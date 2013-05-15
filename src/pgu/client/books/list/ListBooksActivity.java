@@ -1,6 +1,7 @@
 package pgu.client.books.list;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import pgu.client.app.event.AskForNewSearchBooksEvent;
 import pgu.client.app.event.AskForNextPageSearchBooksEvent;
@@ -230,6 +231,11 @@ public class ListBooksActivity extends AbstractActivity implements ListBooksPres
                 view.setBooks(books, isEditable);
             }
         });
+    }
+
+    @Override
+    public void deleteDuplicates(final HashSet<Book> duplicates) {
+        u.fire(eventBus, new DeleteBooksEvent(duplicates));
     }
 
 }
